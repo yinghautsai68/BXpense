@@ -6,6 +6,7 @@ import Layout from "./layout/Layout"
 import Analysis from "./pages/Analysis"
 import Savings from "./pages/Savings"
 import Tags from "./pages/Tags"
+import Record from "./pages/Record"
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
       <Route path='/analysis' element={<Layout><Analysis></Analysis></Layout>}></Route>
       <Route path='/savings' element={<Layout><Savings></Savings></Layout>}></Route>
       <Route path='/tags' element={<Layout><Tags></Tags></Layout>}></Route>
+      <Route path='/record' element={<Record />}></Route>
 
     </Routes>
   )
