@@ -21,7 +21,7 @@ const Expenses = () => {
             <div className='flex flex-col gap-3'>
                 <div className='flex flex-col'>
                     <span>2026年4月6日 週一</span>
-                    <div className='flex flex-col  divide-y divide-gray-300 w-full px-2 bg-white rounded-lg'>
+                    <div className='flex flex-col  divide-y divide-gray-300 w-full px-3 py-1 bg-white rounded-lg'>
                         <ExpenseCard></ExpenseCard>
                         <ExpenseCard></ExpenseCard>
                         <ExpenseCard></ExpenseCard>
