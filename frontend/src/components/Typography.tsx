@@ -9,5 +9,12 @@ export const Title = ({ className, children }: TitleProps) => {
             {children}
         </div>
     )
+}
 
+export const SubTitle = ({ className, children }: TitleProps) => {
+    return (
+        <div className={`${className} w-full text- `}>
+            {children}
+        </div>
+    )
 }
