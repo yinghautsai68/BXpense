@@ -5,6 +5,7 @@ USE bxpense_dev;
 CREATE TABLE users(
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(55) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
     image_url VARCHAR(255),
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
