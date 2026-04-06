@@ -2,12 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import { db } from './config/db';
 import usersRouter from './modules/users.routes';
+import accountsRouter from './modules/accounts/accounts.routes';
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 app.use('/api/users', usersRouter);
+app.use('/api/accounts', accountsRouter);
 
 const testDbConnection = async () => {
     try {

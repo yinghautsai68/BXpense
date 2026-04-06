@@ -16,8 +16,8 @@ CREATE TABLE accounts(
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
 
-    image_url VARCHAR(255),
     name VARCHAR(255) NOT NULL,
+    image_url VARCHAR(255),
     balance INT DEFAULT 0,
     
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
