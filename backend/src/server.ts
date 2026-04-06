@@ -3,6 +3,7 @@ import cors from 'cors';
 import { db } from './config/db';
 import usersRouter from './modules/users.routes';
 import accountsRouter from './modules/accounts/accounts.routes';
+import categoriesRouter from './modules/categories/categories.routes';
 
 const app = express();
 app.use(express.json());
@@ -10,6 +11,7 @@ app.use(cors());
 
 app.use('/api/users', usersRouter);
 app.use('/api/accounts', accountsRouter);
+app.use('/api/categories', categoriesRouter);
 
 const testDbConnection = async () => {
     try {
