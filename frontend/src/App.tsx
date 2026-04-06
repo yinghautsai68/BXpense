@@ -5,8 +5,8 @@ import Expenses from "./pages/Expenses"
 import Layout from "./layout/Layout"
 import Analysis from "./pages/Analysis"
 import Savings from "./pages/Savings"
-import Tags from "./pages/Tags"
 import Record from "./pages/Record"
+import Profile from "./pages/Profile"
 
 const App = () => {
   return (
@@ -17,7 +17,7 @@ const App = () => {
       <Route path='/expenses' element={<Layout><Expenses /></Layout>}></Route>
       <Route path='/analysis' element={<Layout><Analysis></Analysis></Layout>}></Route>
       <Route path='/savings' element={<Layout><Savings></Savings></Layout>}></Route>
-      <Route path='/tags' element={<Layout><Tags></Tags></Layout>}></Route>
+      <Route path='/profile' element={<Layout><Profile></Profile></Layout>}></Route>
       <Route path='/record' element={<Record />}></Route>
 
     </Routes>
