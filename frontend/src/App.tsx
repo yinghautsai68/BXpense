@@ -7,6 +7,7 @@ import Analysis from "./pages/Analysis"
 import Savings from "./pages/Savings"
 import Record from "./pages/Record"
 import Profile from "./pages/Profile"
+import Categories from "./pages/Categories"
 
 const App = () => {
   return (
@@ -19,7 +20,7 @@ const App = () => {
       <Route path='/savings' element={<Layout><Savings></Savings></Layout>}></Route>
       <Route path='/profile' element={<Layout><Profile></Profile></Layout>}></Route>
       <Route path='/record' element={<Record />}></Route>
-
+      <Route path='/categories' element={<Categories />}></Route>
     </Routes>
   )
 }

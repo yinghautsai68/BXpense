@@ -1,6 +1,7 @@
 import Card from '../components/Card'
 import { SubTitle } from '../components/Typography'
 import RecordTag from '../components/RecordTag'
+import { Link } from 'react-router-dom'
 
 const Profile = () => {
     return (
@@ -39,7 +40,7 @@ const Profile = () => {
                         <span>收入</span>
                     </div>
                 </div>
-                <div className='px-2 py-1 bg-yellow-500 rounded-xl cursor-pointer'>+</div>
+                <Link to='/categories' className='px-2 py-1 bg-yellow-500 rounded-xl cursor-pointer'>+</Link>
             </div>
             <Card className='grid grid-cols-4 gap-5'>
                 <RecordTag></RecordTag>

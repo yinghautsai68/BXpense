@@ -5,7 +5,7 @@ type TitleProps = {
 }
 export const Title = ({ className, children }: TitleProps) => {
     return (
-        <div className={`${className} w-full text-3xl font-bold`}>
+        <div className={`${className}  text-3xl font-bold`}>
             {children}
         </div>
     )
