@@ -1,0 +1,81 @@
+DROP DATABASE IF EXISTS bxpense_dev;
+CREATE DATABASE bxpense_dev;
+USE bxpense_dev;
+
+CREATE TABLE users(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(55) NOT NULL UNIQUE,
+    image_url VARCHAR(255),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE accounts(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+
+    image_url VARCHAR(255),
+    name VARCHAR(255) NOT NULL,
+    balance INT DEFAULT 0,
+    
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE  CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+
+);
+
+CREATE TABLE categories(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    image_url VARCHAR(255),
+    name VARCHAR(255) NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE records(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    account_id INT,
+    category_id INT,
+    type ENUM('expense', 'income') NOT NULL,
+    amount INT NOT NULL,
+    remarks VARCHAR(255),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (account_id) REFERENCES accounts(id),
+    FOREIGN KEY (category_id) REFERENCES categories(id)
+);
+
+CREATE TABLE savings(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+
+    name VARCHAR(255),
+    target_date DATE,
+    goal_amount INT DEFAULT 0,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE savings_record(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    savings_id INT,
+
+    date DATE,
+    amount INT DEFAULT  0,
+    
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (savings_id) REFERENCES savings(id)
+);
+
