@@ -12,7 +12,7 @@ const Layout = ({ children }: LayoutProps) => {
             <div className='flex flex-col gap-4 w-full min-h-screen    px-4 pt-8 pb-25 bg-zinc-100 rounded-t-2xl text-gray-800'>
                 {children}
                 <div className='fixed left-0 bottom-0  flex flex-row justify-between items-center w-full px-5 py-5 bg-white'>
-                    <NavLink to='/expenses'>紀錄</NavLink>
+                    <NavLink to='/records'>紀錄</NavLink>
                     <NavLink to='/analysis'>分析</NavLink>
                     <NavLink to='/record' className='p-4 border'>+</NavLink>
                     <NavLink to='/savings'>存錢</NavLink>

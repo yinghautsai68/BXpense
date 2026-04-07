@@ -1,6 +1,6 @@
 import ExpenseCard from '../components/ExpenseCard'
 
-const Expenses = () => {
+const Records = () => {
     return (
         <>
             <div className='flex flex-col gap-4 p-2 bg-white rounded-lg text-sm'>
@@ -42,4 +42,4 @@ const Expenses = () => {
     )
 }
 
-export default Expenses
+export default Records;
