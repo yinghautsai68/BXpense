@@ -11,6 +11,9 @@ CREATE TABLE users(
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+INSERT INTO users (username, password, image_url)
+VALUES ("蔡英豪", "placeholder", "placeholder"),
+	("Pani", "placeholder", "placeholder");
 
 CREATE TABLE accounts(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -26,6 +29,8 @@ CREATE TABLE accounts(
     FOREIGN KEY (user_id) REFERENCES users(id)
 
 );
+INSERT INTO accounts (user_id, name, image_url, balance)
+VALUES (1, "現金", "placeholder", 500000);
 
 CREATE TABLE categories(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -38,6 +43,9 @@ CREATE TABLE categories(
 
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+INSERT INTO categories (user_id, name, image_url)
+VALUES (1, "食物", "placeholder");
+
 
 CREATE TABLE records(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -55,8 +63,11 @@ CREATE TABLE records(
     FOREIGN KEY (account_id) REFERENCES accounts(id),
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
+INSERT INTO records (user_id, account_id, category_id, type, amount, remarks)
+VALUES ( 1, 1, 1, "expense", 100, "午餐");
 
-CREATE TABLE savings(
+
+CREATE TABLE saving_goals(
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
 
@@ -70,9 +81,9 @@ CREATE TABLE savings(
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE savings_record(
+CREATE TABLE saving_goal_records(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    savings_id INT,
+    saving_goal_id INT,
 
     date DATE,
     amount INT DEFAULT  0,
@@ -80,6 +91,6 @@ CREATE TABLE savings_record(
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (savings_id) REFERENCES savings(id)
+    FOREIGN KEY (saving_goal_id) REFERENCES saving_goals(id)
 );
 

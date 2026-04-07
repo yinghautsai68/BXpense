@@ -1,0 +1,207 @@
+import type { Request, Response } from "express";
+import { db } from "../../config/db";
+import { createRecordSchema, updateRecordSchema } from "./records.schema";
+
+
+
+export const createRecord = async (req: Request, res: Response) => {
+    const bodyResult = createRecordSchema.safeParse(req.body);
+    if (!bodyResult.success) {
+        return res.status(400).json({ success: false, message: `輸入資料錯誤` });
+    }
+    try {
+        const { user_id, account_id, category_id, type, amount, remarks } = bodyResult.data;
+
+        const [insertResult]: any = await db.query(
+            `
+            INSERT INTO records
+            (user_id, account_id, category_id, type, amount, remarks)
+            VALUES (?,?,?,?,?,?)
+            `,
+            [user_id, account_id, category_id, type, amount, remarks]
+        );
+        if (insertResult.affectedRows === 0) {
+            return res.status(400).json({ success: false, message: `建立紀錄失敗` })
+        }
+
+        const [newResult]: any = await db.query(
+            `
+            SELECT * FROM records WHERE id = ?
+            `,
+            [insertResult.insertId]
+        );
+        res.status(201).json({ success: true, message: "建立紀錄成功", data: newResult[0] });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "SERVER ERROR" });
+    }
+}
+
+export const getRecords = async (req: Request, res: Response) => {
+    try {
+        const { user_id } = req.query;
+        let query = `
+        SELECT 
+            r.type, 
+            r.amount, 
+            r.remarks, 
+            r.created_at, 
+            r.updated_at,
+            a.name AS account_name,
+            a.image_url AS account_image_url, 
+            a.balance AS account_balance,
+            c.name AS category_name, 
+            c.image_url AS category_image_url
+        FROM records r
+        LEFT JOIN accounts a ON r.account_id = a.id
+        LEFT JOIN categories c ON r.category_id = c.id
+        `
+        let params = []
+
+
+
+
+        if (user_id) {
+            query += ` WHERE user_id = ?`
+            params.push(user_id);
+        }
+
+
+        const [recordsResult]: any = await db.query(query, params);
+        if (recordsResult.length === 0) {
+            return res.status(404).json({ success: false, message: user_id ? `該帳號沒有紀錄` : `沒有紀錄` });
+        }
+
+        res.status(200).json({ success: true, message: `取得紀錄成功`, data: recordsResult });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "SERVER ERROR" });
+    }
+}
+
+
+export const getRecordsById = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const [recordResult]: any = await db.query(
+            ` SELECT 
+            r.type, 
+            r.amount, 
+            r.remarks, 
+            r.created_at, 
+            r.updated_at,
+            a.name AS account_name,
+            a.image_url AS account_image_url, 
+            a.balance AS account_balance,
+            c.name AS category_name, 
+            c.image_url AS category_image_url
+        FROM records r
+        LEFT JOIN accounts a ON r.account_id = a.id
+        LEFT JOIN categories c ON r.category_id = c.id
+        WHERE r.id = ?`,
+            [id]
+        )
+        if (recordResult.length === 0) {
+            return res.status(404).json({ success: false, message: `該紀錄不存在`, data: [] });
+        }
+
+        res.status(200).json({ success: true, message: "取得紀錄成功", data: recordResult[0] });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "SERVER ERROR" });
+    }
+}
+
+export const updateRecordById = async (req: Request, res: Response) => {
+    const bodyResult = updateRecordSchema.safeParse(req.body);
+    if (!bodyResult.success) {
+        return res.status(400).json({ success: false, message: `所輸入資料有誤` })
+    }
+    try {
+        const { id } = req.params;
+        const { account_id, category_id, type, amount, remarks } = bodyResult.data;
+
+        const [recordResult]: any = await db.query(
+            `
+            SELECT id FROM records WHERE id = ?
+            `,
+            [id]
+        );
+        if (recordResult.length === 0) {
+            return res.status(404).json({ success: false, message: `該紀錄不存在` });
+        }
+
+        const [updateResult]: any = await db.query(
+            `
+            UPDATE records
+            SET
+                account_id = COALESCE(?, account_id) ,
+                category_id = COALESCE(?, category_id),
+                type = COALESCE(?, type),
+                amount = COALESCE(?, amount),
+                remarks = COALESCE(?,remarks)
+            WHERE id = ?
+            `,
+            [account_id ?? null, category_id ?? null, type ?? null, amount ?? null, remarks ?? null, id]
+        );
+        if (updateResult.affectedRows === 0) {
+            return res.status(400).json({ success: false, message: `更新紀錄失敗` });
+        }
+
+        const [newResult]: any = await db.query(
+            `SELECT 
+                r.type, 
+                r.amount, 
+                r.remarks, 
+                r.created_at, 
+                r.updated_at,
+                a.name AS account_name,
+                a.image_url AS account_image_url, 
+                a.balance AS account_balance,
+                c.name AS category_name, 
+                c.image_url AS category_image_url
+            FROM records r
+            LEFT JOIN accounts a ON r.account_id = a.id
+            LEFT JOIN categories c ON r.category_id = c.id
+            WHERE r.id = ?`,
+            [id]
+        );
+        res.status(200).json({ success: true, message: `更新紀錄成功`, data: newResult[0] });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "SERVER ERROR" });
+    }
+}
+
+export const deleteRecordById = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const [recordResult]: any = await db.query(
+            `
+            SELECT 
+                id  
+            FROM records
+            WHERE id = ?
+            `,
+            [id]
+        );
+        if (recordResult.length === 0) {
+            return res.status(400).json({ success: false, message: `該紀錄不存在` });
+        }
+
+        const [deleteResult]: any = await db.query(
+            `
+            DELETE FROM records WHERE id = ?
+            `,
+            [id]
+        );
+        if (deleteResult.affectedRows === 0) {
+            return res.status(400).json({ success: false, message: `刪除紀錄失敗` });
+        }
+
+        res.status(200).json({ success: true, message: `刪除類別成功` });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "SERVER ERROR" });
+    }
+}
