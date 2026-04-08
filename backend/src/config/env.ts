@@ -6,7 +6,11 @@ const envSchema = z.object({
     DB_USER: z.string(),
     DB_PASSWORD: z.string(),
     DB_DATABASE: z.string(),
-    JWT_SECRET: z.string()
+    JWT_SECRET: z.string(),
+    AWS_ACCESS_KEY: z.string(),
+    AWS_SECRET_KEY: z.string(),
+    AWS_REGION: z.string(),
+    AWS_BUCKET: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

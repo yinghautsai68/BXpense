@@ -7,12 +7,14 @@ import categoriesRouter from './modules/categories/categories.routes';
 import recordsRouter from './modules/records/records.routes';
 import savingGoalsRouter from './modules/saving_goals/saving_goals.routes';
 import authRouter from './modules/auth/auth.routes';
+import uploadRouter from './modules/upload/upload.routes';
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 app.use('/api/auth', authRouter);
+app.use('/api/upload', uploadRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/accounts', accountsRouter);
 app.use('/api/categories', categoriesRouter);
