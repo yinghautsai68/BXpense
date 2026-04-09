@@ -1,4 +1,5 @@
-export type Record = {
+export type RecordType = {
+    id: number,
     type: string,
     amount: number,
     remarks: string,

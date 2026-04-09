@@ -1,12 +1,17 @@
-import type { Record } from "../types/records.type"
+import { Link } from "react-router-dom";
+import { useUtil } from "../context/UtilContext";
+import type { RecordType } from "../types/records.type";
+
 
 type ExpenseCardProps = {
-    record: Record
+    record: RecordType
 };
 
 const ExpenseCard = ({ record }: ExpenseCardProps) => {
+    const { formatDateTime } = useUtil();
+
     return (
-        <div className='flex flex-row justify-between items-center py-3 first:pt-0 last:pb-0 '>
+        <Link to={`/records/${record.id}`} className='flex flex-row justify-between items-center py-3 first:pt-0 last:pb-0 '>
             <div className='flex flex-row items-center gap-2'>
                 <img src={record.category_image_url} className='w-8 aspect-square bg-black' />
                 <div className="flex flex-col">
@@ -16,9 +21,9 @@ const ExpenseCard = ({ record }: ExpenseCardProps) => {
             </div>
             <div className='flex flex-col items-end'>
                 <span className="text-xs font-bold">-NT$ {record.amount}</span>
-                <span className="text-xs">{record.record_date}</span>
+                <span className="text-xs">{formatDateTime(record.record_date)}</span>
             </div>
-        </div >
+        </Link >
     )
 }
 

@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
 import ExpenseCard from '../components/ExpenseCard'
 import { useAuth } from '../context/AuthContext';
-import type { Record } from '../types/records.type';
+import type { RecordType } from '../types/records.type';
 import { getRecords } from '../services/records.service';
 import Card from '../components/Card';
+import { useUtil } from '../context/UtilContext';
 
 const Records = () => {
     const { token, user } = useAuth();
+    const { formatDateTime } = useUtil();
+
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [records, setRecords] = useState<Record[] | null>(null);
+    const [records, setRecords] = useState<Record<string, RecordType[]> | null>(null);
+
+
 
     useEffect(() => {
         if (!token || !user) {
@@ -50,17 +55,21 @@ const Records = () => {
             <div className='flex flex-col gap-3'>
 
                 {
-                    isLoading ? <span>...loading</span>
-                        : records ? <>
-                            < span > 2026年4月6日 週一</span>
-                            <Card className='flex flex-col  divide-y divide-gray-300 w-full bg-white rounded-lg'>
-                                {records.map((item, index) => {
-                                    return (<ExpenseCard key={index} record={item}></ExpenseCard>)
-                                })}
+                    isLoading ? (<span>...loading</span>)
+                        : records ? (
+                            Object.entries(records).map(([date, records]) => (
+                                <div key={date}>
+                                    <span>{date}</span>
+                                    <Card>
+                                        {records.map((record, index) => (
+                                            <ExpenseCard key={index} record={record}></ExpenseCard>
+                                        ))}
+                                    </Card>
+                                </div>
+                            ))
 
+                        )
 
-                            </Card>
-                        </>
                             :
                             <div className='flex flex-row justify-center items-center w-full h-10 bg-white rounded-lg'>
                                 <span>目前沒有紀錄</span>

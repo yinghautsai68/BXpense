@@ -42,6 +42,7 @@ export const getRecords = async (req: Request, res: Response) => {
         const { user_id } = req.query;
         let query = `
         SELECT 
+            r.id,
             r.type, 
             r.amount, 
             r.remarks, 
@@ -67,13 +68,26 @@ export const getRecords = async (req: Request, res: Response) => {
             params.push(user_id);
         }
 
-
         const [recordsResult]: any = await db.query(query, params);
         if (recordsResult.length === 0) {
             return res.status(404).json({ success: false, message: user_id ? `該帳號沒有紀錄` : `沒有紀錄` });
         }
 
-        res.status(200).json({ success: true, message: `取得紀錄成功`, data: recordsResult });
+        const grouped: any = {};
+        for (let i = 0; i < recordsResult.length; i++) {
+
+            const date = recordsResult[i].record_date.toISOString().split("T")[0];
+
+            if (!grouped[date]) {
+                grouped[date] = [];
+            }
+
+            grouped[date].push(recordsResult[i]);
+        }
+
+
+
+        res.status(200).json({ success: true, message: `取得紀錄成功`, data: grouped });
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "SERVER ERROR" });
