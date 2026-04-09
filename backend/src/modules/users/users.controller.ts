@@ -75,7 +75,7 @@ export const getUserById = async (req: Request, res: Response) => {
             return res.status(404).json({ success: false, message: `沒有使用者資料`, data: [] });
         }
 
-        res.status(200).json({ success: true, message: "取得使用者成功", data: userResult });
+        res.status(200).json({ success: true, message: "取得使用者成功", data: userResult[0] });
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "SERVER ERROR" });
