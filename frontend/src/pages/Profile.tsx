@@ -6,7 +6,8 @@ import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react'
 
 import type { User } from '../types/users.types'
-import { getUserData } from '../services/user.service'
+import { deleteUser, getUserData } from '../services/user.service'
+import toast from 'react-hot-toast'
 
 const Profile = () => {
     const { token, user } = useAuth();
@@ -15,11 +16,21 @@ const Profile = () => {
     const [error, setError] = useState<string | null>(null);
     const [userData, setUserData] = useState<User | null>(null);
 
+    const handleDeleteUser = async () => {
+        if (!user || !token) return;
+        try {
+            const result = await deleteUser(token, user.userId);
+            toast.success(result.message);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     useEffect(() => {
         if (!token || !user) {
             setIsLoading(false);
-            return
+            return;
         }
         const fetchUserData = async () => {
             try {
@@ -90,7 +101,9 @@ const Profile = () => {
             </Card>
 
             <SubTitle>其他</SubTitle>
-            <Card className='text-center text-rose-600'>刪除所有資料</Card>
+            <Card>
+                <p onClick={() => handleDeleteUser()} className='w-full text-center text-rose-600'>刪除所有資料</p>
+            </Card>
         </>
     )
 }

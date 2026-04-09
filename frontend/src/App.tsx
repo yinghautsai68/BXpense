@@ -4,11 +4,12 @@ import Register from "./pages/Register"
 import Records from "./pages/Records"
 import Layout from "./layout/Layout"
 import Analysis from "./pages/Analysis"
-import Savings from "./pages/Savings"
+import Accounts from "./pages/Accounts"
 import Record from "./pages/Record"
 import Profile from "./pages/Profile"
 import Categories from "./pages/Categories"
 import { Toaster } from "react-hot-toast"
+import Account from "./pages/Account"
 
 
 const App = () => {
@@ -21,7 +22,8 @@ const App = () => {
         <Route path='/register' element={<Register></Register>}></Route>
         <Route path='/records' element={<Layout><Records /></Layout>}></Route>
         <Route path='/analysis' element={<Layout><Analysis></Analysis></Layout>}></Route>
-        <Route path='/savings' element={<Layout><Savings></Savings></Layout>}></Route>
+        <Route path='/accounts/:id' element={<Account />}></Route>
+        <Route path='/accounts' element={<Layout><Accounts /> </Layout>}></Route>
         <Route path='/profile' element={<Layout><Profile></Profile></Layout>}></Route>
         <Route path='/record' element={<Record />}></Route>
         <Route path='/categories' element={<Categories />}></Route>

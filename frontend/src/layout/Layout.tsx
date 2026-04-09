@@ -15,7 +15,7 @@ const Layout = ({ children }: LayoutProps) => {
                     <NavLink to='/records'>紀錄</NavLink>
                     <NavLink to='/analysis'>分析</NavLink>
                     <NavLink to='/record' className='p-4 border'>+</NavLink>
-                    <NavLink to='/savings'>存錢</NavLink>
+                    <NavLink to='/accounts'>帳戶</NavLink>
                     <NavLink to='/profile'>我的</NavLink>
                 </div>
             </div>

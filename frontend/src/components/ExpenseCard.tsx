@@ -1,6 +1,6 @@
 const ExpenseCard = () => {
     return (
-        <div className='flex flex-row justify-between items-center  py-2 '>
+        <div className='flex flex-row justify-between items-center py-3 first:pt-0 last:pb-0 '>
             <div className='flex flex-row items-center gap-2'>
                 <div className='w-8 aspect-square bg-black'></div>
                 <span className="text-sm font-bold">餐飲</span>
