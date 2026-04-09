@@ -12,8 +12,7 @@ CREATE TABLE users(
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 INSERT INTO users (username, password, image_url)
-VALUES ("蔡英豪", "placeholder", "placeholder"),
-	("Pani", "placeholder", "placeholder");
+VALUES ("pani", "$2b$10$TXTi84Riik9D4I9lVuGPP.6XUEuq7qQJBCzRaB.HkrMGJmPlmZTNG", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775711545283-SnapInsta.to_642800192_17954497605067836_5123513395128580387_n.jpg");
 
 CREATE TABLE accounts(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -30,7 +29,7 @@ CREATE TABLE accounts(
 
 );
 INSERT INTO accounts (user_id, name, image_url, balance)
-VALUES (1, "現金", "placeholder", 500000);
+VALUES (1, "現金", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png", 500000);
 
 CREATE TABLE categories(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -44,18 +43,20 @@ CREATE TABLE categories(
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 INSERT INTO categories (user_id, name, image_url)
-VALUES (1, "食物", "placeholder");
+VALUES (1, "食物", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png");
 
 
 CREATE TABLE records(
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     account_id INT,
+    
     category_id INT,
     type ENUM('expense', 'income') NOT NULL,
     amount INT NOT NULL,
     remarks VARCHAR(255),
-
+	record_date DATETIME,
+    
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -63,8 +64,14 @@ CREATE TABLE records(
     FOREIGN KEY (account_id) REFERENCES accounts(id),
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
-INSERT INTO records (user_id, account_id, category_id, type, amount, remarks)
-VALUES ( 1, 1, 1, "expense", 100, "午餐");
+INSERT INTO records (user_id, account_id, category_id, type, amount, remarks, record_date)
+VALUES ( 1, 1, 1, "expense", 100, "午餐","2026-04-01 18:30:30"),
+( 1, 1, 1, "expense", 100, "午餐","2026-04-01 18:30:30"),
+( 1, 1, 1, "expense", 100, "午餐","2026-04-01 18:30:30"),
+( 1, 1, 1, "expense", 100, "午餐","2026-04-01 18:30:30"),
+( 1, 1, 1, "expense", 100, "午餐","2026-04-01 18:30:30"),
+( 1, 1, 1, "expense", 100, "午餐","2026-04-01 18:30:30");
+
 
 
 CREATE TABLE saving_goals(

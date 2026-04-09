@@ -10,15 +10,15 @@ export const createRecord = async (req: Request, res: Response) => {
         return res.status(400).json({ success: false, message: `輸入資料錯誤` });
     }
     try {
-        const { user_id, account_id, category_id, type, amount, remarks } = bodyResult.data;
+        const { user_id, account_id, category_id, type, amount, remarks, record_date } = bodyResult.data;
 
         const [insertResult]: any = await db.query(
             `
             INSERT INTO records
-            (user_id, account_id, category_id, type, amount, remarks)
-            VALUES (?,?,?,?,?,?)
+            (user_id, account_id, category_id, type, amount, remarks, record_date)
+            VALUES (?,?,?,?,?,?,?)
             `,
-            [user_id, account_id, category_id, type, amount, remarks]
+            [user_id, account_id, category_id, type, amount, remarks, record_date]
         );
         if (insertResult.affectedRows === 0) {
             return res.status(400).json({ success: false, message: `建立紀錄失敗` })
@@ -45,6 +45,7 @@ export const getRecords = async (req: Request, res: Response) => {
             r.type, 
             r.amount, 
             r.remarks, 
+            r.record_date,
             r.created_at, 
             r.updated_at,
             a.name AS account_name,
@@ -62,7 +63,7 @@ export const getRecords = async (req: Request, res: Response) => {
 
 
         if (user_id) {
-            query += ` WHERE user_id = ?`
+            query += ` WHERE r.user_id = ?`
             params.push(user_id);
         }
 
@@ -88,6 +89,7 @@ export const getRecordsById = async (req: Request, res: Response) => {
             r.type, 
             r.amount, 
             r.remarks, 
+            r.record_date,
             r.created_at, 
             r.updated_at,
             a.name AS account_name,
@@ -119,7 +121,7 @@ export const updateRecordById = async (req: Request, res: Response) => {
     }
     try {
         const { id } = req.params;
-        const { account_id, category_id, type, amount, remarks } = bodyResult.data;
+        const { account_id, category_id, type, amount, remarks, record_date } = bodyResult.data;
 
         const [recordResult]: any = await db.query(
             `
@@ -139,10 +141,11 @@ export const updateRecordById = async (req: Request, res: Response) => {
                 category_id = COALESCE(?, category_id),
                 type = COALESCE(?, type),
                 amount = COALESCE(?, amount),
-                remarks = COALESCE(?,remarks)
+                remarks = COALESCE(?,remarks),
+                record_date = COALESCE(?, record_date)
             WHERE id = ?
             `,
-            [account_id ?? null, category_id ?? null, type ?? null, amount ?? null, remarks ?? null, id]
+            [account_id ?? null, category_id ?? null, type ?? null, amount ?? null, remarks ?? null, record_date ?? null, id]
         );
         if (updateResult.affectedRows === 0) {
             return res.status(400).json({ success: false, message: `更新紀錄失敗` });

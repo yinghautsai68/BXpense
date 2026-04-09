@@ -36,6 +36,7 @@ const Profile = () => {
             try {
                 setIsLoading(true);
                 const data = await getUserData(token, user.userId);
+                console.log(data);
                 setUserData(data);
             } catch (error) {
                 console.error(error);
