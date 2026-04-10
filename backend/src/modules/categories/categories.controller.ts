@@ -45,7 +45,7 @@ export const getCategories = async (req: Request, res: Response) => {
         let params = []
 
         if (user_id) {
-            query += ` WHERE user_id = ?`
+            query += ` WHERE user_id IS NULL OR user_id = ?`
             params.push(user_id);
         }
 

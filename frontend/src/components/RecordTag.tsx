@@ -1,10 +1,15 @@
-import React from 'react'
+import { categoryZhTW } from '../constants/categoryZhTw'
+import type { CategoryType } from '../types/categories.type'
 
-const RecordTag = () => {
+type RecordTagProps = {
+    onClick: () => void,
+    category: CategoryType
+}
+const RecordTag = ({ onClick, category }: RecordTagProps) => {
     return (
-        <div className='flex flex-col items-center'>
-            <div className='w-full aspect-square bg-green-500'></div>
-            <span className='text-xs'>Tag-name</span>
+        <div onClick={onClick} className='flex flex-col items-center'>
+            <img src={category.image_url} className='w-full p-2 aspect-square border border-gray-400 rounded-xl' />
+            <span className='text-xs'>{categoryZhTW[category.name] || category.name}</span>
         </div>
     )
 }

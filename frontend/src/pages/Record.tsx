@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import Card from "../components/Card"
 import Information from "../components/Information"
 import { Title } from "../components/Typography"
@@ -14,6 +14,8 @@ const Record = () => {
     const { token } = useAuth();
     const { id } = useParams();
     const { formatDateTime } = useUtil();
+    const navigate = useNavigate();
+
 
     const [record, setRecord] = useState<RecordType | null>(null);
     useEffect(() => {
@@ -73,7 +75,7 @@ const Record = () => {
                 <div className="w-5 aspect-square bg-black"></div>
 
                 <div className="flex flex-row items-center gap-2">
-                    <div className="w-5 aspect-square bg-black"></div>
+                    <div onClick={() => navigate(`/add/${id}`)} className="w-5 aspect-square bg-black"></div>
                     <div onClick={() => setShowDeleteModal(true)} className="w-5 aspect-square bg-black"></div>
                 </div>
 

@@ -34,6 +34,7 @@ VALUES (1, "現金", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products
 CREATE TABLE categories(
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
+
     name VARCHAR(255) NOT NULL,
     image_url VARCHAR(255),
 
@@ -42,8 +43,28 @@ CREATE TABLE categories(
 
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
-INSERT INTO categories (user_id, name, image_url)
-VALUES (1, "食物", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png");
+INSERT INTO categories (name, image_url)
+VALUES ("wifi_bill", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-wifi-bill.png"),
+( "water_bill", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/cateogry-water-bill.png"),
+( "electric_bill", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-electric-bill.png"),
+(true, "rent_bill", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-rent-bill.png"),
+(true, "bag", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-bag.png"),
+(true, "clothes", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-clothes.png"),
+(true, "cosmetics", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-cosmetics.png"),
+(true, "travel", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-travel.png"),
+(true, "entertainment", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-entertainment.png"),
+(true, "game", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-game.png"),
+(true, "workout", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-workout.png"),
+(true, "education", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-education.png"),
+(true, "phone", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-phone.png"),
+(true, "meat", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-meat.png"),
+(true, "fruit", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-fruit.png"),
+(true, "vegetable", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-vegetable.png"),
+(true, "social", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-social.png"),
+(true, "daily_use", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-daily-use.png"),
+(true, "transportation", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-transporation.png"),
+(true, "drink", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-drink.png"),
+(true, "food", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/category-icons/category-food.png");
 
 
 CREATE TABLE records(
@@ -65,12 +86,12 @@ CREATE TABLE records(
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 INSERT INTO records (user_id, account_id, category_id, type, amount, remarks, record_date)
-VALUES ( 1, 1, 1, "expense", 100, "午餐","2026-04-01 18:30:30"),
-( 1, 1, 1, "expense", 100, "午餐","2026-04-01 18:30:30"),
-( 1, 1, 1, "expense", 100, "午餐","2026-04-01 18:30:30"),
-( 1, 1, 1, "expense", 100, "午餐","2026-04-01 18:30:30"),
-( 1, 1, 1, "expense", 100, "午餐","2026-04-01 18:30:30"),
-( 1, 1, 1, "expense", 100, "午餐","2026-04-01 18:30:30");
+VALUES ( 1, 1, 1, "expense", 100, "午餐","2026-04-01 12:30:30"),
+( 1, 1, 1, "expense", 50, "晚餐","2026-04-01 18:30:30"),
+( 1, 1, 1, "expense", 200, "消夜","2026-04-01 19:30:30"),
+( 1, 1, 1, "expense", 300, "Snacks","2026-04-01 20:30:30"),
+( 1, 1, 1, "expense", 100, "午餐","2026-04-02 12:30:30"),
+( 1, 1, 1, "expense", 150, "晚餐","2026-04-02 18:30:30");
 
 
 

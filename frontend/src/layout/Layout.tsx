@@ -14,7 +14,7 @@ const Layout = ({ children }: LayoutProps) => {
                 <div className='fixed left-0 bottom-0  flex flex-row justify-between items-center w-full px-5 py-5 bg-white'>
                     <NavLink to='/records'>紀錄</NavLink>
                     <NavLink to='/analysis'>分析</NavLink>
-                    <NavLink to='/record' className='p-4 border'>+</NavLink>
+                    <NavLink to='/records/new' className='p-4 border'>+</NavLink>
                     <NavLink to='/accounts'>帳戶</NavLink>
                     <NavLink to='/profile'>我的</NavLink>
                 </div>

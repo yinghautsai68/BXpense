@@ -108,7 +108,7 @@ const Register = () => {
 
 
 
-                <Button>註冊</Button>
+                <Button className="bg-yellow-500 hover:bg-yellow-700">註冊</Button>
             </form>
         </div>
     )

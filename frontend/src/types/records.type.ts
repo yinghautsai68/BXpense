@@ -12,3 +12,12 @@ export type RecordType = {
     category_name: string,
     category_image_url: string
 };
+
+export type createRecordType = {
+    account_id: number,
+    category_id: number,
+    type: 'expense' | 'income',
+    amount: number,
+    remarks: string,
+    record_date: string,
+};

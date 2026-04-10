@@ -57,9 +57,9 @@ const Login = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-full px-4" >
-                <FormInput onChange={handleChange} label="使用者" name="username" value={loginFormData.username} type="text" placeholder="example_123" />
-                <FormInput onChange={handleChange} label="密碼" name="password" value={loginFormData.password} type="password" placeholder="********" />
-                <Button>登入</Button>
+                <FormInput onChange={handleChange} label="使用者" name="username" value={loginFormData.username} type="text" placeholder="example_123" required={true} />
+                <FormInput onChange={handleChange} label="密碼" name="password" value={loginFormData.password} type="password" placeholder="********" required={true} />
+                <Button className="bg-yellow-500 hover:bg-yellow-700">登入</Button>
             </form>
 
             <div className="fixed left-0 bottom-0 w-full h-[20%] bg-yellow-400">
