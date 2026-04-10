@@ -87,6 +87,34 @@ const RecordForm = () => {
 
     useEffect(() => { console.log(recordForm) }, [recordForm])
 
+
+
+    const [expression, setExpression] = useState("");
+    const appendValue = (val: string) => {
+        setExpression((prev) => prev + val);
+    };
+    const handleDelete = () => {
+        setExpression((prev) => prev.slice(0, -1));
+    };
+    const add = () => setExpression((prev) => prev + "+");
+    const subtract = () => setExpression((prev) => prev + "-");
+    const multiply = () => setExpression((prev) => prev + "*");
+    const divide = () => setExpression((prev) => prev + "/");
+    const handleClear = () => {
+        setExpression("");
+    }
+    const calculate = () => {
+        try {
+            const result = eval(expression);
+            setExpression(String(result));
+        } catch {
+            setExpression("Error");
+        }
+    };
+
+    const handlecalc = () => {
+        setRecordForm((prev) => ({ ...prev, amount: Number(expression) }));
+    }
     return (
         <div className='flex flex-col gap-2 w-full h-screen pt-10 bg-yellow-400'>
             <span className='px-10'>X</span>
@@ -102,7 +130,6 @@ const RecordForm = () => {
 
                         {categories && categories.map((category, index) => (
                             <RecordTag onClick={() => console.log(`selected ${category.id}`)} key={index} category={category} ></RecordTag>
-
                         ))}
 
                     </div>
@@ -113,31 +140,35 @@ const RecordForm = () => {
                             <Button onClick={() => navigate('/select-account')} className='px-2 border border-black bg-white text-xs'>{selectedAccountName}</Button>
                             <Button className='px-2 border border-black bg-white text-xs'>date</Button>
                         </div>
-                        <Button className='px-4 bg-yellow-500 text-xs'>新增</Button>
+                        <Button onClick={handlecalc} className='px-4 bg-yellow-500 text-xs'>新增</Button>
                     </div>
-                    <input type="" name='amount' value={recordForm.amount} onChange={handleChange} placeholder='0' className='w-full px-4 py-2  bg-white rounded-lg text-end' />
-                    <div className='flex flex-row gap-1 w-full'>
+                    <input type="" name='amount' value={expression} placeholder='0' className='w-full px-4 py-2  bg-white rounded-lg text-end' />
+                    <div className='flex fl     ex-row gap-1 w-full'>
                         <div className='grid grid-cols-3 gap-1 w-[70%]'>
-                            <CalculatorButton>7</CalculatorButton>
-                            <CalculatorButton>8</CalculatorButton>
-                            <CalculatorButton>9</CalculatorButton>
-                            <CalculatorButton>4</CalculatorButton>
-                            <CalculatorButton>5</CalculatorButton>
-                            <CalculatorButton>6</CalculatorButton>
-                            <CalculatorButton>1</CalculatorButton>
-                            <CalculatorButton>2</CalculatorButton>
-                            <CalculatorButton>3</CalculatorButton>
-                            <CalculatorButton>.</CalculatorButton>
-                            <CalculatorButton>0</CalculatorButton>
+                            <CalculatorButton onClick={() => appendValue("7")}>7</CalculatorButton>
+                            <CalculatorButton onClick={() => appendValue("8")}>8</CalculatorButton>
+                            <CalculatorButton onClick={() => appendValue("9")}>9</CalculatorButton>
+
+                            <CalculatorButton onClick={() => appendValue("4")}>4</CalculatorButton>
+                            <CalculatorButton onClick={() => appendValue("5")}>5</CalculatorButton>
+                            <CalculatorButton onClick={() => appendValue("6")}>6</CalculatorButton>
+
+                            <CalculatorButton onClick={() => appendValue("1")}>1</CalculatorButton>
+                            <CalculatorButton onClick={() => appendValue("2")}>2</CalculatorButton>
+                            <CalculatorButton onClick={() => appendValue("3")}>3</CalculatorButton>
+
+                            <CalculatorButton onClick={() => appendValue("0")}>0</CalculatorButton>
+                            <CalculatorButton onClick={() => appendValue(".")}>.</CalculatorButton>
                             <CalculatorButton>今天</CalculatorButton>
                         </div>
                         <div className='grid gird-cols-2 gap-1 w-[30%]  '>
-                            <CalculatorButton className='col-span-2'>delete</CalculatorButton>
-                            <CalculatorButton>+</CalculatorButton>
-                            <CalculatorButton>*</CalculatorButton>
-                            <CalculatorButton>-</CalculatorButton>
-                            <CalculatorButton>/</CalculatorButton>
-                            <CalculatorButton className='col-span-2 bg-yellow-400'>//</CalculatorButton>
+                            <CalculatorButton onClick={handleDelete} >delete</CalculatorButton>
+                            <CalculatorButton onClick={handleClear} >AC</CalculatorButton>
+                            <CalculatorButton onClick={add}>+</CalculatorButton>
+                            <CalculatorButton onClick={multiply}>*</CalculatorButton>
+                            <CalculatorButton onClick={subtract}>-</CalculatorButton>
+                            <CalculatorButton onClick={divide}>/</CalculatorButton>
+                            <CalculatorButton onClick={calculate} className='col-span-2 bg-yellow-400'>=</CalculatorButton>
                         </div>
                     </div>
                 </div>
