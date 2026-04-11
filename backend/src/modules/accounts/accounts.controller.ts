@@ -1,15 +1,18 @@
 import type { Request, Response } from "express";
 import { db } from "../../config/db";
-import bcrypt from 'bcrypt';
 import { createAccountSchema, updateAccountSchema } from "./accounts.schema";
-import { success } from "zod";
+
 export const createAccount = async (req: Request, res: Response) => {
+    const { user_id } = (req as any).user;
+    if (!user_id) {
+        return res.status(400).json({ success: false, message: "沒有資格" });
+    }
     const bodyResult = createAccountSchema.safeParse(req.body);
     if (!bodyResult.success) {
         return res.status(400).json({ success: false, message: "輸入資料錯誤" });
     }
     try {
-        const { user_id, name, image_url, balance } = bodyResult.data;
+        const { name, image_url, balance } = bodyResult.data;
 
         const [insertResult]: any = await db.query(
             `

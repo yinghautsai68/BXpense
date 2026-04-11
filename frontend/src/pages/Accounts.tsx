@@ -4,9 +4,12 @@ import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react';
 import type { AccountType } from '../types/accounts.type';
 import { getAccounts } from '../services/accounts.service';
+import Button from '../components/Button';
+import { useNavigate } from 'react-router-dom';
 
 const Accounts = () => {
     const { token, user } = useAuth();
+    const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -74,8 +77,11 @@ const Accounts = () => {
                 </div>
             </div>
 
-            <div className='flex flex-col'>
-                <SubTitle>儲蓄帳戶</SubTitle>
+            <div className='flex flex-col gap-2'>
+                <div className='flex flex-row justify-between items-center'>
+                    <SubTitle>儲蓄帳戶</SubTitle>
+                    <Button onClick={() => navigate('/accounts/new')} className='p-1 bg-yellow-500'>新增帳戶</Button>
+                </div>
                 <div className='flex flex-col gap-2'>
                     {
                         isLoading ?
@@ -91,7 +97,7 @@ const Accounts = () => {
                     }
 
                 </div>
-            </div>
+            </div >
         </ >
     )
 }

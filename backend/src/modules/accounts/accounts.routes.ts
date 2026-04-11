@@ -1,9 +1,10 @@
 import express from 'express';
 import { createAccount, getAccounts, getAccountsById, updateAccountById, deleteAccountById } from './accounts.controller';
+import { protect } from '../../middleware/authenticate';
 
 const accountsRouter = express.Router();
 
-accountsRouter.post('/', createAccount);
+accountsRouter.post('/', protect, createAccount);
 accountsRouter.get('/', getAccounts);
 accountsRouter.get('/:id', getAccountsById);
 accountsRouter.patch('/:id', updateAccountById);

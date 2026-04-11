@@ -12,6 +12,7 @@ import Categories from "./pages/Categories"
 import { Toaster } from "react-hot-toast"
 import RecordForm from "./pages/RecordForm"
 import AccountSelector from "./pages/AccountSelector"
+import NewAccount from "./pages/NewAccount"
 
 
 
@@ -29,8 +30,11 @@ const App = () => {
         <Route path='/records/:id/edit' element={<RecordForm />}></Route>
         <Route path='/select-account' element={<AccountSelector></AccountSelector>}></Route>
         <Route path='/analysis' element={<Layout><Analysis></Analysis></Layout>}></Route>
-        <Route path='/accounts/:id' element={<Account />}></Route>
+
         <Route path='/accounts' element={<Layout><Accounts /> </Layout>}></Route>
+        <Route path='/accounts/new' element={<NewAccount></NewAccount>}></Route>
+        <Route path='/accounts/:id' element={<Account />}></Route>
+
         <Route path='/profile' element={<Layout><Profile></Profile></Layout>}></Route>
         <Route path='/categories' element={<Categories />}></Route>
       </Routes>
