@@ -1,5 +1,5 @@
 import type { ApiResponse } from "../types/api.types";
-import type { createRecordType, RecordType } from "../types/records.type";
+import type { createRecordType, MonthlySummaryType, RecordType } from "../types/records.type";
 
 export const createRecord = async (token: string, record: createRecordType) => {
     try {
@@ -58,6 +58,26 @@ export const getRecordById = async (token: string, recordId: string) => {
             throw new Error(result.message);
         }
         return result.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+export const getMonthlySummary = async (token: string, userId: string) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records/monthly-summary`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const result: ApiResponse<MonthlySummaryType[]> = await response.json();
+        if (!result.success) {
+            throw new Error;
+        }
+        return result.data;
+
     } catch (error) {
         console.error(error);
         throw error;

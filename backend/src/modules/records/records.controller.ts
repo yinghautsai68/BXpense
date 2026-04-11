@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { db } from "../../config/db";
 import { createRecordSchema, updateRecordSchema } from "./records.schema";
+import { success } from "zod/mini";
 
 
 
@@ -126,6 +127,32 @@ export const getRecordsById = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "SERVER ERROR" });
+    }
+}
+
+export const getMonthlySummary = async (req: Request, res: Response) => {
+    try {
+        const { user_id } = (req as any).user;
+
+        const [result]: any = await db.query(
+            `SELECT 
+                DATE_FORMAT(record_date, '%Y-%m') AS month, 
+                SUM(CASE WHEN type ='income' THEN amount ELSE 0 END) AS income,
+                SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) AS expense
+            FROM records
+            WHERE user_id = ?
+            GROUP BY month
+            ORDER BY month`,
+            [user_id]
+        )
+        if (result.length === 0) {
+            return res.status(404).json({ success: false, message: `沒有資料`, data: [] });
+        }
+
+        res.status(200).json({ success: true, message: `取得月成功`, data: result });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: `SERVER ERROR` });
     }
 }
 

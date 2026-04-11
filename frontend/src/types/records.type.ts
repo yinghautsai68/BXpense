@@ -22,3 +22,9 @@ export type createRecordType = {
     remarks: string,
     record_date: string,
 };
+
+export type MonthlySummaryType = {
+    month: string,
+    income: number,
+    expense: number
+}
