@@ -50,12 +50,7 @@ const Record = () => {
         }
     }
     return (
-        <div className="flex flex-col gap-4 w-full h-screen px-3 pt-3 bg-gray-200">
-            <div className="flex flex-row justify-between items-center">
-                <p className="w-full">previous</p>
-                <Title className="w-full">Record</Title>
-                <div className="w-full"></div>
-            </div>
+        <>
             <Card>
                 <div className="flex flex-row justify-between items-center border-b-2 border-dashed border-gray-300">
                     <div className="flex flex-row items-center gap-2 pb-4">
@@ -92,7 +87,7 @@ const Record = () => {
                     </div>
                 )}
             </div>
-        </div>
+        </>
     )
 }
 

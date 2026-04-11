@@ -13,6 +13,7 @@ import { Toaster } from "react-hot-toast"
 import RecordForm from "./pages/RecordForm"
 import AccountSelector from "./pages/AccountSelector"
 import NewAccount from "./pages/NewAccount"
+import DetailLayout from "./layout/DetailLayout"
 
 
 
@@ -26,17 +27,17 @@ const App = () => {
         <Route path='/register' element={<Register></Register>}></Route>
         <Route path='/records' element={<Layout><Records /></Layout>}></Route>
         <Route path='/records/new' element={<RecordForm />}></Route>
-        <Route path='/records/:id' element={<Record />}></Route>
+        <Route path='/records/:id' element={<DetailLayout title="檢視紀錄"><Record /></DetailLayout>}></Route>
         <Route path='/records/:id/edit' element={<RecordForm />}></Route>
         <Route path='/select-account' element={<AccountSelector></AccountSelector>}></Route>
         <Route path='/analysis' element={<Layout><Analysis></Analysis></Layout>}></Route>
 
         <Route path='/accounts' element={<Layout><Accounts /> </Layout>}></Route>
-        <Route path='/accounts/new' element={<NewAccount></NewAccount>}></Route>
+        <Route path='/accounts/new' element={<DetailLayout title="新增帳戶"><NewAccount /></DetailLayout>}></Route>
         <Route path='/accounts/:id' element={<Account />}></Route>
 
         <Route path='/profile' element={<Layout><Profile></Profile></Layout>}></Route>
-        <Route path='/categories' element={<Categories />}></Route>
+        <Route path='/categories' element={<DetailLayout title="類別自定義"><Categories /></DetailLayout>}></Route>
       </Routes>
     </>
 

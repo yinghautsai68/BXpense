@@ -67,13 +67,7 @@ const NewAccount = () => {
         }
     }
     return (
-        <div className="flex flex-col gap-3 w-full h-screen px-3 py-10 bg-gray-100">
-            <div className="flex flex-row   items-center w-full">
-                <span onClick={() => navigate('/accounts')} className="w-full cursor-pointer ">back</span>
-                <SubTitle className="w-full text-center font-medium">新增帳戶</SubTitle>
-                <div className="w-full"></div>
-
-            </div>
+        <>
             <Card >
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <Information label="帳戶名稱" name='name' value={accountForm.name} type="text" onChange={handleChange}></Information>
@@ -82,7 +76,7 @@ const NewAccount = () => {
                     <Button className="bg-yellow-500">新增</Button>
                 </form>
             </Card>
-        </div>
+        </>
     )
 }
 

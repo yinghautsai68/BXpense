@@ -1,16 +1,9 @@
-import React from 'react'
-import { Title } from '../components/Typography'
 import Card from '../components/Card'
 import Icon from '../components/Icon'
 
 const Categories = () => {
     return (
-        <div className='flex flex-col gap-10 w-full h-screen pt-10'>
-            <div className='flex flex-row justify-between items-center px-2 '>
-                <span>back</span>
-                <Title>類別自定義</Title>
-                <span>back</span>
-            </div>
+        <div className='flex flex-col bg-white'>
             <div className='grid grid-cols-2'>
                 <span className='text-center'>收入</span>
                 <span className='text-center'>收入</span>
