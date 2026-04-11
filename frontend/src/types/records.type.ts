@@ -14,6 +14,7 @@ export type RecordType = {
 };
 
 export type createRecordType = {
+    user_id: number,
     account_id: number,
     category_id: number,
     type: 'expense' | 'income',

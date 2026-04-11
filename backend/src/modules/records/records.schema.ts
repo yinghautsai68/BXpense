@@ -6,7 +6,7 @@ export const createRecordSchema = z.object({
     category_id: z.number(),
     type: z.enum(['expense', 'income']),
     amount: z.number(),
-    remarks: z.string(),
+    remarks: z.string().optional(),
     record_date: z.string()
 });
 

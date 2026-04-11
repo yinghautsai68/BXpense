@@ -7,6 +7,7 @@ import { createRecordSchema, updateRecordSchema } from "./records.schema";
 export const createRecord = async (req: Request, res: Response) => {
     const bodyResult = createRecordSchema.safeParse(req.body);
     if (!bodyResult.success) {
+        console.log(bodyResult.error.format());
         return res.status(400).json({ success: false, message: `輸入資料錯誤` });
     }
     try {
