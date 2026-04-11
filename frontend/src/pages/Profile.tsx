@@ -1,13 +1,15 @@
 import Card from '../components/Card'
 import { SubTitle } from '../components/Typography'
 import RecordTag from '../components/RecordTag'
-import { Link } from 'react-router-dom'
+import { Link, useAsyncError } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react'
 
 import type { User } from '../types/users.types'
 import { deleteUser, getUserData } from '../services/user.service'
 import toast from 'react-hot-toast'
+import type { CategoryType } from '../types/categories.type'
+import { getCategories } from '../services/categories.service'
 
 const Profile = () => {
     const { token, user } = useAuth();
@@ -15,17 +17,8 @@ const Profile = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [userData, setUserData] = useState<User | null>(null);
+    const [categories, setCategories] = useState<CategoryType[] | null>(null);
 
-    const handleDeleteUser = async () => {
-        if (!user || !token) return;
-        try {
-            const result = await deleteUser(token, user.userId);
-            toast.success(result.message);
-
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     useEffect(() => {
         if (!token || !user) {
@@ -47,6 +40,33 @@ const Profile = () => {
         }
         fetchUserData();
     }, [token, user]);
+
+    useEffect(() => {
+        if (!token || !user) {
+            return;
+        }
+        const fetchCategories = async () => {
+            try {
+                const data = await getCategories(token, user.userId);
+                console.log(data);
+                setCategories(data);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchCategories();
+    }, [token, user]);
+
+    const handleDeleteUser = async () => {
+        if (!user || !token) return;
+        try {
+            const result = await deleteUser(token, user.userId);
+            toast.success(result.message);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     if (isLoading) return <p>載入中...</p>;
     if (error) return <p className="text-red-500">{error}</p>;
@@ -91,11 +111,9 @@ const Profile = () => {
             </div>
             <Card className='grid grid-cols-4 gap-5'>
                 {
-                    [...Array(9)].map((_, index) => {
-                        return (
-                            <RecordTag key={index}></RecordTag>
-                        )
-                    })
+                    categories?.map((category, index) => (
+                        <RecordTag key={index} category={category}></RecordTag>
+                    ))
                 }
 
 

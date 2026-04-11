@@ -9,7 +9,7 @@ export const getCategories = async (token: string, userId: string) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        const result: ApiResponse<CategoryType> = await response.json();
+        const result: ApiResponse<CategoryType[]> = await response.json();
         if (!result.success) {
             throw new Error(result.message);
         }

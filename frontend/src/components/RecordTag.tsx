@@ -1,9 +1,9 @@
-import { categoryZhTW } from '../constants/categoryZhTw'
+import { categoryZhTW } from '../constants/categoryZhTW'
 import type { CategoryType } from '../types/categories.type'
 
 type RecordTagProps = {
-    onClick: () => void,
-    isSelected: boolean,
+    onClick?: () => void,
+    isSelected?: boolean,
     className?: string,
     category: CategoryType
 }
