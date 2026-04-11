@@ -59,6 +59,7 @@ export const getRecords = async (req: Request, res: Response) => {
         FROM records r
         LEFT JOIN accounts a ON r.account_id = a.id
         LEFT JOIN categories c ON r.category_id = c.id
+  
         `
         let params = []
 
@@ -69,6 +70,8 @@ export const getRecords = async (req: Request, res: Response) => {
             query += ` WHERE r.user_id = ?`
             params.push(user_id);
         }
+
+        query += ' ORDER BY record_date DESC'
 
         const [recordsResult]: any = await db.query(query, params);
         if (recordsResult.length === 0) {
