@@ -77,7 +77,7 @@ export const getRecords = async (req: Request, res: Response) => {
         const grouped: any = {};
         for (let i = 0; i < recordsResult.length; i++) {
 
-            const date = recordsResult[i].record_date.toISOString().split("T")[0];
+            const date = new Date(recordsResult[i].record_date).toLocaleDateString('en-CA');
 
             if (!grouped[date]) {
                 grouped[date] = [];
