@@ -2,7 +2,7 @@ import { SubTitle } from '../components/Typography'
 import SavingsCard from '../components/SavingsCard'
 import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react';
-import type { Account } from '../types/accounts.type';
+import type { AccountType } from '../types/accounts.type';
 import { getAccounts } from '../services/accounts.service';
 
 const Accounts = () => {
@@ -10,7 +10,7 @@ const Accounts = () => {
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [accounts, setAccounts] = useState<Account[] | null>(null);
+    const [accounts, setAccounts] = useState<AccountType[] | null>(null);
 
 
     useEffect(() => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ExpenseCard from '../components/ExpenseCard'
 import Card from '../components/Card'
-import type { Account } from '../types/accounts.type'
+import type { AccountType } from '../types/accounts.type'
 import { useAuth } from '../context/AuthContext'
 import { getAccountById } from '../services/accounts.service'
 import { useParams } from 'react-router-dom'
@@ -11,7 +11,7 @@ const Account = () => {
     const { id } = useParams();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [account, setAccount] = useState<Account | null>(null);
+    const [account, setAccount] = useState<AccountType | null>(null);
 
     useEffect(() => {
         if (!token || !id) {
