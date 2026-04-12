@@ -1,14 +1,17 @@
 export type RecordType = {
     id: number,
-    type: string,
+    user_id: number,
+    type: 'expense' | 'income',
     amount: number,
     remarks: string,
     record_date: string,
     created_at: string,
     updated_at: string,
+    account_id: number,
     account_name: string,
     account_image_url: string,
     account_balance: number,
+    category_id: number,
     category_name: string,
     category_image_url: string
 };

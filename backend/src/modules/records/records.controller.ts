@@ -45,15 +45,18 @@ export const getRecords = async (req: Request, res: Response) => {
         let query = `
         SELECT 
             r.id,
+            r.user_id,
             r.type, 
             r.amount, 
             r.remarks, 
             r.record_date,
             r.created_at, 
             r.updated_at,
+            a.id AS account_id,
             a.name AS account_name,
             a.image_url AS account_image_url, 
             a.balance AS account_balance,
+            c.id AS category_id,
             c.name AS category_name, 
             c.image_url AS category_image_url
         FROM records r
@@ -104,16 +107,19 @@ export const getRecordsById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const [recordResult]: any = await db.query(
-            ` SELECT 
+            ` SELECT
+            r.user_id,
             r.type, 
             r.amount, 
             r.remarks, 
             r.record_date,
             r.created_at, 
             r.updated_at,
+            a.id AS account_id,
             a.name AS account_name,
             a.image_url AS account_image_url, 
             a.balance AS account_balance,
+            c.id AS category_id,
             c.name AS category_name, 
             c.image_url AS category_image_url
         FROM records r

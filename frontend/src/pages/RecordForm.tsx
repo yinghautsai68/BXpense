@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import type { createRecordType, RecordType } from '../types/records.type'
-import { createRecord } from '../services/records.service'
+import { createRecord, getRecordById } from '../services/records.service'
 import Button from '../components/Button'
 import { useUtil } from '../context/UtilContext'
 import { getCategories } from '../services/categories.service'
@@ -43,6 +43,31 @@ const RecordForm = () => {
 
         setRecordForm((prev) => ({ ...prev, [name]: name === 'amount' ? Number(value) : value }));
     }
+
+    useEffect(() => {
+        if (!token || !id) {
+            return;
+        }
+
+        const fetchRecordById = async () => {
+            try {
+                const data = await getRecordById(token, id);
+                setRecordForm({
+                    user_id: data.user_id,
+                    account_id: data.account_id,
+                    category_id: data.category_id,
+                    type: data.type,
+                    amount: data.amount,
+                    remarks: data.remarks,
+                    record_date: data.record_date.slice(0, 16)
+                });
+                setExpression(String(data.amount));
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchRecordById();
+    }, [token, id])
 
 
     const [record, setRecord] = useState<RecordType | null>(null);
@@ -110,35 +135,32 @@ const RecordForm = () => {
 
 
     const [expression, setExpression] = useState("");
-
-    const handleDelete = () => {
-        setExpression((prev) => prev.slice(0, -1));
-    };
-    const add = () => setExpression((prev) => prev + "+");
-    const subtract = () => setExpression((prev) => prev + "-");
-    const multiply = () => setExpression((prev) => prev + "*");
-    const divide = () => setExpression((prev) => prev + "/");
-    const handleClear = () => {
-        setExpression("");
-    }
     const appendValue = (val: string) => {
         setExpression((prev) => prev + val);
     };
     useEffect(() => {
-        if (expression === "") {
-            return;
-        }
-        const parsedExpression = Number(expression);
-
-        if (!isNaN(parsedExpression)) {
-            setRecordForm((prev) => ({ ...prev, amount: parsedExpression }));
-        }
-
+        setRecordForm((prev) => ({ ...prev, amount: Number(expression) }));
     }, [expression]);
+    const handleDelete = () => {
+        setExpression((prev) => prev.slice(0, -1));
+    };
+    const handleClear = () => {
+        setExpression("");
+    }
+
+
+    const add = () => setExpression((prev) => prev + "+");
+    const subtract = () => setExpression((prev) => prev + "-");
+    const multiply = () => setExpression((prev) => prev + "*");
+    const divide = () => setExpression((prev) => prev + "/");
+
+
     const calculate = () => {
         try {
             const result = eval(expression);
+
             setExpression(String(result));
+
             setRecordForm((prev) => ({ ...prev, amount: Number(result) }));
         } catch {
             setExpression("Error");
@@ -154,6 +176,10 @@ const RecordForm = () => {
             toast.error("請選擇類別");
             return;
         }
+        if (isNaN(recordForm.amount)) {
+            toast.error("請輸入合理金額");
+            return;
+        }
         if (recordForm.amount <= 0) {
             toast.error("請輸入合理金額");
             return;
@@ -164,6 +190,7 @@ const RecordForm = () => {
             }
             const data = await createRecord(token, recordForm);
             console.log(data);
+            toast.success("新增紀錄成功");
         } catch (error) {
             console.error(error);
         }
