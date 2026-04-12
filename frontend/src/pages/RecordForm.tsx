@@ -14,8 +14,11 @@ import { useRecordStore } from '../store/recordStore'
 import { getAccounts } from '../services/accounts.service'
 import type { AccountType } from '../types/accounts.type'
 import toast from 'react-hot-toast'
+import AccountSelector from './AccountSelector'
 
 const RecordForm = () => {
+    const [isSelectingAccount, setIsSelectingAccount] = useState<boolean>(false);
+
     const { token, user } = useAuth();
     const { id } = useParams();
     const navigate = useNavigate();
@@ -224,6 +227,8 @@ const RecordForm = () => {
                         </div>
                     </div>
                 </div>
+
+
             </div>
         </div >
     )

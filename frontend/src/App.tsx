@@ -29,7 +29,6 @@ const App = () => {
         <Route path='/records/new' element={<RecordForm />}></Route>
         <Route path='/records/:id' element={<DetailLayout title="檢視紀錄"><Record /></DetailLayout>}></Route>
         <Route path='/records/:id/edit' element={<RecordForm />}></Route>
-        <Route path='/select-account' element={<AccountSelector></AccountSelector>}></Route>
         <Route path='/analysis' element={<Layout><Analysis></Analysis></Layout>}></Route>
 
         <Route path='/accounts' element={<Layout><Accounts /> </Layout>}></Route>

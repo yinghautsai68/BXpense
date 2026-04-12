@@ -70,7 +70,7 @@ const Record = () => {
                 <div className="w-5 aspect-square bg-black"></div>
 
                 <div className="flex flex-row items-center gap-2">
-                    <div onClick={() => navigate(`/add/${id}`)} className="w-5 aspect-square bg-black"></div>
+                    <div onClick={() => navigate(`/records/${id}/edit`)} className="w-5 aspect-square bg-black"></div>
                     <div onClick={() => setShowDeleteModal(true)} className="w-5 aspect-square bg-black"></div>
                 </div>
 
