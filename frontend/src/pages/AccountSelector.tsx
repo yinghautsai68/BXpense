@@ -34,15 +34,16 @@ const AccountSelector = () => {
         navigate(-1);
     }
 
+
     return (
-        <div className='px-4 py-5'>
+        <>
             <span>儲蓄帳戶</span>
             <div className='flex flex-col '>
                 {accounts?.map((account, index) => (
                     <SavingsCard key={index} onClick={() => handleSelect(account)} account={account} />
                 ))}
             </div>
-        </div>
+        </>
     )
 }
 

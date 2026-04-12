@@ -15,13 +15,14 @@ import { getAccounts } from '../services/accounts.service'
 import type { AccountType } from '../types/accounts.type'
 import toast from 'react-hot-toast'
 import AccountSelector from './AccountSelector'
+import Modal from '../components/Modal'
 
 const RecordForm = () => {
-    const [isSelectingAccount, setIsSelectingAccount] = useState<boolean>(false);
-
     const { token, user } = useAuth();
     const { id } = useParams();
     const navigate = useNavigate();
+
+    const [accountModalOpen, setAccountModalOpen] = useState<boolean>(false);
 
     const { formatDateTime } = useUtil();
     const currentDateTime = () => {
@@ -189,7 +190,7 @@ const RecordForm = () => {
                 <div className='fixed left-0 bottom-0 flex flex-col gap-2 w-full h-[40%] px-2 pt-2 bg-gray-300 rounded-t-xl'>
                     <div className='flex flex-row justify-between items-center'>
                         <div className='flex flex-row items-center gap-1 '>
-                            <Button onClick={() => navigate('/select-account')} className='px-1 border border-black bg-white text-xs'>{selectedAccountName || '選擇帳戶'}</Button>
+                            <Button onClick={() => setAccountModalOpen(true)} className='px-1 border border-black bg-white text-xs'>{selectedAccountName || '選擇帳戶'}</Button>
                             <input type='datetime-local' name='record_date' value={recordForm.record_date} onChange={handleChange} className='px-1 py-1 border border-black rounded-lg bg-white text-xs' />
                         </div>
                         <Button onClick={() => handleSubmit()} className='px-4 bg-yellow-500 text-xs'>新增</Button>
@@ -227,9 +228,18 @@ const RecordForm = () => {
                         </div>
                     </div>
                 </div>
-
-
             </div>
+
+
+
+            {
+                accountModalOpen &&
+                (
+                    <Modal isOpen={accountModalOpen} onClose={() => setAccountModalOpen(false)}>
+                        <AccountSelector />
+                    </Modal>
+                )
+            }
         </div >
     )
 }
