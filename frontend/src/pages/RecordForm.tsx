@@ -231,15 +231,9 @@ const RecordForm = () => {
             </div>
 
 
-
-            {
-                accountModalOpen &&
-                (
-                    <Modal isOpen={accountModalOpen} onClose={() => setAccountModalOpen(false)}>
-                        <AccountSelector onClose={() => setAccountModalOpen(false)} />
-                    </Modal>
-                )
-            }
+            <Modal isOpen={accountModalOpen} onClose={() => setAccountModalOpen(false)}>
+                <AccountSelector onClose={() => setAccountModalOpen(false)} />
+            </Modal>
         </div >
     )
 }
