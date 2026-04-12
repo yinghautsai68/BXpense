@@ -10,7 +10,6 @@ import Button from '../components/Button'
 import { useUtil } from '../context/UtilContext'
 import { getCategories } from '../services/categories.service'
 import type { CategoryType } from '../types/categories.type'
-import { useRecordStore } from '../store/recordStore'
 import { getAccounts } from '../services/accounts.service'
 import type { AccountType } from '../types/accounts.type'
 import toast from 'react-hot-toast'
@@ -30,19 +29,20 @@ const RecordForm = () => {
         return now.toISOString().slice(0, 16); // YYYY-MM-DDTHH:mm
     };
 
-    const { recordForm, setRecordForm } = useRecordStore();
+    const [recordForm, setRecordForm] = useState<createRecordType>({
+        user_id: 0,
+        account_id: 0,
+        category_id: 0,
+        type: 'expense',
+        amount: 0,
+        remarks: '',
+        record_date: new Date().toISOString().slice(0, 16),
+    })
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
-        setRecordForm({ [name]: name === 'amount' ? Number(value) : value });
+        setRecordForm((prev) => ({ ...prev, [name]: name === 'amount' ? Number(value) : value }));
     }
-    const selectedAccountId = useRecordStore((state) => state.selectedAccountId);
-    useEffect(() => {
-        if (!selectedAccountId) {
-            return;
-        }
-        setRecordForm(({ account_id: selectedAccountId }));
-    }, [selectedAccountId]);
 
 
     const [record, setRecord] = useState<RecordType | null>(null);
@@ -52,7 +52,7 @@ const RecordForm = () => {
         if (!user) {
             return;
         }
-        setRecordForm({ user_id: Number(user.userId) });
+        setRecordForm((prev) => ({ ...prev, user_id: Number(user.userId) }));
 
     }, [user]);
 
@@ -88,19 +88,21 @@ const RecordForm = () => {
         }
         fetchAccounts();
 
-    }, [token, id]);
+    }, [token, user]);
 
     const handleTypeSelect = (newType: 'expense' | 'income') => {
-        setRecordForm({ type: newType });
+        setRecordForm((prev) => ({ ...prev, type: newType }));
     }
 
 
-
-    const selectedAccount = accounts?.find((account) => account.id === selectedAccountId);
+    const handleSelectAccount = (accountId: number) => {
+        setRecordForm((prev) => ({ ...prev, account_id: accountId }));
+    };
+    const selectedAccount = accounts?.find((account) => account.id === recordForm.account_id);
     const selectedAccountName = selectedAccount?.name;
 
     const handleSelectCategory = (categoryId: number) => {
-        setRecordForm({ category_id: categoryId });
+        setRecordForm((prev) => ({ ...prev, category_id: categoryId }));
     }
 
     useEffect(() => { console.log(recordForm) }, [recordForm])
@@ -129,7 +131,7 @@ const RecordForm = () => {
         const parsedExpression = Number(expression);
 
         if (!isNaN(parsedExpression)) {
-            setRecordForm({ amount: parsedExpression });
+            setRecordForm((prev) => ({ ...prev, amount: parsedExpression }));
         }
 
     }, [expression]);
@@ -137,7 +139,7 @@ const RecordForm = () => {
         try {
             const result = eval(expression);
             setExpression(String(result));
-            setRecordForm({ amount: Number(result) });
+            setRecordForm((prev) => ({ ...prev, amount: Number(result) }));
         } catch {
             setExpression("Error");
         }
@@ -232,7 +234,7 @@ const RecordForm = () => {
 
 
             <Modal isOpen={accountModalOpen} onClose={() => setAccountModalOpen(false)}>
-                <AccountSelector onClose={() => setAccountModalOpen(false)} />
+                <AccountSelector onClose={() => setAccountModalOpen(false)} handleSelectAccount={handleSelectAccount} />
             </Modal>
         </div >
     )

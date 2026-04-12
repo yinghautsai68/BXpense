@@ -3,14 +3,12 @@ import { useAuth } from '../context/AuthContext'
 import type { AccountType } from '../types/accounts.type';
 import { getAccounts } from '../services/accounts.service';
 import SavingsCard from '../components/SavingsCard';
-import { useRecordStore } from '../store/recordStore';
-import { useNavigate } from 'react-router-dom';
-
 type AccountSelectorProps = {
-    onClose: () => void
+    onClose: () => void,
+    handleSelectAccount: (accountId: number) => void,
 }
 
-const AccountSelector = ({ onClose }: AccountSelectorProps) => {
+const AccountSelector = ({ onClose, handleSelectAccount }: AccountSelectorProps) => {
     const { token, user } = useAuth();
     const [accounts, setAccounts] = useState<AccountType[] | null>(null)
 
@@ -31,9 +29,9 @@ const AccountSelector = ({ onClose }: AccountSelectorProps) => {
     }, [token, user?.userId]);
 
 
-    const setSelectedAccountId = useRecordStore((state) => state.setSelectedAccountId);
+
     const handleSelect = (account: AccountType) => {
-        setSelectedAccountId(account.id);
+        handleSelectAccount(account.id);
         onClose();
     }
 
