@@ -6,10 +6,13 @@ import SavingsCard from '../components/SavingsCard';
 import { useRecordStore } from '../store/recordStore';
 import { useNavigate } from 'react-router-dom';
 
-const AccountSelector = () => {
+type AccountSelectorProps = {
+    onClose: () => void
+}
+
+const AccountSelector = ({ onClose }: AccountSelectorProps) => {
     const { token, user } = useAuth();
     const [accounts, setAccounts] = useState<AccountType[] | null>(null)
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (!token || !user) {
@@ -31,7 +34,7 @@ const AccountSelector = () => {
     const setSelectedAccountId = useRecordStore((state) => state.setSelectedAccountId);
     const handleSelect = (account: AccountType) => {
         setSelectedAccountId(account.id);
-        navigate(-1);
+        onClose();
     }
 
 

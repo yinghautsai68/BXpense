@@ -236,7 +236,7 @@ const RecordForm = () => {
                 accountModalOpen &&
                 (
                     <Modal isOpen={accountModalOpen} onClose={() => setAccountModalOpen(false)}>
-                        <AccountSelector />
+                        <AccountSelector onClose={() => setAccountModalOpen(false)} />
                     </Modal>
                 )
             }
