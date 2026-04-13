@@ -66,8 +66,6 @@ export const getRecords = async (req: Request, res: Response) => {
         let params = []
 
 
-
-
         if (user_id) {
             query += ` WHERE r.user_id = ?`
             params.push(user_id);

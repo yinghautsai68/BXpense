@@ -9,7 +9,7 @@ import { getRecordsByAccountId } from '../services/records.service'
 import type { RecordType } from '../types/records.type'
 import { useUtil } from '../context/UtilContext'
 
-
+import IconDelete from '../assets/icons/icon-delete.png'
 import IconEdit from '../assets/icons/icon-edit.png'
 const Account = () => {
     const { token, user } = useAuth();
@@ -73,7 +73,10 @@ const Account = () => {
                 </div>
                 {/*  <img src={account?.image_url} alt="" className='w-24 h-full object-cover' />*/}
                 <div className='relative w-[50%] overflow-hidden'>
-                    <img onClick={() => navigate(`/accounts/${account?.id}/edit`)} src={IconEdit} className='absolute right-3 top-3 w-5 aspect-square cursor-pointer' />
+                    <div className='absolute right-3 top-3 flex flex-row items-center gap-2 '>
+                        <img src={IconDelete} alt="icon-delete" className='w-5 aspect-square cursor-pointer' />
+                        <img onClick={() => navigate(`/accounts/${account?.id}/edit`)} src={IconEdit} alt='icon-delete' className='w-5 aspect-square cursor-pointer' />
+                    </div>
                     <div className='absolute right-0 top-10 translate-x-1/2 w-60 h-60 bg-yellow-500 rounded-full z-50'></div>
                 </div>
             </div>
@@ -101,8 +104,6 @@ const Account = () => {
                         </div>
                     ))
                 }
-
-
             </div>
         </div >
     )
