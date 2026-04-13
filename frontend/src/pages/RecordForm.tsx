@@ -230,7 +230,7 @@ const RecordForm = () => {
                             <Button onClick={() => setAccountModalOpen(true)} className='px-1 border border-black bg-white text-xs'>{selectedAccountName || '選擇帳戶'}</Button>
                             <input type='datetime-local' name='record_date' value={recordForm.record_date} onChange={handleChange} className='px-1 py-1 border border-black rounded-lg bg-white text-xs' />
                         </div>
-                        <Button onClick={() => handleSubmit()} className='px-4 bg-yellow-500 text-xs'>新增</Button>
+                        <Button onClick={() => handleSubmit()} className='px-4 bg-yellow-500 text-xs'>{id ? '更新' : '新增'}</Button>
                     </div>
                     <div className='flex flex-row justify-between items-center w-full bg-white rounded-lg'>
                         <input type="text" name='remarks' value={recordForm.remarks} onChange={handleChange} placeholder='備註' className='w-full px-2' />
