@@ -30,7 +30,8 @@ CREATE TABLE accounts(
 
 );
 INSERT INTO accounts (user_id, name, image_url, balance)
-VALUES (1, "現金", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png", 500000);
+VALUES (1, "現金", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png", 500000),
+(1, "銀行", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png", 500000);
 
 CREATE TABLE categories(
     id INT AUTO_INCREMENT PRIMARY KEY,

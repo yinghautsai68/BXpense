@@ -57,10 +57,13 @@ export const getAccounts = async (req: Request, res: Response) => {
             `
         const queryParams: any[] = [];
 
+
         if (user_id) {
-            query += ` WHERE a.user_id = ?`
+            query += ` WHERE a.user_id = ? AND deleted_at IS NULL`
             queryParams.push(user_id);
         }
+
+
 
         query += ` GROUP BY a.id`;
 
@@ -95,7 +98,8 @@ export const getAccountsById = async (req: Request, res: Response) => {
                 ) AS final_balance
             FROM accounts a
             LEFT JOIN records r ON a.id = r.account_id  
-            WHERE a.id = ?`,
+            WHERE a.id = ? AND deleted_at IS NULL
+            GROUP BY a.id`,
             [id]
         )
         if (accountResult.length === 0) {
