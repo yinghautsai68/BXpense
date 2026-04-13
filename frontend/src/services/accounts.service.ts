@@ -107,3 +107,23 @@ export const updateAccountById = async (token: string, accountId: string, accoun
         throw error;
     }
 }
+
+export const deleteAccountById = async (token: string, accountId: string) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/accounts/${accountId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const result = await response.json();
+        if (!result.success) {
+            throw new Error(result.message);
+        }
+
+        return result.message;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}

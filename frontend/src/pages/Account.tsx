@@ -3,7 +3,7 @@ import ExpenseCard from '../components/ExpenseCard'
 import Card from '../components/Card'
 import type { AccountType } from '../types/accounts.type'
 import { useAuth } from '../context/AuthContext'
-import { getAccountById } from '../services/accounts.service'
+import { deleteAccountById, getAccountById } from '../services/accounts.service'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getRecordsByAccountId } from '../services/records.service'
 import type { RecordType } from '../types/records.type'
@@ -57,7 +57,19 @@ const Account = () => {
             }
         }
         fetchRecordsByAccountId();
-    }, [token, user])
+    }, [token, user]);
+
+    const handleDelete = async (accountId: string) => {
+        if (!token) {
+            return;
+        }
+        try {
+            const message = await deleteAccountById(token, accountId);
+            console.log(message);
+        } catch (error) {
+            console.error(error);
+        }
+    }
     return (
         <div className='flex flex-col gap-7 bg-neutral-200 w-full '>
             <div className='flex flex-row justify-between items-stretch w-full  bg-white rounded-xl'>
@@ -74,7 +86,7 @@ const Account = () => {
                 {/*  <img src={account?.image_url} alt="" className='w-24 h-full object-cover' />*/}
                 <div className='relative w-[50%] overflow-hidden'>
                     <div className='absolute right-3 top-3 flex flex-row items-center gap-2 '>
-                        <img src={IconDelete} alt="icon-delete" className='w-5 aspect-square cursor-pointer' />
+                        <img onClick={() => handleDelete(String(account?.id))} src={IconDelete} alt="icon-delete" className='w-5 aspect-square cursor-pointer' />
                         <img onClick={() => navigate(`/accounts/${account?.id}/edit`)} src={IconEdit} alt='icon-delete' className='w-5 aspect-square cursor-pointer' />
                     </div>
                     <div className='absolute right-0 top-10 translate-x-1/2 w-60 h-60 bg-yellow-500 rounded-full z-50'></div>
