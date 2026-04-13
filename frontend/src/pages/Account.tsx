@@ -44,12 +44,12 @@ const Account = () => {
 
 
     useEffect(() => {
-        if (!token || !user) {
+        if (!token || !id) {
             return;
         }
         const fetchRecordsByAccountId = async () => {
             try {
-                const data = await getRecordsByAccountId(token, user?.userId);
+                const data = await getRecordsByAccountId(token, id);
                 console.log(data);
                 setRecords(data);
             } catch (error) {
@@ -68,7 +68,7 @@ const Account = () => {
                     </div>
                     <div className='flex flex-col'>
                         <span className='text-sm'>當前餘額</span>
-                        <span className='text-2xl font-bold'>NTD {account?.balance}</span>
+                        <span className='text-2xl font-bold'>NTD {account?.final_balance}</span>
                     </div>
                 </div>
                 {/*  <img src={account?.image_url} alt="" className='w-24 h-full object-cover' />*/}

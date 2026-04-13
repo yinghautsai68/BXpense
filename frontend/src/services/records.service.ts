@@ -64,9 +64,9 @@ export const getRecordById = async (token: string, recordId: string) => {
     }
 }
 
-export const getRecordsByAccountId = async (token: string, userId: string) => {
+export const getRecordsByAccountId = async (token: string, accountId: string) => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records?user_id=${userId}`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records?account_id=${accountId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
