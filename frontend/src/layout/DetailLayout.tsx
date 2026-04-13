@@ -7,7 +7,7 @@ type DetailLayoutProps = {
 };
 const DetailLayout = ({ title, children }: DetailLayoutProps) => {
     return (
-        <div className="flex flex-col gap-4 w-full h-screen px-3 pt-3 bg-gray-200">
+        <div className="flex flex-col gap-4 w-full min-h-screen px-3 pt-3 pb-5 bg-gray-200">
             <div className="flex flex-row justify-between items-center">
                 <p className="w-full">previous</p>
                 <Title className="w-full text-center">{title}</Title>
