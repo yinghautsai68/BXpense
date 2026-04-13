@@ -41,18 +41,21 @@ const Account = () => {
                 <span>賬戶</span>
                 <span>=</span>
             </div>
-            <div className='flex flex-row justify-between w-full p-4 bg-white rounded-xl'>
-                <div className='flex flex-col justify-center gap-2'>
+            <div className='flex flex-row justify-between w-full bg-white rounded-xl'>
+                <div className='flex flex-col justify-center gap-2 pl-4 py-4'>
                     <div className='flex flex-row items-center gap-2'>
-                        <img src={account?.image_url} alt="" className='w-12 aspect-square rounded-lg object-cover' />
-                        <span>{account?.name}</span>
+                        <img src={account?.image_url} alt="" className='w-12 aspect-square border rounded-xl object-cover' />
+                        <span className='font-bold'>{account?.name}</span>
                     </div>
-                    <div className='flex flex-col gap-2'>
-                        <span>當前餘額</span>
+                    <div className='flex flex-col'>
+                        <span className='text-sm'>當前餘額</span>
                         <span className='text-2xl font-bold'>NTD {account?.balance}</span>
                     </div>
                 </div>
-                <img src={account?.image_url} alt="" className='w-24' />
+                {/*  <img src={account?.image_url} alt="" className='w-24 h-full object-cover' />*/}
+                <div className='relative w-[50%] h-full overflow-hidden'>
+                    <div className='absolute right-0 top-10 translate-x-1/2    w-60 h-60 bg-yellow-500 rounded-full'></div>
+                </div>
             </div>
 
             <div className='flex flex-col'>
