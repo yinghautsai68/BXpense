@@ -1,6 +1,6 @@
 import RecordTag from '../components/RecordTag'
 import CalculatorButton from '../components/CalculatorButton'
-import { SubTitle } from '../components/Typography'
+import { SubTitle, Title } from '../components/Typography'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -207,11 +207,14 @@ const RecordForm = () => {
 
     return (
         <div className='flex flex-col gap-2 w-full h-screen pt-10 bg-yellow-400'>
-            <span className='px-10'>X</span>
-            <div className='flex flex-col gap-4 pt-4 rounded-t-xl bg-white'>
+            <div className='flex flex-row items-center gap-5 pl-5'>
+                <span className='text-2xl font-bold text-white'>x</span>
+                <Title className='text-white'>{id ? '更新紀錄' : '新增紀錄'}</Title>
+            </div>
+            <div className='flex flex-col gap-4 pt-4 pb-8 rounded-t-xl bg-neutral-100'>
                 <div className='flex flex-row justify-center items-center gap-10 w-full'>
-                    <span onClick={() => handleTypeSelect('expense')} className={`px-2 py-1  ${recordForm.type === 'expense' ? 'bg-yellow-500 rounded-lg' : ''} transition-all duration-300 `}>支出</span>
-                    <span onClick={() => handleTypeSelect('income')} className={`px-2 py-1 ${recordForm.type === 'income' ? ' bg-yellow-500 rounded-lg' : ''} transition-all duration-300 `}>收入</span>
+                    <span onClick={() => handleTypeSelect('expense')} className={`px-2 py-1  ${recordForm.type === 'expense' ? 'bg-yellow-500 rounded-lg text-white' : ''} transition-all duration-300 `}>支出</span>
+                    <span onClick={() => handleTypeSelect('income')} className={`px-2 py-1 ${recordForm.type === 'income' ? ' bg-yellow-500 rounded-lg text-white' : ''} transition-all duration-300 `}>收入</span>
                 </div>
 
                 <div className='flex flex-col gap-2 w-full  px-4 pb-60'>
@@ -224,20 +227,22 @@ const RecordForm = () => {
 
                     </div>
                 </div>
-                <div className='fixed left-0 bottom-0 flex flex-col gap-2 w-full h-[40%] px-2 pt-2 bg-gray-300 rounded-t-xl'>
-                    <div className='flex flex-row justify-between items-center'>
+
+                {/*Calculator*/}
+                <div className='fixed left-0 bottom-0 flex flex-col gap-2 w-full h-[43%] px-2 pt-3 pb-3 bg-white rounded-t-xl'>
+                    <div className='flex flex-row justify-between items-center w-full'>
                         <div className='flex flex-row items-center gap-1 '>
                             <Button onClick={() => setAccountModalOpen(true)} className='px-1 border border-black bg-white text-xs'>{selectedAccountName || '選擇帳戶'}</Button>
                             <input type='datetime-local' name='record_date' value={recordForm.record_date} onChange={handleChange} className='px-1 py-1 border border-black rounded-lg bg-white text-xs' />
                         </div>
-                        <Button onClick={() => handleSubmit()} className='px-4 bg-yellow-500 text-xs'>{id ? '更新' : '新增'}</Button>
+                        <Button onClick={() => handleSubmit()} className='px-4 bg-yellow-500 text-sm font-medium text-white'>{id ? '更新' : '新增'}</Button>
                     </div>
-                    <div className='flex flex-row justify-between items-center w-full bg-white rounded-lg'>
-                        <input type="text" name='remarks' value={recordForm.remarks} onChange={handleChange} placeholder='備註' className='w-full px-2' />
-                        <input type="text" name='amount' value={expression} onChange={handleChange} placeholder='0' className='w-full px-2 text-end' />
+                    <div className='flex flex-row divide-x-2 divide-gray-300 justify-between items-center w-full py-2 bg-gray-100 rounded-lg'>
+                        <input type="text" name='remarks' value={recordForm.remarks} onChange={handleChange} placeholder='備註' className='w-full px-2 focus:outline-none' />
+                        <input type="text" name='amount' value={expression} onChange={handleChange} placeholder='0' className='w-full px-2 text-end focus:outline-none' />
                     </div>
-                    <div className='flex fl     ex-row gap-1 w-full'>
-                        <div className='grid grid-cols-3 gap-1 w-[70%]'>
+                    <div className='flex flex-row gap-1 w-full'>
+                        <div className='grid grid-cols-3 gap-1 flex-2 '>
                             <CalculatorButton onClick={() => appendValue("7")}>7</CalculatorButton>
                             <CalculatorButton onClick={() => appendValue("8")}>8</CalculatorButton>
                             <CalculatorButton onClick={() => appendValue("9")}>9</CalculatorButton>
@@ -254,14 +259,14 @@ const RecordForm = () => {
                             <CalculatorButton onClick={() => appendValue(".")}>.</CalculatorButton>
                             <CalculatorButton>今天</CalculatorButton>
                         </div>
-                        <div className='grid gird-cols-2 gap-1 w-[30%]  '>
+                        <div className='grid gird-cols-2 gap-1 flex-1  '>
                             <CalculatorButton onClick={handleDelete} >delete</CalculatorButton>
                             <CalculatorButton onClick={handleClear} >AC</CalculatorButton>
                             <CalculatorButton onClick={add}>+</CalculatorButton>
-                            <CalculatorButton onClick={multiply}>*</CalculatorButton>
+                            <CalculatorButton onClick={multiply}>x</CalculatorButton>
                             <CalculatorButton onClick={subtract}>-</CalculatorButton>
                             <CalculatorButton onClick={divide}>/</CalculatorButton>
-                            <CalculatorButton onClick={calculate} className='col-span-2 bg-yellow-400'>=</CalculatorButton>
+                            <CalculatorButton onClick={calculate} className='col-span-2 bg-yellow-400 text-white  font-bold'>=</CalculatorButton>
                         </div>
                     </div>
                 </div>

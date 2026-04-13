@@ -7,7 +7,7 @@ type CalculatorButtonProps = {
 }
 const CalculatorButton = ({ onClick, className, children }: CalculatorButtonProps) => {
     return (
-        <div onClick={onClick} className={`${className} flex flex-row justify-center items-center  px-2  py-2 bg-white rounded-lg text-center text-sm cursor-pointer`}>
+        <div onClick={onClick} className={`flex flex-row justify-center items-center  px-2  py-2 border border-gray-200 rounded-lg bg-white text-center text-sm font-medium cursor-pointer ${className}`}>
             {children}
         </div>
     )
