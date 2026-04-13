@@ -64,6 +64,26 @@ export const getRecordById = async (token: string, recordId: string) => {
     }
 }
 
+export const getRecordsByAccountId = async (token: string, userId: string) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records?user_id=${userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const result = await response.json();
+        if (!result.success) {
+            throw new Error(result.message);
+        }
+
+        return result.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 export const getMonthlySummary = async (token: string, userId: string) => {
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records/monthly-summary`, {

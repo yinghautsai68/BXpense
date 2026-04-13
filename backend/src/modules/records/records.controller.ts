@@ -41,7 +41,7 @@ export const createRecord = async (req: Request, res: Response) => {
 
 export const getRecords = async (req: Request, res: Response) => {
     try {
-        const { user_id } = req.query;
+        const { user_id, account_id } = req.query;
         let query = `
         SELECT 
             r.id,
@@ -62,7 +62,6 @@ export const getRecords = async (req: Request, res: Response) => {
         FROM records r
         LEFT JOIN accounts a ON r.account_id = a.id
         LEFT JOIN categories c ON r.category_id = c.id
-  
         `
         let params = []
 
@@ -72,6 +71,11 @@ export const getRecords = async (req: Request, res: Response) => {
         if (user_id) {
             query += ` WHERE r.user_id = ?`
             params.push(user_id);
+        }
+
+        if (account_id) {
+            query += ' WHERE r.account_id = ?';
+            params.push(account_id);
         }
 
         query += ' ORDER BY record_date DESC'
@@ -138,6 +142,7 @@ export const getRecordsById = async (req: Request, res: Response) => {
         res.status(500).json({ success: false, message: "SERVER ERROR" });
     }
 }
+
 
 export const getMonthlySummary = async (req: Request, res: Response) => {
     try {
