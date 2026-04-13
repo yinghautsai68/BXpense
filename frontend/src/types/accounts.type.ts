@@ -4,9 +4,11 @@ export type AccountType = {
     name: string,
     image_url: string,
     balance: number,
+    final_balance: string,
     created_at: string,
     updated_at: string
 };
+
 
 export type CreateAccountType = {
     name: string,
