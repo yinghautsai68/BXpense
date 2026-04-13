@@ -64,9 +64,10 @@ const Account = () => {
                     </div>
                 </div>
                 <Card className='flex flex-col   divide-y divide-gray-300'>
+                    {/*  <ExpenseCard></ExpenseCard>
                     <ExpenseCard></ExpenseCard>
-                    <ExpenseCard></ExpenseCard>
-                    <ExpenseCard></ExpenseCard>
+                    <ExpenseCard></ExpenseCard> */}
+
                 </Card>
 
             </div>

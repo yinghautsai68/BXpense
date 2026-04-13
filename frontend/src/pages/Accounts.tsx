@@ -100,9 +100,9 @@ const Accounts = () => {
                         isLoading ?
                             <div className="h-16 bg-gray-300 rounded animate-pulse"></div>
                             :
-                            accounts?.map((item, index) => {
+                            accounts?.map((account, index) => {
                                 return (
-                                    <SavingsCard key={index} account={item}></SavingsCard>
+                                    <SavingsCard key={index} onClick={() => navigate(`/accounts/${account.id}`)} account={account} ></SavingsCard>
 
                                 )
                             })
