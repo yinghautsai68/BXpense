@@ -40,20 +40,29 @@ export const getAccounts = async (req: Request, res: Response) => {
 
         let query =
             `SELECT 
-                id,
-                user_id,
-                name,
-                image_url,
-                balance,
-                created_at,
-                updated_at
-            FROM accounts`
+                a.id,
+                a.user_id,
+                a.name,
+                a.image_url,
+                a.balance,
+                a.created_at,
+                a.updated_at,
+                (
+                    a.balance 
+                    + SUM(CASE WHEN r.type = 'income' THEN r.amount ELSE 0 END)
+                    - SUM(CASE WHEN r.type = 'expense' THEN r.amount ELSE 0 END)
+                ) AS final_balance
+            FROM accounts a
+            LEFT JOIN records r ON a.id = r.account_id
+            `
         const queryParams: any[] = [];
 
         if (user_id) {
-            query += ` WHERE user_id = ?`
+            query += ` WHERE a.user_id = ?`
             queryParams.push(user_id);
         }
+
+        query += ` GROUP BY a.id`;
 
         const [accountsResult]: any = await db.query(query, queryParams);
 
@@ -72,15 +81,21 @@ export const getAccountsById = async (req: Request, res: Response) => {
         const { id } = req.params;
         const [accountResult]: any = await db.query(
             `SELECT 
-                id,
-                user_id,
-                name,
-                image_url,
-                balance,
-                created_at,
-                updated_at
-            FROM accounts
-            WHERE id = ?`,
+                a.id,
+                a.user_id,
+                a.name,
+                a.image_url,
+                a.balance,
+                a.created_at,
+                a.updated_at,
+                ( 
+                    a.balance 
+                    + SUM(CASE WHEN r.type = 'income' THEN r.amount ELSE 0 END ) 
+                    - SUM(CASE WHEN r.type = 'expense' THEN r.amount ELSE 0 END) 
+                ) AS final_balance
+            FROM accounts a
+            LEFT JOIN records r ON a.id = r.account_id  
+            WHERE a.id = ?`,
             [id]
         )
         if (accountResult.length === 0) {
