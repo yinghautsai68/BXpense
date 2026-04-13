@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react"
 import Card from "../components/Card"
 import Information from "../components/Information"
-import { createAccountSchema, type CreateAccountType } from "../schemas/accounts.schema";
+import { createAccountSchema, updateAccountSchema, type CreateAccountType } from "../schemas/accounts.schema";
 import { uploadImage } from "../services/upload.service"
 import { useAuth } from "../context/AuthContext"
-import { createAccount } from "../services/accounts.service"
+import { createAccount, getAccountById, updateAccountById } from "../services/accounts.service"
 import Button from "../components/Button"
 import toast from "react-hot-toast"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
+import { updateRecordById } from "../services/records.service";
 
 
 const AccountForm = () => {
     const { token } = useAuth();
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const [accountForm, setAccountForm] = useState<CreateAccountType>({
@@ -20,6 +22,28 @@ const AccountForm = () => {
         balance: 0
     });
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!token || !id) {
+            return;
+        }
+        const fetchAccountById = async () => {
+            try {
+                const data = await getAccountById(token, id);
+                console.log(data);
+                setAccountForm({
+                    name: data.name,
+                    image_url: data.image_url,
+                    balance: data.balance
+                })
+                setImagePreview(data.image_url);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchAccountById()
+    }, [token, id]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
@@ -50,7 +74,13 @@ const AccountForm = () => {
             return;
         }
 
-        const result = createAccountSchema.safeParse(accountForm);
+        let result;
+        if (id) {
+            result = updateAccountSchema.safeParse(accountForm);
+        } else {
+            result = createAccountSchema.safeParse(accountForm);
+        }
+
 
         if (!result.success) {
             console.log(result);
@@ -58,12 +88,20 @@ const AccountForm = () => {
             return;
         }
         try {
-            const data = await createAccount(token, accountForm);
-            console.log(data);
-            toast.success("新增帳戶成功");
+
+            let data;
+            if (id) {
+                data = await updateAccountById(token, id, accountForm);
+                toast.success("更新帳戶成功");
+                navigate(-1);
+            } else {
+                data = await createAccount(token, accountForm);
+                toast.success("新增帳戶成功");
+                return;
+            }
         } catch (error) {
             console.error(error);
-
+            toast.error(error, 'hotdog');
         }
     }
     return (
@@ -73,7 +111,7 @@ const AccountForm = () => {
                     <Information label="帳戶名稱" name='name' value={accountForm.name} type="text" onChange={handleChange}></Information>
                     <Information label="帳戶照片" name='image_url' value={imagePreview ?? ''} type="file" onChange={hanldeUpload}></Information>
                     <Information label="當前餘額" name='balance' value={accountForm.balance} type="number" onChange={handleChange}></Information>
-                    <Button className="bg-yellow-500">新增</Button>
+                    <Button className="bg-yellow-500 text-white">{id ? '更新' : '新增'}</Button>
                 </form>
             </Card>
         </>

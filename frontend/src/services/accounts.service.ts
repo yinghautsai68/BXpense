@@ -85,3 +85,25 @@ export const getTotalAssets = async (token: string) => {
         throw error;
     }
 }
+
+export const updateAccountById = async (token: string, accountId: string, accountForm: CreateAccountType) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/accounts/${accountId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(accountForm)
+        });
+        const result = await response.json();
+        if (!result.success) {
+            throw new Error(result.message);
+        }
+
+        return result.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
