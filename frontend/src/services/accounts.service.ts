@@ -118,6 +118,7 @@ export const deleteAccountById = async (token: string, accountId: string) => {
         });
         const result = await response.json();
         if (!result.success) {
+
             throw new Error(result.message);
         }
 

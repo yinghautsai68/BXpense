@@ -11,6 +11,7 @@ import { useUtil } from '../context/UtilContext'
 
 import IconDelete from '../assets/icons/icon-delete.png'
 import IconEdit from '../assets/icons/icon-edit.png'
+import toast from 'react-hot-toast'
 const Account = () => {
     const { token, user } = useAuth();
     const { id } = useParams();
@@ -66,8 +67,12 @@ const Account = () => {
         try {
             const message = await deleteAccountById(token, accountId);
             console.log(message);
-        } catch (error) {
+            toast.success('刪除成功');
+            navigate(-1);
+        } catch (error: any) {
             console.error(error);
+            toast.error(error.message);
+
         }
     }
     return (
