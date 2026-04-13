@@ -8,9 +8,9 @@ import { createAccount } from "../services/accounts.service"
 import Button from "../components/Button"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
-import { SubTitle, Title } from "../components/Typography"
 
-const NewAccount = () => {
+
+const AccountForm = () => {
     const { token } = useAuth();
     const navigate = useNavigate();
 
@@ -80,4 +80,4 @@ const NewAccount = () => {
     )
 }
 
-export default NewAccount
+export default AccountForm
