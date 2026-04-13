@@ -60,7 +60,7 @@ const Accounts = () => {
                             isLoading ?
                                 <div className="w-full h-8 bg-gray-300 rounded animate-pulse"></div>
                                 :
-                                <span className='text-4xl font-bold'>{totalAssets}</span>
+                                <span className='text-2xl font-bold'>NT$ {totalAssets}</span>
                         }
                     </div>
                     <div className='w-20 aspect-square bg-black'>
@@ -74,7 +74,7 @@ const Accounts = () => {
                             isLoading ?
                                 <div className="h-8 bg-gray-300 rounded animate-pulse"></div>
                                 :
-                                <span className='text-2xl'>{totalAssets}</span>
+                                <span className='text-xl'>NT$ {totalAssets}</span>
                         }
                     </div>
                     <div className='flex flex-col justify-start w-full'>
@@ -82,7 +82,7 @@ const Accounts = () => {
                         {isLoading ?
                             <div className="h-8 bg-gray-300 rounded animate-pulse"></div>
                             :
-                            <span className='text-2xl'>48,000</span>
+                            <span className='text-xl'>NT$ 48,000</span>
 
                         }
 
