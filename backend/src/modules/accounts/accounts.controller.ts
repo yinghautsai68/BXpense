@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { db } from "../../config/db";
 import { createAccountSchema, updateAccountSchema } from "./accounts.schema";
+import { success } from "zod";
 
 export const createAccount = async (req: Request, res: Response) => {
     const { user_id } = (req as any).user;
@@ -168,5 +169,24 @@ export const deleteAccountById = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "SERVER ERROR" });
+    }
+}
+
+
+export const getTotalAssets = async (req: Request, res: Response) => {
+    try {
+        const { user_id } = (req as any).user;
+        const [totalAssetsResult]: any = await db.query(
+            'SELECT SUM(balance) AS assets FROM accounts WHERE user_id = ?',
+            [user_id]
+        );
+        if (totalAssetsResult.length === 0) {
+            return res.status(404).json({ success: false, message: `沒有` })
+        }
+
+        res.status(200).json({ success: true, message: `取得成功`, data: totalAssetsResult[0] });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: `SERVER ERROR` });
     }
 }

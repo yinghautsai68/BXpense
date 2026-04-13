@@ -65,3 +65,23 @@ export const getAccountById = async (token: string, accountId: string): Promise<
         throw error;
     }
 }
+
+export const getTotalAssets = async (token: string) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/accounts/total-assets`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const result: ApiResponse<{ assets: number }> = await response.json();
+        if (!result.success) {
+            throw new Error(result.message);
+        }
+
+        return result.data.assets;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}

@@ -3,7 +3,7 @@ import SavingsCard from '../components/SavingsCard'
 import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react';
 import type { AccountType } from '../types/accounts.type';
-import { getAccounts } from '../services/accounts.service';
+import { getAccounts, getTotalAssets } from '../services/accounts.service';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ const Accounts = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [accounts, setAccounts] = useState<AccountType[] | null>(null);
-
+    const [totalAssets, setTotalAssets] = useState<number>(0);
 
     useEffect(() => {
         if (!token || !user) {
@@ -36,6 +36,20 @@ const Accounts = () => {
         fetchAccounts();
     }, [token, user]);
 
+    useEffect(() => {
+        if (!token) {
+            return;
+        }
+        const fetchTotalAssets = async () => {
+            try {
+                const data = await getTotalAssets(token);
+                setTotalAssets(data);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchTotalAssets();
+    }, [token]);
     return (
         <>
             <div className='flex flex-col gap-4 w-full p-4 border-2 border-dashed bg-white rounded-xl'>
@@ -46,7 +60,7 @@ const Accounts = () => {
                             isLoading ?
                                 <div className="w-full h-8 bg-gray-300 rounded animate-pulse"></div>
                                 :
-                                <span className='text-4xl font-bold'>48,000</span>
+                                <span className='text-4xl font-bold'>{totalAssets}</span>
                         }
                     </div>
                     <div className='w-20 aspect-square bg-black'>
@@ -60,9 +74,8 @@ const Accounts = () => {
                             isLoading ?
                                 <div className="h-8 bg-gray-300 rounded animate-pulse"></div>
                                 :
-                                <span className='text-2xl'>48,000</span>
+                                <span className='text-2xl'>{totalAssets}</span>
                         }
-                        <span className='text-2xl'>NTD 48,000</span>
                     </div>
                     <div className='flex flex-col justify-start w-full'>
                         <span className='text-xl'>負債</span>
