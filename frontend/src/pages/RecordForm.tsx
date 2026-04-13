@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import type { createRecordType, RecordType } from '../types/records.type'
-import { createRecord, getRecordById } from '../services/records.service'
+import { createRecord, getRecordById, updateRecordById } from '../services/records.service'
 import Button from '../components/Button'
 import { useUtil } from '../context/UtilContext'
 import { getCategories } from '../services/categories.service'
@@ -188,9 +188,17 @@ const RecordForm = () => {
             if (!token) {
                 return;
             }
-            const data = await createRecord(token, recordForm);
-            console.log(data);
-            toast.success("新增紀錄成功");
+            let data;
+            if (id) {
+                data = await updateRecordById(token, id, recordForm);
+                console.log(data);
+                toast.success("更新紀錄成功");
+                return navigate(`/records`)
+            } else {
+                data = await createRecord(token, recordForm);
+                console.log(data);
+                return toast.success("新增紀錄成功");
+            }
         } catch (error) {
             console.error(error);
         }

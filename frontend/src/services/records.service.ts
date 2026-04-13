@@ -84,6 +84,29 @@ export const getMonthlySummary = async (token: string, userId: string) => {
     }
 }
 
+export const updateRecordById = async (token: string, recordId: string, recordForm: createRecordType) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records/${recordId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(recordForm)
+        })
+        const result = await response.json();
+        if (!result.success) {
+            throw new Error(result.message);
+        }
+
+        return result.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
+
 export const deleteById = async (token: string, recordId: string) => {
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records/${recordId}`, {
