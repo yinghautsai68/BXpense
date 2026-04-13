@@ -208,7 +208,7 @@ const RecordForm = () => {
     return (
         <div className='flex flex-col gap-2 w-full h-screen pt-10 bg-yellow-400'>
             <div className='flex flex-row items-center gap-5 pl-5'>
-                <span className='text-2xl font-bold text-white'>x</span>
+                <span onClick={() => navigate(-1)} className='text-2xl font-bold text-white'>x</span>
                 <Title className='text-white'>{id ? '更新紀錄' : '新增紀錄'}</Title>
             </div>
             <div className='flex flex-col gap-4 pt-4 pb-8 rounded-t-xl bg-neutral-100'>
