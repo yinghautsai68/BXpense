@@ -172,7 +172,9 @@ export const deleteAccountById = async (req: Request, res: Response) => {
 
         const [deleteResult]: any = await db.query(
             `
-            DELETE FROM accounts WHERE id = ?
+            UPDATE accounts 
+            SET deleted_at = NOW()
+            where id = ?
             `,
             [id]
         );
