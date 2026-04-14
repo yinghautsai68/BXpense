@@ -7,15 +7,15 @@ type ExpenseChartProps = {
 const ExpenseChart = ({ data }: ExpenseChartProps) => {
 
     return (
-        <ResponsiveContainer>
-            <LineChart data={data}>
+        <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={data} >
                 <CartesianGrid strokeDasharray='10 10' />
-                <XAxis label={{ value: '日期', position: 'insideBottom', offset: -5 }} dataKey="date" />
-                <YAxis label={{ value: 'amount', position: 'insideLeft', angle: -90 }} />
+                <XAxis height={10} tick={{ fontSize: 10 }} dataKey="date" />
+                <YAxis width={25} tick={{ fontSize: 10 }} />
                 <Line dataKey='amount' type='monotone' strokeWidth={3} stroke='orange' />
                 <Tooltip />
             </LineChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer >
     )
 }
 
