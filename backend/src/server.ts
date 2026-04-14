@@ -8,6 +8,7 @@ import recordsRouter from './modules/records/records.routes';
 import savingGoalsRouter from './modules/saving_goals/saving_goals.routes';
 import authRouter from './modules/auth/auth.routes';
 import uploadRouter from './modules/upload/upload.routes';
+import analyticsRouter from './modules/analytics/analytics.routes';
 
 const app = express();
 app.use(express.json());
@@ -20,6 +21,7 @@ app.use('/api/accounts', accountsRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/records', recordsRouter);
 app.use('/api/saving-goals', savingGoalsRouter);
+app.use('/api/analytics', analyticsRouter);
 
 const testDbConnection = async () => {
     try {
