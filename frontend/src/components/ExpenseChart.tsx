@@ -1,12 +1,11 @@
 import React from 'react'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
-const ExpenseChart = () => {
-    const data = [
-        { date: "04-10", amount: 200 },
-        { date: "04-11", amount: 150 },
-        { date: "04-12", amount: 300 },
-    ];
+type ExpenseChartProps = {
+    data: Record<string, number>[]
+}
+const ExpenseChart = ({ data }: ExpenseChartProps) => {
+
     return (
         <ResponsiveContainer>
             <LineChart data={data}>
