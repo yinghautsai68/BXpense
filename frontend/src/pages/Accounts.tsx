@@ -43,6 +43,7 @@ const Accounts = () => {
         const fetchTotalAssets = async () => {
             try {
                 const data = await getTotalAssets(token);
+                console.log(data);
                 setTotalAssets(data);
             } catch (error) {
                 console.error(error);

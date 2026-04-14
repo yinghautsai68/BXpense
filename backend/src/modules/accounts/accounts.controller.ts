@@ -198,14 +198,12 @@ export const getTotalAssets = async (req: Request, res: Response) => {
     try {
         const { user_id } = (req as any).user;
         const [totalAssetsResult]: any = await db.query(
-            'SELECT SUM(balance) AS assets FROM accounts WHERE user_id = ?',
+            'SELECT SUM(balance) AS assets FROM accounts WHERE user_id = ? AND deleted_at IS NULL',
             [user_id]
         );
-        if (totalAssetsResult.length === 0) {
-            return res.status(404).json({ success: false, message: `沒有` })
-        }
+        const assets = totalAssetsResult[0].assets ?? 0;
 
-        res.status(200).json({ success: true, message: `取得成功`, data: totalAssetsResult[0] });
+        res.status(200).json({ success: true, message: `取得成功`, data: assets });
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: `SERVER ERROR` });

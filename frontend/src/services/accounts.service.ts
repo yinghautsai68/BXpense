@@ -74,12 +74,12 @@ export const getTotalAssets = async (token: string) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        const result: ApiResponse<{ assets: number }> = await response.json();
+        const result: ApiResponse<number> = await response.json();
         if (!result.success) {
             throw new Error(result.message);
         }
 
-        return result.data.assets;
+        return result.data;
     } catch (error) {
         console.error(error);
         throw error;
