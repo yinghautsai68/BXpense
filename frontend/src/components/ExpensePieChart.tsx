@@ -1,12 +1,13 @@
-import React from 'react'
 import { Pie, ResponsiveContainer, Tooltip, PieChart, Cell } from 'recharts';
 
-const ExpensePieChart = () => {
-    const data = [
-        { name: "Food", value: 80 },
-        { name: "Commute", value: 20 },
-        { name: "Drinks", value: 10 },
-    ];
+type ExpensePieChartProps = {
+    data: {
+        name: string,
+        value: number
+    }[]
+}
+const ExpensePieChart = ({ data }: ExpensePieChartProps) => {
+
 
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     return (
