@@ -1,7 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ExpenseCard from '../components/ExpenseCard'
+import { getTopExpenseRecords } from '../services/records.service';
+import { useAuth } from '../context/AuthContext';
+import type { RecordType } from '../types/records.type';
 
 const Analysis = () => {
+    const { token } = useAuth();
+    const [topExpenses, setTopExpenses] = useState<RecordType[]>([]);
+    useEffect(() => {
+        if (!token) {
+            return;
+        }
+        const fetchTopExpenseRecords = async () => {
+            try {
+                const data = await getTopExpenseRecords(token);
+                console.log(data);
+                setTopExpenses(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchTopExpenseRecords();
+    }, [token]);
     return (
         <>
             <div className='flex flex-row items-center'>
@@ -23,12 +43,11 @@ const Analysis = () => {
                     <span>TOP 10</span>
                 </div>
                 <div className='flex flex-col w-full  bg-white '>
-                    <ExpenseCard></ExpenseCard>
-                    <ExpenseCard></ExpenseCard>
-                    <ExpenseCard></ExpenseCard>
-                    <ExpenseCard></ExpenseCard>
-                    <ExpenseCard></ExpenseCard>
-
+                    {
+                        topExpenses.map((expense, index) => (
+                            <ExpenseCard key={expense.id} record={expense}></ExpenseCard>
+                        ))
+                    }
                 </div>
             </div>
         </>
