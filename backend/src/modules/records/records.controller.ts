@@ -262,3 +262,42 @@ export const deleteRecordById = async (req: Request, res: Response) => {
         res.status(500).json({ success: false, message: "SERVER ERROR" });
     }
 }
+
+export const getTopExpenseRecords = async (req: Request, res: Response) => {
+    try {
+        const { user_id } = (req as any).user;
+
+        const [topTenResult]: any = await db.query(
+            `
+            SELECT 
+                r.id,
+                r.user_id,
+                r.type,
+                r.amount,
+                r.remarks,
+                r.record_date,
+                r.created_at,
+                r.updated_at,
+                a.id AS account_id,
+                a.name AS account_name,
+                a.image_url AS account_image_url,
+                a.balance AS account_balance,
+                c.id AS category_id,
+                c.name AS category_name,
+                c.image_url AS category_image_url
+            FROM records r
+            LEFT JOIN accounts a ON r.account_id = a.id
+            LEFT JOIN categories c ON r.category_id = c.id
+            WHERE r.user_id = ?
+            ORDER BY amount DESC
+            LIMIT 10
+            `,
+            [user_id]
+        );
+
+        res.status(200).json({ success: true, message: `get`, data: topTenResult })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: `SERVER ERROR` })
+    }
+}
