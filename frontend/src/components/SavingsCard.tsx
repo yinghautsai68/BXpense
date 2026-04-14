@@ -13,7 +13,7 @@ const SavingsCard = ({ account, onClick }: SavingsCardProps) => {
                 <img src={account.image_url} className='w-8 aspect-square border rounded-lg object-cover' />
                 <span>{account.name}</span>
             </div>
-            <span>NTD {account.balance}</span>
+            <span>NTD {account.final_balance}</span>
         </div>
     )
 }
