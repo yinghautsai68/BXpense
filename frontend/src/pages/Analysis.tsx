@@ -93,10 +93,10 @@ const Analysis = () => {
                 <button>支出</button>
             </div>
 
-            <Card className='w-full h-[280px] bg-white'>
+            <Card className='w-full h-[230px] bg-white'>
+                <span className='text-xs font-bold'>支出：NT${totalAmount}</span>
                 <ExpenseChart data={line}></ExpenseChart>
             </Card>
-
             <Card>
                 <div className='w-full h-[180px] bg-white'>
                     <ExpensePieChart data={pieData} />
