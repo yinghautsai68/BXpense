@@ -1,13 +1,13 @@
 import React, { useRef } from 'react'
 
 type InformationProps = {
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void,
     className?: string
 
     label: string,
-    name: string,
+    name?: string,
     value: string | number | undefined,
-    type: 'text' | 'number' | 'file'
+    type?: 'text' | 'number' | 'file'
 }
 const Information = ({ onChange, className, label, name, value, type }: InformationProps) => {
     const ref = useRef<HTMLInputElement>(null);
@@ -16,7 +16,7 @@ const Information = ({ onChange, className, label, name, value, type }: Informat
     }
     return (
         <div className={`${className} flex flex-row justify-between w-full`}>
-            <span>{label}</span>
+            <span className='text-lg font-medium'>{label}</span>
             {
                 type === 'file' ? (<>
                     <div onClick={handleClick}>
@@ -36,7 +36,7 @@ const Information = ({ onChange, className, label, name, value, type }: Informat
                 </>)
                     : type === 'text' ?
                         (
-                            <input type="text" name={name} value={value} onChange={onChange} placeholder='請輸入' className='text-end' />
+                            <input type="text" name={name} value={value} onChange={onChange} placeholder='請輸入' className='text-end ' />
                         )
                         : type === 'number' &&
                         (

@@ -10,6 +10,9 @@ import { useUtil } from "../context/UtilContext"
 import toast from "react-hot-toast"
 import Button from "../components/Button"
 
+import IconEdit from '../assets/icons/icon-edit.png'
+import IconDelete from '../assets/icons/icon-delete.png'
+import Modal from "../components/Modal"
 const Record = () => {
     const { token } = useAuth();
     const { id } = useParams();
@@ -54,39 +57,41 @@ const Record = () => {
             <Card>
                 <div className="flex flex-row justify-between items-center border-b-2 border-dashed border-gray-300">
                     <div className="flex flex-row items-center gap-2 pb-4">
-                        <img src='https://picsum.photos/200' alt="" className="w-10 aspect-square rounded-lg" />
+                        <img src={record?.category_image_url} alt="" className="w-10 aspect-square rounded-lg" />
                         <span className="font-medium">{record?.category_name}</span>
                     </div>
-                    <span>-NT$ {record?.amount}</span>
+                    <span className={`${record?.type === 'expense' ? 'text-red-500' : 'text-green-500'}`}>{record?.type === 'expense' ? '-' : '+'}NT$ {record?.amount}</span>
                 </div>
-                <div className="flex flex-col gap-2">
-                    <Information label="類別" value={record?.type} />
-                    <Information label="備註" value={record?.remarks} />
-                    <Information label="帳戶" value={record?.account_name} />
-                    <Information label="日期" value={formatDateTime(record?.record_date || "")} />
+                <div className="flex flex-col gap-4">
+                    <Information label="類別" type="text" value={record?.type} />
+                    <Information label="備註" type="text" value={record?.remarks} />
+                    <Information label="帳戶" type="text" value={record?.account_name} />
+                    <Information label="日期" type="text" value={formatDateTime(record?.record_date || "")} />
                 </div>
             </Card>
-            <div className="flex flex-row justify-between items-center ">
-                <div className="w-5 aspect-square bg-black"></div>
-
+            <div className="flex flex-row justify-end items-center ">
                 <div className="flex flex-row items-center gap-2">
-                    <div onClick={() => navigate(`/records/${id}/edit`)} className="w-5 aspect-square bg-black"></div>
-                    <div onClick={() => setShowDeleteModal(true)} className="w-5 aspect-square bg-black"></div>
+                    <img src={IconEdit} onClick={() => navigate(`/records/${id}/edit`)} className="w-8 " />
+                    <img src={IconDelete} onClick={() => setShowDeleteModal(true)} className="w-8" />
                 </div>
 
-                {/* Modal */}
-                {showDeleteModal && (
-                    <div className="fixed left-0 bottom-0 flex flex-row items-center justify-center w-full h-[30%] z-10">
-                        <Card className="flex flex-col justify-center items-center w-full h-full">
-                            <p className="mb-4">確定要刪除這筆紀錄嗎？</p>
-                            <div className="flex justify-end gap-2">
-                                <Button onClick={() => setShowDeleteModal(false)} className="px-4 py-2 bg-gray-400 hover:bg-gray-500 rounded">取消</Button>
-                                <Button onClick={handleDelete} className="px-4 py-2 bg-rose-500 hover:bg-rose-700 text-white rounded">刪除</Button>
-                            </div>
-                        </Card>
-                    </div>
-                )}
-            </div>
+                <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+                    <>
+                        <p className="">確定要刪除這筆紀錄嗎？</p>
+                        <div className="flex justify-end gap-2">
+                            <Button onClick={() => setShowDeleteModal(false)} className="px-4 py-2 bg-gray-400 hover:bg-gray-500 rounded text-white">取消</Button>
+                            <Button onClick={handleDelete} className="px-4 py-2 bg-rose-500 hover:bg-rose-700  rounded text-white">刪除</Button>
+                        </div>
+                    </>
+
+
+
+
+                </Modal>
+
+
+
+            </div >
         </>
     )
 }
