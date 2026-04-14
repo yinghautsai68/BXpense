@@ -288,7 +288,7 @@ export const getTopExpenseRecords = async (req: Request, res: Response) => {
             FROM records r
             LEFT JOIN accounts a ON r.account_id = a.id
             LEFT JOIN categories c ON r.category_id = c.id
-            WHERE r.user_id = ?
+            WHERE r.user_id = ? AND r.type = 'expense'
             ORDER BY amount DESC
             LIMIT 10
             `,
