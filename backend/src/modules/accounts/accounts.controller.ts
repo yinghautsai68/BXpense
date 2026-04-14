@@ -197,13 +197,31 @@ export const deleteAccountById = async (req: Request, res: Response) => {
 export const getTotalAssets = async (req: Request, res: Response) => {
     try {
         const { user_id } = (req as any).user;
-        const [totalAssetsResult]: any = await db.query(
-            'SELECT SUM(balance) AS assets FROM accounts WHERE user_id = ? AND deleted_at IS NULL',
+        const [totalBalanceResult]: any = await db.query(
+            `
+                SELECT
+                    SUM(balance) AS total_balance    
+                FROM accounts 
+                WHERE user_id = ? AND deleted_at IS NULL
+            `,
             [user_id]
         );
-        const assets = totalAssetsResult[0].assets ?? 0;
 
-        res.status(200).json({ success: true, message: `取得成功`, data: assets });
+        const [totalIncomeResult]: any = await db.query(
+            `
+                SELECT
+                    SUM(amount) AS total_income
+                FROM records 
+                WHERE user_id = ? AND type = 'income'
+            `,
+            [user_id]
+        );
+
+        const total_balance = Number(totalBalanceResult[0].total_balance);
+        const total_income = Number(totalIncomeResult[0].total_income);
+
+        const total_assets = total_balance + total_income;
+        res.status(200).json({ success: true, message: `取得成功`, data: total_assets });
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: `SERVER ERROR` });
