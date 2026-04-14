@@ -13,6 +13,7 @@ import Button from "../components/Button"
 import IconEdit from '../assets/icons/icon-edit.png'
 import IconDelete from '../assets/icons/icon-delete.png'
 import Modal from "../components/Modal"
+import { typeZhTw } from "../constants/typeZhTW"
 const Record = () => {
     const { token } = useAuth();
     const { id } = useParams();
@@ -63,7 +64,7 @@ const Record = () => {
                     <span className={`${record?.type === 'expense' ? 'text-red-500' : 'text-green-500'}`}>{record?.type === 'expense' ? '-' : '+'}NT$ {record?.amount}</span>
                 </div>
                 <div className="flex flex-col gap-4">
-                    <Information label="類別" type="text" value={record?.type} />
+                    <Information label="類別" type="text" value={typeZhTw[record?.type]} />
                     <Information label="備註" type="text" value={record?.remarks} />
                     <Information label="帳戶" type="text" value={record?.account_name} />
                     <Information label="日期" type="text" value={formatDateTime(record?.record_date || "")} />
