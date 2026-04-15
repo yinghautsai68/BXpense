@@ -3,7 +3,7 @@ import Card from '../components/Card'
 import Icon from '../components/Icon'
 import type { CategoryType, CreateCategoryType } from '../types/categories.type';
 import { useAuth } from '../context/AuthContext';
-import { getCategories } from '../services/categories.service';
+import { createCategory, getCategories } from '../services/categories.service';
 import DetailLayout from '../layout/DetailLayout';
 import Button from '../components/Button';
 
@@ -42,8 +42,20 @@ const Categories = () => {
         console.log(imageUrl);
         setCategoryForm((prev) => ({ ...prev, image_url: imageUrl }));
     }
+
+    const handleSubmit = async () => {
+        if (!token) {
+            return;
+        }
+        try {
+            const data = await createCategory(token, categoryForm);
+            console.log(data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
     return (
-        <DetailLayout title="類別自定義" rightAction={<Button className='bg-yellow-500 text-white'>新增</Button>}>
+        <DetailLayout title="類別自定義" rightAction={<Button onClick={() => handleSubmit()} className='bg-yellow-500 text-white'>新增</Button>}>
             <div className='flex flex-col bg-gray-200'>
                 <div className='grid grid-cols-2'>
                     <span className='text-center'>支出</span>
