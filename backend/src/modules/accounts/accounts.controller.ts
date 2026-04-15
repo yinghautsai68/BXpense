@@ -217,11 +217,40 @@ export const getTotalAssets = async (req: Request, res: Response) => {
             [user_id]
         );
 
+        const [accountResult]: any = await db.query(
+            `
+            SELECT 
+                a.name,
+                a.balance,
+                (
+                    a.balance 
+                    + SUM(CASE WHEN r.type = 'income' THEN r.amount ELSE 0 END) 
+                    - SUM(CASE WHEN r.type = 'expense' THEN r.amount ELSE 0 END)
+                ) AS final_balance
+            FROM accounts a
+            LEFT JOIN records r ON a.id = r.account_id 
+            WHERE a.user_id = ?
+            GROUP BY a.id
+            `
+            ,
+            [user_id]
+        )
+        const net_assets = accountResult.reduce((sum: number, item: any) => sum + Number(item.final_balance), 0);
+        const total_asset = accountResult.reduce((sum: number, item: any) => Number(item.final_balance) > 0 ? sum + Number(item.final_balance) : sum, 0);
+        const total_debt = accountResult.reduce((sum: number, item: any) => Number(item.final_balance) < 0 ? sum + Number(item.final_balance) : sum, 0);
+
+        const datat = {
+            net_assets,
+            total_asset,
+            total_debt
+        }
+
+
         const total_balance = Number(totalBalanceResult[0].total_balance);
         const total_income = Number(totalIncomeResult[0].total_income);
 
         const total_assets = total_balance + total_income;
-        res.status(200).json({ success: true, message: `取得成功`, data: total_assets });
+        res.status(200).json({ success: true, message: `取得成功`, data: total_assets, datat: datat });
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: `SERVER ERROR` });
