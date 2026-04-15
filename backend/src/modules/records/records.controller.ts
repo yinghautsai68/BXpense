@@ -319,7 +319,7 @@ export const getSummary = async (req: Request, res: Response) => {
             [user_id]
         );
 
-        res.status(200).json({ success: true, message: `取得成功`, data: userSummaryResult });
+        res.status(200).json({ success: true, message: `取得成功`, data: userSummaryResult[0] });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: `SERVER ERROR` });
