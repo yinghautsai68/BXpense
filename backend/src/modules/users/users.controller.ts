@@ -170,6 +170,25 @@ export const deleteUserById = async (req: Request, res: Response) => {
     }
 }
 
+export const resetUserData = async (req: Request, res: Response) => {
+    try {
+        const { user_id } = (req as any).user;
+
+        await db.query('DELETE FROM records WHERE user_id = ?', [user_id]);
+        await db.query('DELETE FROM accounts WHERE user_id = ?', [user_id]);
+        await db.query('DELETE FROM categories WHERE user_id = ?', [user_id]);
+        await db.query('DELETE FROM saving_goal_records WHERE saving_goal_id IN (SELECT id FROM saving_goals WHERE user_id = ?)', [user_id]);
+        await db.query('DELETE FROM saving_goals WHERE user_id = ?', [user_id]);
+
+
+
+        res.status(200).json({ success: true, message: `清除資料成功` })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: `SERVER ERROR` });
+    }
+}
+
 /*
 export const createUser = async (req: Request, res: Response) => {
     try {
