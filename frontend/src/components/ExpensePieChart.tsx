@@ -4,12 +4,13 @@ type ExpensePieChartProps = {
     data: {
         name: string,
         value: number
-    }[]
+    }[],
+    colors?: string[]
 }
-const ExpensePieChart = ({ data }: ExpensePieChartProps) => {
 
+const DEFAULT_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const ExpensePieChart = ({ data, colors = DEFAULT_COLORS }: ExpensePieChartProps) => {
 
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     return (
         <ResponsiveContainer width='100%' height='100%'>
             <PieChart>
@@ -21,7 +22,7 @@ const ExpensePieChart = ({ data }: ExpensePieChartProps) => {
                     labelLine={false}
                 >
                     {data.map((data, index) => (
-                        <Cell key={index} fill={COLORS[index]} />
+                        <Cell key={index} fill={colors[index % colors.length]} />
                     ))}
                 </Pie>
                 <Tooltip />
