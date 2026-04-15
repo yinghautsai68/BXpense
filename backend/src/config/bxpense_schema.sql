@@ -30,8 +30,9 @@ CREATE TABLE accounts(
 
 );
 INSERT INTO accounts (user_id, name, image_url, balance)
-VALUES (1, "現金", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png", 500000),
-(1, "銀行", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png", 500000);
+VALUES (1, "現金", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png", 500),
+(1, "銀行", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png", 500),
+(1, "emergency", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png", 500);
 
 CREATE TABLE categories(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -89,11 +90,11 @@ CREATE TABLE records(
 );
 INSERT INTO records (user_id, account_id, category_id, type, amount, remarks, record_date)
 VALUES ( 1, 1, 1, "expense", 100, "午餐","2026-04-01 12:30:30"),
-( 1, 1, 1, "expense", 50, "晚餐","2026-04-01 18:30:30"),
-( 1, 1, 1, "expense", 200, "消夜","2026-04-01 19:30:30"),
-( 1, 1, 1, "expense", 300, "Snacks","2026-04-01 20:30:30"),
-( 1, 1, 1, "expense", 100, "午餐","2026-04-02 12:30:30"),
-( 1, 1, 1, "expense", 150, "晚餐","2026-04-02 18:30:30");
+( 1, 1, 1, "expense", 100, "晚餐","2026-04-01 18:30:30"),
+( 1, 1, 1, "expense", 100, "衣服","2026-04-01 19:30:30"),
+( 1, 2, 1, "expense", 550, "Snacks","2026-04-01 20:30:30"),
+( 1, 3, 1, "expense", 200, "午餐","2026-04-02 12:30:30"),
+( 1, 3, 1, "expense", 200, "晚餐","2026-04-02 18:30:30");
 
 
 

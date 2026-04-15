@@ -3,7 +3,7 @@ import SavingsCard from '../components/SavingsCard'
 import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react';
 import type { AccountType } from '../types/accounts.type';
-import { getAccounts, getAssetsSummary, getTotalAssets } from '../services/accounts.service';
+import { getAccounts, getAssetsSummary } from '../services/accounts.service';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 
