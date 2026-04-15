@@ -6,3 +6,8 @@ export type CategoryType = {
     created_at: string,
     updated_at: string
 };
+
+export type CreateCategoryType = {
+    name: string,
+    image_url: string
+}
