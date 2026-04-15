@@ -109,6 +109,7 @@ const Profile = () => {
         }
     }
 
+    const [isDeleteAccountOpen, setIsDeleteAccountOpen] = useState<boolean>(false);
     if (isLoading) return <p>載入中...</p>;
     if (error) return <p className="text-red-500">{error}</p>;
     if (!userData) return <p>無使用者資料</p>;
@@ -182,8 +183,17 @@ const Profile = () => {
 
             <SubTitle>其他</SubTitle>
             <Card>
-                <p onClick={() => handleDeleteUser()} className='w-full text-center text-rose-600'>刪除所有資料</p>
+                <p onClick={() => setIsDeleteAccountOpen(true)} className='w-full py-2 text-center text-rose-600 cursor-pointer hover:bg-gray-300 rounded-lg transition-all'>清除所有資料</p>
             </Card>
+            <Modal isOpen={isDeleteAccountOpen} onClose={() => setIsDeleteAccountOpen(false)}>
+                <>
+                    <span className='font-bold text-red-500'>確認刪除所有資料？ </span>
+                    <div className='flex flex-row justify-end items-center gap-2'>
+                        <Button onClick={() => setIsDeleteAccountOpen(false)} className='bg-gray-400 hover:bg-gray-500 text-white'>取消</Button>
+                        <Button onClick={() => console.log('delete data')} className='bg-red-500 hover:bg-red-700 text-white'>刪除</Button>
+                    </div>
+                </>
+            </Modal>
         </>
     )
 }
