@@ -9,7 +9,7 @@ import type { User } from '../types/users.types'
 import { deleteUser, getUserData } from '../services/user.service'
 import toast from 'react-hot-toast'
 import type { CategoryType } from '../types/categories.type'
-import { getCategories } from '../services/categories.service'
+import { deleteCategoryById, getCategories } from '../services/categories.service'
 import { getSummary } from '../services/records.service'
 import Button from '../components/Button'
 import Modal from '../components/Modal'
@@ -94,6 +94,20 @@ const Profile = () => {
     }
     const [isDelete, setIsDelete] = useState<boolean>(false);
     const [deleteId, setDeleteId] = useState<number | null>(null);
+    const handleDeleteById = async (categoryId: number) => {
+        if (!token || !categoryId) {
+            return;
+        }
+        try {
+            const data = await deleteCategoryById(token, categoryId);
+            console.log(data);
+            setCategories((prev) => prev ? prev.filter((item) => item.id !== categoryId) : prev);
+            setDeleteId(null);
+            toast.success(data)
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     if (isLoading) return <p>載入中...</p>;
     if (error) return <p className="text-red-500">{error}</p>;
@@ -161,7 +175,7 @@ const Profile = () => {
                     <span className='font-bold'>確認刪除該類別？ </span>
                     <div className='flex flex-row justify-end items-center gap-2'>
                         <Button onClick={() => setDeleteId(null)} className='bg-gray-400 text-white'>取消</Button>
-                        <Button onClick={() => console.log(`handledelete(${deleteId})`)} className='bg-red-500 text-white'>刪除</Button>
+                        <Button onClick={() => handleDeleteById(deleteId!)} className='bg-red-500 text-white'>刪除</Button>
                     </div>
                 </>
             </Modal>
