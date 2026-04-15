@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react'
 
 import type { User } from '../types/users.types'
-import { deleteUser, getUserData } from '../services/user.service'
+import { deleteUser, getUserData, resetUserData } from '../services/user.service'
 import toast from 'react-hot-toast'
 import type { CategoryType } from '../types/categories.type'
 import { deleteCategoryById, getCategories } from '../services/categories.service'
@@ -110,6 +110,20 @@ const Profile = () => {
     }
 
     const [isDeleteAccountOpen, setIsDeleteAccountOpen] = useState<boolean>(false);
+    const hanldeResetUserData = async () => {
+        if (!token) {
+            return;
+        }
+        try {
+            const data = await resetUserData(token);
+            console.log(data);
+            toast.success(data);
+            setIsDeleteAccountOpen(false);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     if (isLoading) return <p>載入中...</p>;
     if (error) return <p className="text-red-500">{error}</p>;
     if (!userData) return <p>無使用者資料</p>;
@@ -190,7 +204,7 @@ const Profile = () => {
                     <span className='font-bold text-red-500'>確認刪除所有資料？ </span>
                     <div className='flex flex-row justify-end items-center gap-2'>
                         <Button onClick={() => setIsDeleteAccountOpen(false)} className='bg-gray-400 hover:bg-gray-500 text-white'>取消</Button>
-                        <Button onClick={() => console.log('delete data')} className='bg-red-500 hover:bg-red-700 text-white'>刪除</Button>
+                        <Button onClick={() => hanldeResetUserData()} className='bg-red-500 hover:bg-red-700 text-white'>刪除</Button>
                     </div>
                 </>
             </Modal>
