@@ -36,7 +36,7 @@ const App = () => {
         <Route path='/accounts/:id/edit' element={<DetailLayout title="更新帳戶"><AccountForm /></DetailLayout>}></Route>
 
         <Route path='/profile' element={<Layout title="使用者"><Profile></Profile></Layout>}></Route>
-        <Route path='/categories' element={<DetailLayout title="類別自定義"><Categories /></DetailLayout>}></Route>
+        <Route path='/categories' element={<Categories />}></Route>
       </Routes>
     </>
 
