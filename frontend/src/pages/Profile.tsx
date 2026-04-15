@@ -11,6 +11,8 @@ import toast from 'react-hot-toast'
 import type { CategoryType } from '../types/categories.type'
 import { getCategories } from '../services/categories.service'
 import { getSummary } from '../services/records.service'
+import Button from '../components/Button'
+import Modal from '../components/Modal'
 
 const Profile = () => {
     const { token, user } = useAuth();
@@ -90,10 +92,15 @@ const Profile = () => {
             console.log(error);
         }
     }
+    const [isDelete, setIsDelete] = useState<boolean>(false);
+    const [deleteId, setDeleteId] = useState<number | null>(null);
 
     if (isLoading) return <p>載入中...</p>;
     if (error) return <p className="text-red-500">{error}</p>;
     if (!userData) return <p>無使用者資料</p>;
+
+
+
     return (
         <>
             <SubTitle>我的帳號</SubTitle>
@@ -121,7 +128,7 @@ const Profile = () => {
 
 
             <div className='flex flex-row justify-between items-center'>
-                <div className='flex flex-row items-center gap-4 w-full'>
+                <div className='flex flex-row items-center gap-4 '>
                     <SubTitle>
                         我的類別
                     </SubTitle>
@@ -130,17 +137,34 @@ const Profile = () => {
                         <span>收入</span>
                     </div>
                 </div>
-                <Link to='/categories' className='px-2 py-1 bg-yellow-500 rounded-xl cursor-pointer'>+</Link>
+                <div className='flex flex-row items-center gap-2'>
+                    <Button onClick={() => setIsDelete((prev) => !prev)} className='bg-red-500 text-white'>刪除</Button>
+                    <Link to='/categories' className='px-2 py-1 bg-yellow-500 rounded-xl cursor-pointer'>+</Link>
+                </div>
             </div>
             <Card className='grid grid-cols-4 gap-5'>
                 {
                     categories?.map((category, index) => (
-                        <RecordTag key={index} onClick={() => navigate(`/categories/${category.id}/edit`)} category={category}></RecordTag>
+                        <div className='relative'>
+                            {
+                                isDelete &&
+                                <div onClick={() => setDeleteId(category.id)} className='absolute right-0 flex flex-row justify-center items-center w-5 h-5 pb-1 bg-red-500 rounded-full text-xl text-white'>-</div>
+                            }
+                            <RecordTag key={index} onClick={() => navigate(`/categories/${category.id}/edit`)} category={category}></RecordTag>
+                        </div>
                     ))
                 }
-
-
             </Card>
+
+            <Modal isOpen={!!deleteId} onClose={() => setDeleteId(null)}>
+                <>
+                    <span className='font-bold'>確認刪除該類別？ </span>
+                    <div className='flex flex-row justify-end items-center gap-2'>
+                        <Button onClick={() => setDeleteId(null)} className='bg-gray-400 text-white'>取消</Button>
+                        <Button onClick={() => console.log(`handledelete(${deleteId})`)} className='bg-red-500 text-white'>刪除</Button>
+                    </div>
+                </>
+            </Modal>
 
             <SubTitle>其他</SubTitle>
             <Card>
