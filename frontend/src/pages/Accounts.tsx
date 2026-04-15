@@ -14,8 +14,6 @@ const Accounts = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [accounts, setAccounts] = useState<AccountType[] | null>(null);
-    const [totalAssets, setTotalAssets] = useState<number>(0);
-
     useEffect(() => {
         if (!token || !user) {
             setIsLoading(false);
@@ -36,23 +34,7 @@ const Accounts = () => {
         fetchAccounts();
     }, [token, user]);
 
-    useEffect(() => {
-        if (!token) {
-            return;
-        }
-        const fetchTotalAssets = async () => {
-            try {
-                const data = await getTotalAssets(token);
-                console.log(data);
-                setTotalAssets(data);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        fetchTotalAssets();
-    }, [token]);
-
-    const [object, setObject] = useState({});
+    const [assetsSummary, setAssetsSummary] = useState({});
     useEffect(() => {
         if (!token) {
             return;
@@ -61,7 +43,7 @@ const Accounts = () => {
             try {
                 const data = await getAssetsSummary(token);
                 console.log(data);
-                setObject(data);
+                setAssetsSummary(data);
             } catch (error) {
                 console.error(error);
             }
@@ -78,7 +60,7 @@ const Accounts = () => {
                             isLoading ?
                                 <div className="w-full h-8 bg-gray-300 rounded animate-pulse"></div>
                                 :
-                                <span className='text-2xl font-bold'>NT$ {object.net_assets}</span>
+                                <span className='text-2xl font-bold'>NT$ {assetsSummary.net_assets}</span>
                         }
                     </div>
                     <div className='w-20 aspect-square bg-black'>
@@ -92,7 +74,7 @@ const Accounts = () => {
                             isLoading ?
                                 <div className="h-8 bg-gray-300 rounded animate-pulse"></div>
                                 :
-                                <span className='text-xl'>NT$ {object.total_asset}</span>
+                                <span className='text-xl'>NT$ {assetsSummary.total_asset}</span>
                         }
                     </div>
                     <div className='flex flex-col justify-start w-full'>
@@ -100,7 +82,7 @@ const Accounts = () => {
                         {isLoading ?
                             <div className="h-8 bg-gray-300 rounded animate-pulse"></div>
                             :
-                            <span className='text-xl'>NT$  {object.total_debt}</span>
+                            <span className='text-xl'>NT$  {assetsSummary.total_debt}</span>
 
                         }
 
