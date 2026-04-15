@@ -45,7 +45,7 @@ const Analysis = () => {
 
         let pie = categorySummary.map((item, index) => (
             {
-                name: item.name,
+                name: categoryZhTW[item.name],
                 value: Number(item.total_amount)
             }
         ));
