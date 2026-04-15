@@ -37,6 +37,7 @@ const App = () => {
 
         <Route path='/profile' element={<Layout title="使用者"><Profile></Profile></Layout>}></Route>
         <Route path='/categories' element={<Categories />}></Route>
+        <Route path='/categories/:id/edit' element={<Categories />}></Route>
       </Routes>
     </>
 

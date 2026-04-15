@@ -1,7 +1,7 @@
 import Card from '../components/Card'
 import { SubTitle } from '../components/Typography'
 import RecordTag from '../components/RecordTag'
-import { Link, useAsyncError } from 'react-router-dom'
+import { Link, useAsyncError, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react'
 
@@ -14,6 +14,7 @@ import { getSummary } from '../services/records.service'
 
 const Profile = () => {
     const { token, user } = useAuth();
+    const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -134,7 +135,7 @@ const Profile = () => {
             <Card className='grid grid-cols-4 gap-5'>
                 {
                     categories?.map((category, index) => (
-                        <RecordTag key={index} category={category}></RecordTag>
+                        <RecordTag key={index} onClick={() => navigate(`/categories/${category.id}/edit`)} category={category}></RecordTag>
                     ))
                 }
 
