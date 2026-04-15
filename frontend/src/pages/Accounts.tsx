@@ -3,7 +3,7 @@ import SavingsCard from '../components/SavingsCard'
 import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react';
 import type { AccountType } from '../types/accounts.type';
-import { getAccounts, getTotalAssets } from '../services/accounts.service';
+import { getAccounts, getAssetsSummary, getTotalAssets } from '../services/accounts.service';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 
@@ -51,6 +51,23 @@ const Accounts = () => {
         }
         fetchTotalAssets();
     }, [token]);
+
+    const [object, setObject] = useState({});
+    useEffect(() => {
+        if (!token) {
+            return;
+        }
+        const fetchAssetsSummary = async () => {
+            try {
+                const data = await getAssetsSummary(token);
+                console.log(data);
+                setObject(data);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchAssetsSummary();
+    }, [token]);
     return (
         <>
             <div className='flex flex-col gap-4 w-full p-4 border-2 border-dashed bg-white rounded-xl'>
@@ -61,7 +78,7 @@ const Accounts = () => {
                             isLoading ?
                                 <div className="w-full h-8 bg-gray-300 rounded animate-pulse"></div>
                                 :
-                                <span className='text-2xl font-bold'>NT$ {totalAssets}</span>
+                                <span className='text-2xl font-bold'>NT$ {object.net_assets}</span>
                         }
                     </div>
                     <div className='w-20 aspect-square bg-black'>
@@ -75,7 +92,7 @@ const Accounts = () => {
                             isLoading ?
                                 <div className="h-8 bg-gray-300 rounded animate-pulse"></div>
                                 :
-                                <span className='text-xl'>NT$ {totalAssets}</span>
+                                <span className='text-xl'>NT$ {object.total_asset}</span>
                         }
                     </div>
                     <div className='flex flex-col justify-start w-full'>
@@ -83,7 +100,7 @@ const Accounts = () => {
                         {isLoading ?
                             <div className="h-8 bg-gray-300 rounded animate-pulse"></div>
                             :
-                            <span className='text-xl'>NT$ 48,000</span>
+                            <span className='text-xl'>NT$  {object.total_debt}</span>
 
                         }
 
