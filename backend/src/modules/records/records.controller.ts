@@ -301,3 +301,27 @@ export const getTopExpenseRecords = async (req: Request, res: Response) => {
         res.status(500).json({ success: false, message: `SERVER ERROR` })
     }
 }
+
+
+export const getSummary = async (req: Request, res: Response) => {
+    try {
+        const { user_id } = (req as any).user;
+
+        const [userSummaryResult]: any = await db.query(
+            `
+            SELECT
+                SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) AS total_income,
+                SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) AS total_expense,
+                COUNT(id) AS total_records 
+            FROM records 
+            WHERE user_id = ?
+            `,
+            [user_id]
+        );
+
+        res.status(200).json({ success: true, message: `取得成功`, data: userSummaryResult });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: `SERVER ERROR` });
+    }
+}
