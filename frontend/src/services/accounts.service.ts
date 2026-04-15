@@ -92,7 +92,32 @@ export const getTotalAssets = async (token: string) => {
         throw error;
     }
 }
+export const getAssetsSummary = async (token: string) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/accounts/total-assets`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const result: ApiResponse<number> & {
+            datat: {
+                net_assets: number;
+                total_asset: number;
+                total_debt: number;
+            }
+        } = await response.json();
+        if (!result.success) {
+            throw new Error(result.message);
+        }
 
+        console.log(result.data)
+        return result.datat;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
 export const updateAccountById = async (token: string, accountId: string, accountForm: CreateAccountType) => {
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/accounts/${accountId}`, {
