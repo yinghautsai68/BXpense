@@ -10,6 +10,7 @@ import { deleteUser, getUserData } from '../services/user.service'
 import toast from 'react-hot-toast'
 import type { CategoryType } from '../types/categories.type'
 import { getCategories } from '../services/categories.service'
+import { getSummary } from '../services/records.service'
 
 const Profile = () => {
     const { token, user } = useAuth();
@@ -17,6 +18,11 @@ const Profile = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [userData, setUserData] = useState<User | null>(null);
+    const [summary, setSummary] = useState({
+        total_expense: 0,
+        total_income: 0,
+        total_records: 0
+    });
     const [categories, setCategories] = useState<CategoryType[] | null>(null);
 
 
@@ -40,6 +46,22 @@ const Profile = () => {
         }
         fetchUserData();
     }, [token, user]);
+
+    useEffect(() => {
+        if (!token) {
+            return;
+        }
+        const fetchSummary = async () => {
+            try {
+                const data = await getSummary(token);
+                console.log(data);
+                setSummary(data);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchSummary();
+    }, [token]);
 
     useEffect(() => {
         if (!token || !user) {
@@ -82,15 +104,15 @@ const Profile = () => {
                 <div className='grid grid-cols-3 '>
                     <div className='flex flex-col justify-center '>
                         <span className='text-gray-500'>總支出</span>
-                        <span>NT$26500</span>
+                        <span>NT${summary.total_expense}</span>
                     </div>
                     <div className='flex flex-col justify-center'>
                         <span className='text-gray-500'>總收入</span>
-                        <span>NT$26500</span>
+                        <span>NT${summary.total_income}</span>
                     </div>
                     <div className='flex flex-col justify-center'>
                         <span className='text-gray-500'>紀錄</span>
-                        <span>500</span>
+                        <span>{summary.total_records}</span>
                     </div>
                 </div>
             </Card>
