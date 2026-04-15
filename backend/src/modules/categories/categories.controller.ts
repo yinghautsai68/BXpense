@@ -10,7 +10,8 @@ export const createCategory = async (req: Request, res: Response) => {
         return res.status(400).json({ success: false, message: `輸入資料錯誤` });
     }
     try {
-        const { user_id, name, image_url } = bodyResult.data;
+        const { user_id } = (req as any).user;
+        const { name, image_url } = bodyResult.data;
 
         const [insertResult]: any = await db.query(
             `
