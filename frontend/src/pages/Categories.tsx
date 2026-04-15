@@ -98,7 +98,7 @@ const Categories = () => {
         }
     }
     return (
-        <DetailLayout title="類別自定義" rightAction={<Button onClick={() => handleSubmit()} className='bg-yellow-500 text-white'>新增</Button>}>
+        <DetailLayout title="類別自定義" rightAction={<Button onClick={() => handleSubmit()} className='bg-yellow-500 text-white'>{id ? '更新' : '新增'}</Button>}>
             <div className='flex flex-col bg-gray-200'>
                 <div className='grid grid-cols-2'>
                     <span className='text-center'>支出</span>
