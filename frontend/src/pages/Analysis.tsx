@@ -85,7 +85,7 @@ const Analysis = () => {
         fetchTopExpenseRecords();
     }, [token]);
 
-
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     return (
         <>
             <div className='flex flex-row items-center'>
@@ -99,7 +99,7 @@ const Analysis = () => {
             </Card>
             <Card>
                 <div className='w-full h-[180px] bg-white'>
-                    <ExpensePieChart data={pieData} />
+                    <ExpensePieChart data={pieData} colors={COLORS} />
                 </div>
                 <div className='flex flex-col  gap-5 w-full'>
                     {
@@ -122,8 +122,9 @@ const Analysis = () => {
                                     </div>
                                     <div className='w-full h-2 rounded-xl bg-gray-200'>
                                         <div style={{
-                                            width: `${getPercent(Number(category.total_amount))}%`
-                                        }} className={`h-2 rounded-xl bg-red-500`}>
+                                            width: `${getPercent(Number(category.total_amount))}%`,
+                                            backgroundColor: COLORS[index % COLORS.length]
+                                        }} className={`h-2 rounded-xl `}>
                                         </div>
                                     </div>
                                 </div>
