@@ -51,4 +51,29 @@ export const deleteUser = async (token: string, userId: string) => {
         throw error;
     }
 }
+export const resetUserData = async (token: string) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/me/data`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
 
+
+        const result = await response.json();
+
+
+        if (!result.success) {
+            throw new Error(result.message);
+        }
+
+        return result.message;
+    } catch (error) {
+        console.error("deleteUser 失敗", error);
+        throw error;
+    }
+}
