@@ -7,6 +7,7 @@ export const createUserSchema = z.object({
 })
 
 export const updateUserSchema = z.object({
-    username: z.string(),
-    image_url: z.string(),
-})
+    username: z.string().optional(),
+    password: z.string().optional(),
+    image_url: z.string().optional(),
+}) 

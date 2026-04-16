@@ -89,7 +89,7 @@ export const updateUser = async (req: Request, res: Response) => {
     }
     try {
         const { id } = req.params;
-        const { username, image_url } = bodyResult.data;
+        const { username, image_url, password } = bodyResult.data;
 
         const [userResult]: any = await db.query(
             `SELECT id FROM users WHERE id = ?`,
@@ -99,14 +99,22 @@ export const updateUser = async (req: Request, res: Response) => {
             return res.status(404).json({ success: false, message: `使用者不存在` });
         }
 
+        let hashedPassword;
+        if (password) {
+            hashedPassword = await bcrypt.hash(password, 10);
+        }
+
+
+
         const [updateResult]: any = await db.query(
             `
             UPDATE users SET
                 username = COALESCE (?, username),
-                image_url = COALESCE (?, image_url)
+                image_url = COALESCE (?, image_url),
+                password = COALESCE(?, password)
             WHERE id = ?
             `,
-            [username ?? null, image_url ?? null, id]
+            [username ?? null, image_url ?? null, hashedPassword ?? null, id]
         );
         if (updateResult.affectedRows === 0) {
             return res.status(400).json({ success: false, message: `更新使用者失敗` })
