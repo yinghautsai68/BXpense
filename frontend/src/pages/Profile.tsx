@@ -1,12 +1,12 @@
 import Card from '../components/Card'
 import { SubTitle } from '../components/Typography'
 import RecordTag from '../components/RecordTag'
-import { Link, useAsyncError, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react'
 
 import type { User } from '../types/users.types'
-import { deleteUser, getUserData, resetUserData } from '../services/user.service'
+import { getUserData, resetUserData } from '../services/user.service'
 import toast from 'react-hot-toast'
 import type { CategoryType } from '../types/categories.type'
 import { deleteCategoryById, getCategories } from '../services/categories.service'
@@ -82,16 +82,6 @@ const Profile = () => {
         fetchCategories();
     }, [token, user]);
 
-    const handleDeleteUser = async () => {
-        if (!user || !token) return;
-        try {
-            const result = await deleteUser(token, user.userId);
-            toast.success(result.message);
-
-        } catch (error) {
-            console.log(error);
-        }
-    }
     const [isDelete, setIsDelete] = useState<boolean>(false);
     const [deleteId, setDeleteId] = useState<number | null>(null);
     const handleDeleteById = async (categoryId: number) => {
@@ -133,7 +123,7 @@ const Profile = () => {
     return (
         <>
             <SubTitle>我的帳號</SubTitle>
-            <Card className='flex flex-col'>
+            <Card className='flex flex-col bg-white'>
                 <div className='flex flex-row items-center gap-2'>
                     <img src={userData.image_url} alt="大頭照" className='w-15 aspect-square border rounded-lg object-cover' />
                     <span>{userData.username}</span>
@@ -167,7 +157,7 @@ const Profile = () => {
                     <Link to='/categories' className='px-2 py-1 bg-yellow-500 rounded-xl cursor-pointer'>+</Link>
                 </div>
             </div>
-            <Card className='grid grid-cols-4 gap-5'>
+            <Card className='grid grid-cols-4 gap-5 bg-white'>
                 {
                     categories?.map((category, index) => (
                         <div className='relative'>
@@ -192,8 +182,10 @@ const Profile = () => {
             </Modal>
 
             <SubTitle>其他</SubTitle>
-            <Card>
-                <p onClick={() => setIsDeleteAccountOpen(true)} className='w-full py-2 text-center text-rose-600 cursor-pointer hover:bg-gray-300 rounded-lg transition-all'>清除所有資料</p>
+            <Card className='bg-white'>
+                <div onClick={() => setIsDeleteAccountOpen(true)} className='w-full py-2 text-center text-rose-600 cursor-pointer hover:bg-gray-300 rounded-lg transition-all'>
+                    <p >清除所有資料</p>
+                </div>
             </Card>
             <Modal isOpen={isDeleteAccountOpen} onClose={() => setIsDeleteAccountOpen(false)}>
                 <>
