@@ -18,7 +18,7 @@ const Account = () => {
     const { token, user } = useAuth();
     const { id } = useParams();
 
-    const { formatDateTime } = useUtil();
+    const { formatDate } = useUtil();
     const navigate = useNavigate();
 
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -80,9 +80,9 @@ const Account = () => {
         }
     }
     return (
-        <div className='flex flex-col gap-7 bg-neutral-200 w-full '>
-            <div className='flex flex-row justify-between items-stretch w-full  bg-white rounded-xl'>
-                <div className='flex flex-col justify-center gap-2 pl-4 py-4'>
+        <div className='flex flex-col gap-7 w-full '>
+            <div className='flex flex-row justify-between items-stretch w-full border-3 border-dashed  bg-white rounded-xl overflow-hidden'>
+                <div className='flex flex-col justify-center gap-2 pl-4 py-4 '>
                     <div className='flex flex-row items-center gap-2'>
                         <img src={account?.image_url} alt="" className='w-12 aspect-square border rounded-xl object-cover' />
                         <span className='font-bold'>{account?.name}</span>
@@ -92,8 +92,8 @@ const Account = () => {
                         <span className='text-2xl font-bold'>NTD {account?.final_balance}</span>
                     </div>
                 </div>
-                {/*  <img src={account?.image_url} alt="" className='w-24 h-full object-cover' />*/}
-                <div className='relative w-[50%] overflow-hidden'>
+
+                <div className='relative w-[50%] overflow-hidden '>
                     <div className='absolute right-3 top-3 flex flex-row items-center gap-2 '>
                         <img onClick={() => setIsDeleteOpen(true)} src={IconDelete} alt="icon-delete" className='w-5 aspect-square cursor-pointer' />
                         <img onClick={() => navigate(`/accounts/${account?.id}/edit`)} src={IconEdit} alt='icon-delete' className='w-5 aspect-square cursor-pointer' />
@@ -107,11 +107,8 @@ const Account = () => {
                     Object.keys(records).map((date) => (
                         <div className='flex flex-col gap-2'>
                             <div className='flex flex-row justify-between'>
-                                <span>{formatDateTime(date)}</span>
-                                <div className='flex flex-row gap-3'>
-                                    <span>out</span>
-                                    <span>in </span>
-                                </div>
+                                <span className='font-medium'>{formatDate(date)}</span>
+
                             </div>
                             <Card className='flex flex-col divide-y divide-gray-300 bg-white'>
                                 {
