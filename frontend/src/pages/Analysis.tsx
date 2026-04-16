@@ -10,6 +10,7 @@ import Card from '../components/Card';
 import { categoryZhTW } from '../constants/categoryZhTW';
 
 import IllustrationEmpty from '../assets/illustration/illustration-empty.png'
+import { CardTitle, SubTitle } from '../components/Typography';
 const Analysis = () => {
     const { token } = useAuth();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -80,11 +81,13 @@ const Analysis = () => {
     )
     return (
         <>
-            <Card className='w-full h-[230px] bg-white'>
+            <Card className='w-full h-[250px] bg-white'>
+                <CardTitle>支出歷史</CardTitle>
                 <span className='text-xs font-bold'>支出：NT${totalAmount}</span>
                 <ExpenseChart data={line}></ExpenseChart>
             </Card>
-            <Card>
+            <Card className='bg-white'>
+                <CardTitle>支出類別占比</CardTitle>
                 <div className='w-full h-[180px] bg-white'>
                     <ExpensePieChart data={pieData} colors={COLORS} />
                 </div>
@@ -120,9 +123,9 @@ const Analysis = () => {
                     }
                 </div>
             </Card>
-            <div className='flex flex-col w-full p-4 bg-white rounded-xl '>
+            <Card className='flex flex-col gap-5 bg-white'>
                 <div className='flex flex-row justify-between items-center'>
-                    <span>單筆金額排行</span>
+                    <CardTitle>單筆金額排行</CardTitle>
                     <span>TOP 10</span>
                 </div>
                 <div className='flex flex-col w-full  bg-white '>
@@ -132,7 +135,7 @@ const Analysis = () => {
                         ))
                     }
                 </div>
-            </div>
+            </Card>
         </>
     )
 }

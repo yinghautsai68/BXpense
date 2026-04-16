@@ -20,6 +20,7 @@ const ExpensePieChart = ({ data, colors = DEFAULT_COLORS }: ExpensePieChartProps
                     nameKey="name"
                     label={({ percent = 0 }) => `${(percent * 100).toFixed(1)}%`}
                     labelLine={false}
+                    outerRadius={50}
                 >
                     {data.map((data, index) => (
                         <Cell key={index} fill={colors[index % colors.length]} />
