@@ -74,8 +74,7 @@ export const getAssetsSummary = async (token: string) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        const result: ApiResponse<number> & {
-        } = await response.json();
+        const result = await response.json();
         if (!result.success) {
             throw new Error(result.message);
         }
