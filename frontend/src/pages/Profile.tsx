@@ -14,6 +14,7 @@ import { getSummary } from '../services/records.service'
 import Button from '../components/Button'
 import Modal from '../components/Modal'
 
+import IconEdit from '../assets/icons/icon-edit.png'
 const Profile = () => {
     const { token, user } = useAuth();
     const navigate = useNavigate();
@@ -124,9 +125,13 @@ const Profile = () => {
         <>
             <SubTitle>我的帳號</SubTitle>
             <Card className='flex flex-col bg-white'>
-                <div className='flex flex-row items-center gap-2'>
-                    <img src={userData.image_url} alt="大頭照" className='w-15 aspect-square border rounded-lg object-cover' />
-                    <span>{userData.username}</span>
+                <div className='flex flex-row justify-between items-center'>
+                    <div className='flex flex-row items-center gap-2'>
+                        <img src={userData.image_url} alt="大頭照" className='w-15 aspect-square border rounded-lg object-cover' />
+                        <span>{userData.username}</span>
+                    </div>
+
+                    <img onClick={() => navigate('/profile/edit')} src={IconEdit} alt='edit-user-button' className='w-5 h-5 bg-yellow-500' />
                 </div>
                 <div className='grid grid-cols-3 '>
                     <div className='flex flex-col justify-center '>
@@ -142,7 +147,7 @@ const Profile = () => {
                         <span>{summary.total_records}</span>
                     </div>
                 </div>
-            </Card>
+            </Card >
 
 
 

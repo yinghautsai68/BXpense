@@ -13,6 +13,7 @@ import { Toaster } from "react-hot-toast"
 import RecordForm from "./pages/RecordForm"
 import AccountForm from "./pages/AccountForm"
 import DetailLayout from "./layout/DetailLayout"
+import EditProfile from "./pages/EditProfile"
 
 
 
@@ -36,6 +37,8 @@ const App = () => {
         <Route path='/accounts/:id/edit' element={<DetailLayout title="更新帳戶"><AccountForm /></DetailLayout>}></Route>
 
         <Route path='/profile' element={<Layout title="使用者"><Profile></Profile></Layout>}></Route>
+        <Route path="/profile/edit" element={<Layout title="編輯使用者"><EditProfile /></Layout>} />
+
         <Route path='/categories' element={<Categories />}></Route>
         <Route path='/categories/:id/edit' element={<Categories />}></Route>
       </Routes>
