@@ -13,7 +13,7 @@ const Modal = ({ isOpen, onClose, children }: ModalProps) => {
             className="fixed left-0 top-0 bg-black/50 z-50 flex items-center justify-center w-full h-screen p-2 "
             onClick={onClose}
         >
-            <div className="bg-white w-full rounded-2xl p-4 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="w-full  flex flex-col gap-2 p-4 bg-white rounded-xl" onClick={(e) => e.stopPropagation()}>
                 {children}
             </div>
         </div>

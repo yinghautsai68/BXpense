@@ -3,6 +3,8 @@ import { useAuth } from '../context/AuthContext'
 import type { AccountType } from '../types/accounts.type';
 import { getAccounts } from '../services/accounts.service';
 import SavingsCard from '../components/SavingsCard';
+import Button from '../components/Button';
+import { useNavigate } from 'react-router-dom';
 type AccountSelectorProps = {
     onClose: () => void,
     handleSelectAccount: (accountId: number) => void,
@@ -10,6 +12,8 @@ type AccountSelectorProps = {
 
 const AccountSelector = ({ onClose, handleSelectAccount }: AccountSelectorProps) => {
     const { token, user } = useAuth();
+    const navigate = useNavigate();
+
     const [accounts, setAccounts] = useState<AccountType[] | null>(null)
 
     useEffect(() => {
@@ -38,11 +42,21 @@ const AccountSelector = ({ onClose, handleSelectAccount }: AccountSelectorProps)
 
     return (
         <>
-            <span>儲蓄帳戶</span>
+            <div className='flex flex-row justify-between items-center'>
+                <span>儲蓄帳戶</span>
+                <Button onClick={() => navigate('/accounts/new')} className='w-8 h-8 bg-yellow-500'>+</Button>
+            </div>
             <div className='flex flex-col '>
-                {accounts?.map((account, index) => (
-                    <SavingsCard key={index} onClick={() => handleSelect(account)} account={account} />
-                ))}
+                {accounts
+                    ?
+                    accounts.map((account, index) => (
+                        <SavingsCard key={index} onClick={() => handleSelect(account)} account={account} />
+                    ))
+                    :
+                    <div className='pl-5 py-2 bg-gray-200 rounded-xl'>
+                        目前沒有任何賬戶
+                    </div>
+                }
             </div>
         </>
     )
