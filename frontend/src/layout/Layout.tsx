@@ -22,7 +22,7 @@ const Layout = ({ title, children }: LayoutProps) => {
             <Title className='pl-5 text-white'>{title}</Title>
             <div className='flex flex-col gap-4 w-full min-h-screen  px-4 pt-8 pb-25 bg-zinc-100 rounded-t-2xl text-gray-800'>
                 {children}
-                <div className='fixed left-0 bottom-0  flex flex-row justify-between items-center w-full px-5 py-1 bg-white'>
+                <div className='fixed left-0 bottom-0  flex flex-row justify-between items-center w-full px-5 py-1 bg-white overflow-hidden'>
 
                     <NavLink to='/records'>
                         {({ isActive }) => (
@@ -46,9 +46,9 @@ const Layout = ({ title, children }: LayoutProps) => {
                         }
 
                     </NavLink>
-                    <div>
+                    <div className=' '>
                         <div className='absolute left-1/2 -translate-x-1/2  bottom-8 flex flex-row justify-center items-center w-15 h-15 bg-gray-100 rounded-full '>
-                            <NavLink to='/records/new' className='flex flex-row justify-center items-center w-10 h-10 pb-1 bg-yellow-500 rounded-full text-2xl font-bold'>+</NavLink>
+
                         </div>
                     </div>
                     <NavLink to='/accounts'>
@@ -76,6 +76,7 @@ const Layout = ({ title, children }: LayoutProps) => {
                         }
                     </NavLink>
                 </div>
+                <NavLink to='/records/new' className='fixed left-1/2 -translate-x-1/2 bottom-10 flex flex-row justify-center items-center w-10 h-10 pb-1 bg-yellow-500 rounded-full text-2xl font-bold '>+</NavLink>
             </div>
         </div >
     )
