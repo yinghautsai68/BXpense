@@ -7,22 +7,41 @@ import { getAccounts, getAssetsSummary } from '../services/accounts.service';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 
+import IllustrationAccount from '../assets/illustration/illustration-account.png'
+import IllustrationAccounts from '../assets/illustration/illustration-accounts.png'
 const Accounts = () => {
     const { token, user } = useAuth();
     const navigate = useNavigate();
 
+    const [accounts, setAccounts] = useState<AccountType[]>([]);
+
+    type AssetsSummary = {
+        net_assets: number
+        total_asset: number
+        total_debt: number
+    }
+    const [assetsSummary, setAssetsSummary] = useState<AssetsSummary>({
+        net_assets: 0,
+        total_asset: 0,
+        total_debt: 0
+    });
+
+
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const isEmpty = !isLoading && accounts.length === 0;
     const [error, setError] = useState<string | null>(null);
-    const [accounts, setAccounts] = useState<AccountType[] | null>(null);
+
+
     useEffect(() => {
         if (!token || !user) {
-            setIsLoading(false);
             return;
         }
-        const fetchAccounts = async () => {
+        const fetchData = async () => {
             try {
-                const data = await getAccounts(token, user.userId);
-                setAccounts(data);
+                const accountData = await getAccounts(token, user.userId);
+                setAccounts(accountData);
+                const assetsData = await getAssetsSummary(token);
+                setAssetsSummary(assetsData);
             } catch (error) {
                 console.error(error);
                 setError(String(error));
@@ -30,30 +49,13 @@ const Accounts = () => {
                 setIsLoading(false);
             }
         }
-
-        fetchAccounts();
+        fetchData();
     }, [token, user]);
 
-    const [assetsSummary, setAssetsSummary] = useState({});
-    useEffect(() => {
-        if (!token) {
-            return;
-        }
-        const fetchAssetsSummary = async () => {
-            try {
-                const data = await getAssetsSummary(token);
-                console.log(data);
-                setAssetsSummary(data);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        fetchAssetsSummary();
-    }, [token]);
     return (
         <>
-            <div className='flex flex-col gap-4 w-full p-4 border-2 border-dashed bg-white rounded-xl'>
-                <div className='flex flex-row justify-between items-center w-full'>
+            <div className='relative flex flex-col gap-4 w-full p-4 border-2 border-dashed bg-white rounded-xl'>
+                <div className=' flex flex-row justify-between items-center w-full'>
                     <div className='flex flex-col '>
                         <span className='text-xl'>淨資產</span>
                         {
@@ -62,9 +64,6 @@ const Accounts = () => {
                                 :
                                 <span className='text-2xl font-bold'>NT$ {assetsSummary.net_assets}</span>
                         }
-                    </div>
-                    <div className='w-20 aspect-square bg-black'>
-
                     </div>
                 </div>
                 <div className='flex flex-row gap-2'>
@@ -88,28 +87,38 @@ const Accounts = () => {
 
                     </div>
                 </div>
-            </div>
+                <div className='absolute right-5 w-15 h-15 bg-yellow-500 z-10'></div>
+                <img src={IllustrationAccount} className='absolute right-5 w-25 z-50 ' />
+            </div >
 
             <div className='flex flex-col gap-2'>
                 <div className='flex flex-row justify-between items-center'>
                     <SubTitle>儲蓄帳戶</SubTitle>
                     <Button onClick={() => navigate('/accounts/new')} className='p-1 bg-yellow-500'>新增帳戶</Button>
                 </div>
-                <div className='flex flex-col gap-2'>
-                    {
-                        isLoading ?
-                            <div className="h-16 bg-gray-300 rounded animate-pulse"></div>
-                            :
-                            accounts?.map((account, index) => {
-                                return (
-                                    <SavingsCard key={index} onClick={() => navigate(`/accounts/${account.id}`)} account={account} ></SavingsCard>
+                {!isLoading && isEmpty
+                    ?
+                    <div className='flex flex-col justify-center items-center gap-2 pt-10'>
+                        <img src={IllustrationAccounts} alt="" />
+                        <span className='text-center font-bold text-shadow-lg '>目前沒有任何賬戶</span>
+                    </div>
+                    :
 
-                                )
-                            })
+                    <div className='flex flex-col gap-2'>
+                        {
+                            isLoading ?
+                                <div className="h-16 bg-gray-300 rounded animate-pulse"></div>
+                                :
+                                accounts?.map((account, index) => {
+                                    return (
+                                        <SavingsCard key={index} onClick={() => navigate(`/accounts/${account.id}`)} account={account} ></SavingsCard>
 
-                    }
+                                    )
+                                })
 
-                </div>
+                        }
+
+                    </div>}
             </div >
         </ >
     )
