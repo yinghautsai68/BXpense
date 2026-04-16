@@ -8,7 +8,7 @@ import { useUtil } from '../context/UtilContext';
 
 const Records = () => {
     const { token, user } = useAuth();
-    const { formatDateTime } = useUtil();
+    const { formatDate } = useUtil();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [records, setRecords] = useState<Record<string, RecordType[]> | null>(null);
@@ -79,7 +79,7 @@ const Records = () => {
                         : records ? (
                             Object.entries(records).map(([date, records]) => (
                                 <div key={date}>
-                                    <span>{date}</span>
+                                    <span className='font-medium'>{formatDate(date)}</span>
                                     <Card className='divide-y divide-gray-300 bg-white'>
                                         {records.map((record, index) => (
                                             <ExpenseCard key={index} record={record}></ExpenseCard>
