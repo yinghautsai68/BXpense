@@ -20,7 +20,7 @@ const Layout = ({ title, children }: LayoutProps) => {
     return (
         <div className='flex flex-col gap-2 pt-10 pb-10 bg-yellow-400'>
             <Title className='pl-5 text-white'>{title}</Title>
-            <div className='flex flex-col gap-4 w-full h-screen    px-4 pt-8 pb-25 bg-zinc-100 rounded-t-2xl text-gray-800'>
+            <div className='flex flex-col gap-4 w-full min-h-screen  px-4 pt-8 pb-25 bg-zinc-100 rounded-t-2xl text-gray-800'>
                 {children}
                 <div className='fixed left-0 bottom-0  flex flex-row justify-between items-center w-full px-5 py-1 bg-white'>
 
