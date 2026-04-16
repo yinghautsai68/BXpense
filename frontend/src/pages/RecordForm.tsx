@@ -23,11 +23,7 @@ const RecordForm = () => {
 
     const [accountModalOpen, setAccountModalOpen] = useState<boolean>(false);
 
-    const { formatDateTime } = useUtil();
-    const currentDateTime = () => {
-        const now = new Date();
-        return now.toISOString().slice(0, 16); // YYYY-MM-DDTHH:mm
-    };
+
 
     const [recordForm, setRecordForm] = useState<createRecordType>({
         user_id: 0,
@@ -107,6 +103,7 @@ const RecordForm = () => {
                 const data = await getAccounts(token, user.userId);
                 console.log(data);
                 setAccounts(data);
+                setRecordForm((prev) => ({ ...prev, account_id: data[0].id }));
             } catch (error) {
                 console.error(error);
             }
