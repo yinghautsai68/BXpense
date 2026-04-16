@@ -113,7 +113,7 @@ const Account = () => {
                                     <span>in </span>
                                 </div>
                             </div>
-                            <Card className='flex flex-col divide-y divide-gray-300'>
+                            <Card className='flex flex-col divide-y divide-gray-300 bg-white'>
                                 {
                                     records[date].map((record, index) => (
                                         <ExpenseCard key={record.id} record={record}></ExpenseCard>
