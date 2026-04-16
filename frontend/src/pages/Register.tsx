@@ -77,7 +77,7 @@ const Register = () => {
         }
     }
     return (
-        <div className="flex flex-col gap-6 px-4 pt-15">
+        <div className="relative flex flex-col gap-6 w-full h-full  px-4 pt-15 pb-30 ">
             <div className="flex flex-row items-center gap-1">
                 <div className="w-5 aspect-square bg-amber-600"></div>
                 <Title>BXpense</Title>
@@ -109,7 +109,12 @@ const Register = () => {
 
 
                 <Button className="bg-yellow-500 hover:bg-yellow-700">註冊</Button>
+                <span>已經有帳號？ <span onClick={() => navigate('/login')} className="text-yellow-500 font-bold cursor-pointer">登入！</span></span>
             </form>
+
+            <div className="absolute left-0 bottom-0 w-full h-[10%] bg-yellow-400">
+
+            </div>
         </div>
     )
 }
