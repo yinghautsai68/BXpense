@@ -161,10 +161,6 @@ const Profile = () => {
                     <SubTitle>
                         我的類別
                     </SubTitle>
-                    <div className='flex flex-row items-center gap-2'>
-                        <span className='underline underline-offset-4 '>支出</span>
-                        <span>收入</span>
-                    </div>
                 </div>
                 <div className='flex flex-row items-center gap-2'>
                     <Button onClick={() => setIsDelete((prev) => !prev)} className='bg-red-500 text-white'>刪除</Button>
