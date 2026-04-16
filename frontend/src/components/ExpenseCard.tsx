@@ -9,7 +9,7 @@ type ExpenseCardProps = {
 };
 
 const ExpenseCard = ({ record }: ExpenseCardProps) => {
-    const { formatDateTime } = useUtil();
+    const { formatTime } = useUtil();
 
     return (
         <Link to={`/records/${record.id}`} className='flex flex-row justify-between items-center py-3 first:pt-0 last:pb-0 '>
@@ -22,7 +22,7 @@ const ExpenseCard = ({ record }: ExpenseCardProps) => {
             </div>
             <div className='flex flex-col items-end'>
                 <span className="text-xs font-bold">-NT$ {record.amount}</span>
-                <span className="text-xs">{formatDateTime(record.record_date)}</span>
+                <span className="text-xs">{formatTime(record.record_date)}</span>
             </div>
         </Link >
     )
