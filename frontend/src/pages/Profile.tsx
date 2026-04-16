@@ -141,11 +141,11 @@ const Profile = () => {
                 <div className='grid grid-cols-3 '>
                     <div className='flex flex-col justify-center '>
                         <span className='text-gray-500'>總支出</span>
-                        <span>NT${summary.total_expense}</span>
+                        <span>NT${summary.total_expense ?? 0}</span>
                     </div>
                     <div className='flex flex-col justify-center'>
                         <span className='text-gray-500'>總收入</span>
-                        <span>NT${summary.total_income}</span>
+                        <span>NT${summary.total_income ?? 0}</span>
                     </div>
                     <div className='flex flex-col justify-center'>
                         <span className='text-gray-500'>紀錄</span>
