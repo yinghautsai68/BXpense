@@ -133,7 +133,7 @@ const Profile = () => {
 
                     <img onClick={() => navigate('/profile/edit')} src={IconEdit} alt='edit-user-button' className='w-5 h-5 bg-yellow-500' />
                 </div>
-                <div className='grid grid-cols-3 '>
+                <div className='grid grid-cols-3 place-items-center '>
                     <div className='flex flex-col justify-center '>
                         <span className='text-gray-500'>總支出</span>
                         <span>NT${summary.total_expense ?? 0}</span>
@@ -193,13 +193,13 @@ const Profile = () => {
                 </div>
             </Card>
             <Modal isOpen={isDeleteAccountOpen} onClose={() => setIsDeleteAccountOpen(false)}>
-                <>
+                <div className='w-full h-min-screen'>
                     <span className='font-bold text-red-500'>確認刪除所有資料？ </span>
                     <div className='flex flex-row justify-end items-center gap-2'>
                         <Button onClick={() => setIsDeleteAccountOpen(false)} className='bg-gray-400 hover:bg-gray-500 text-white'>取消</Button>
                         <Button onClick={() => hanldeResetUserData()} className='bg-red-500 hover:bg-red-700 text-white'>刪除</Button>
                     </div>
-                </>
+                </div>
             </Modal>
         </>
     )
