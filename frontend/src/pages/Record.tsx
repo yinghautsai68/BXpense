@@ -55,7 +55,7 @@ const Record = () => {
     }
     return (
         <>
-            <Card>
+            <Card className="bg-white">
                 <div className="flex flex-row justify-between items-center border-b-2 border-dashed border-gray-300">
                     <div className="flex flex-row items-center gap-2 pb-4">
                         <img src={record?.category_image_url} alt="" className="w-10 aspect-square rounded-lg" />
