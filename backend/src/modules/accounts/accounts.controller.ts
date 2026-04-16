@@ -210,7 +210,7 @@ export const getTotalAssets = async (req: Request, res: Response) => {
                 ) AS final_balance
             FROM accounts a
             LEFT JOIN records r ON a.id = r.account_id 
-            WHERE a.user_id = ?
+            WHERE a.user_id = ? AND deleted_at IS NULL
             GROUP BY a.id
             `
             ,
