@@ -5,6 +5,7 @@ import type { RegisterType } from "../types/auth.types"
 import Button from "../components/Button"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
+import AuthLayout from "../layout/AuthLayout"
 
 
 const Register = () => {
@@ -77,7 +78,8 @@ const Register = () => {
         }
     }
     return (
-        <div className="relative flex flex-col gap-6 w-full h-full  px-4 pt-15 pb-30 ">
+
+        <AuthLayout>
             <div className="flex flex-row items-center gap-1">
                 <div className="w-5 aspect-square bg-amber-600"></div>
                 <Title>BXpense</Title>
@@ -93,7 +95,6 @@ const Register = () => {
                     <span className="text-rose-400">密碼不一致!</span>
                 }
                 <FormInput onChange={handleChange} label="確認密碼" name="confirmPassword" value={registerFormData.confirmPassword} type="password" placeholder="********" required={true} />
-
                 <FormInput ref={fileInputRef} onChange={handleFileChange} label="照片" name="image_url" type="file" required={false} />
                 <div className="flex flex-row justify-center items-center w-full">
                     <div onClick={() => fileInputRef.current?.click()} className="flex flex-row justify-center items-center w-32 h-32 border rounded-lg bg-zinc-100">
@@ -105,17 +106,13 @@ const Register = () => {
                         }
                     </div>
                 </div>
-
-
-
                 <Button className="bg-yellow-500 hover:bg-yellow-700">註冊</Button>
                 <span>已經有帳號？ <span onClick={() => navigate('/login')} className="text-yellow-500 font-bold cursor-pointer">登入！</span></span>
             </form>
 
-            <div className="absolute left-0 bottom-0 w-full h-[10%] bg-yellow-400">
 
-            </div>
-        </div>
+        </AuthLayout>
+
     )
 }
 

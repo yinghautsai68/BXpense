@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import type { LoginType } from "../types/auth.types";
 import Button from "../components/Button";
+import AuthLayout from "../layout/AuthLayout";
 
 const Login = () => {
     const { login } = useAuth();
@@ -45,7 +46,7 @@ const Login = () => {
         }
     };
     return (
-        <div className="flex flex-col gap-6 px-4 pt-15">
+        <AuthLayout>
             <div className="flex flex-row items-center gap-1">
                 <div className="w-5 aspect-square bg-amber-600"></div>
                 <Title>BXpense</Title>
@@ -56,7 +57,7 @@ const Login = () => {
                 <SubTitle>請登入您的帳號以使用.</SubTitle>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-full px-4" >
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3 w-full px-4" >
                 <FormInput onChange={handleChange} label="使用者" name="username" value={loginFormData.username} type="text" placeholder="example_123" required={true} />
                 <FormInput onChange={handleChange} label="密碼" name="password" value={loginFormData.password} type="password" placeholder="********" required={true} />
                 <Button className="bg-yellow-500 hover:bg-yellow-700">登入</Button>
@@ -66,7 +67,7 @@ const Login = () => {
             <div className="fixed left-0 bottom-0 w-full h-[20%] bg-yellow-400">
 
             </div>
-        </div>
+        </AuthLayout>
     )
 }
 
