@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ExpenseCard from '../components/ExpenseCard'
 import { getTopExpenseRecords } from '../services/records.service';
 import { useAuth } from '../context/AuthContext';
@@ -9,28 +9,39 @@ import { getCategorySummary, getLine } from '../services/analytics.service';
 import Card from '../components/Card';
 import { categoryZhTW } from '../constants/categoryZhTW';
 
+import IllustrationEmpty from '../assets/illustration/illustration-empty.png'
 const Analysis = () => {
     const { token } = useAuth();
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
     const [topExpenses, setTopExpenses] = useState<RecordType[]>([]);
     const [line, setLine] = useState([]);
     const [categorySummary, setCategorySummary] = useState([]);
 
+    const isEmpty = !isLoading && line.length === 0 && categorySummary.length === 0 && topExpenses.length === 0;
 
     useEffect(() => {
         if (!token) {
             return;
         }
-        const fetchLine = async () => {
+        const fetchAll = async () => {
             try {
-                const data = await getLine(token);
-                console.log(data);
-                setLine(data);
+                setIsLoading(true);
+                const lineData = await getLine(token);
+                const categoryData = await getCategorySummary(token);
+                const topData = await getTopExpenseRecords(token);
+                setLine(lineData);
+                setCategorySummary(categoryData);
+                setTopExpenses(topData);
             } catch (error) {
                 console.error(error);
+            } finally {
+                setIsLoading(false);
             }
         }
-        fetchLine();
-    }, [token])
+        fetchAll();
+    }, [token]);
+
 
 
     const totalAmount = categorySummary.reduce((sum, item) => sum + Number(item.total_amount), 0);
@@ -52,47 +63,23 @@ const Analysis = () => {
         setPieData(pie);
     }, [categorySummary]);
 
-    useEffect(() => {
-        if (!token) {
-            return;
-        }
-        const fetchCategorySummary = async () => {
-            try {
-                const data = await getCategorySummary(token);
-                console.log(data);
-                setCategorySummary(data);
 
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        fetchCategorySummary();
-    }, [token]);
 
-    useEffect(() => {
-        if (!token) {
-            return;
-        }
-        const fetchTopExpenseRecords = async () => {
-            try {
-                const data = await getTopExpenseRecords(token);
-                console.log(data);
-                setTopExpenses(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        fetchTopExpenseRecords();
-    }, [token]);
 
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+    if (isLoading) return (
+        <div className='flex flex-col pt-15 items-center w-full h-full'>
+            <span>loading</span>
+        </div>
+    )
+    if (isEmpty && !isLoading) return (
+        <div className=' flex flex-col pt-15 items-center w-full h-full'>
+            <img src={IllustrationEmpty} alt="" />
+            <span className='font-bold text-shadow-lg'>目前沒有數據可以參考</span>
+        </div>
+    )
     return (
         <>
-            <div className='flex flex-row items-center'>
-                <button>支出</button>
-                <button>支出</button>
-            </div>
-
             <Card className='w-full h-[230px] bg-white'>
                 <span className='text-xs font-bold'>支出：NT${totalAmount}</span>
                 <ExpenseChart data={line}></ExpenseChart>
