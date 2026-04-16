@@ -1,5 +1,5 @@
 import type { ApiResponse } from "../types/api.types";
-import type { User } from "../types/users.types";
+import type { EditUserFormType, User } from "../types/users.types";
 
 export const getUserData = async (token: string, userId: string): Promise<User> => {
     try {
@@ -21,6 +21,27 @@ export const getUserData = async (token: string, userId: string): Promise<User> 
         return result.data;
     } catch (error) {
         console.error("getUserData 失敗", error);
+        throw error;
+    }
+}
+
+export const updateUser = async (token: string, userId: string, EditUserForm: EditUserFormType) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/${userId}`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(EditUserForm)
+        });
+        const result = await response.json();
+        if (!result.success) {
+            throw new Error(result.message);
+        }
+        return result.message;
+    } catch (error) {
+        console.error(error);
         throw error;
     }
 }
