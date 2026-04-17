@@ -6,7 +6,7 @@ type InformationProps = {
 
     label: string,
     name?: string,
-    value: string | number | undefined,
+    value: string | string,
     type?: 'text' | 'number' | 'file'
 }
 const Information = ({ onChange, className, label, name, value, type }: InformationProps) => {
@@ -22,7 +22,7 @@ const Information = ({ onChange, className, label, name, value, type }: Informat
                     <div onClick={handleClick}>
                         {
                             value ? (
-                                <img src={value} alt="" className='w-10 aspect-square rounded-lg object-cover ' />
+                                <img src={value} alt="" className='w-10 aspect-square rounded-lg object-cover cursor-pointer ' />
                             )
                                 : (
                                     <span>請添加照片</span>

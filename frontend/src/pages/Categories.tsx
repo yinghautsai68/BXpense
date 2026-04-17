@@ -99,26 +99,28 @@ const Categories = () => {
     }
     return (
         <DetailLayout title="類別自定義" rightAction={<Button onClick={() => handleSubmit()} className='bg-yellow-500 text-white'>{id ? '更新' : '新增'}</Button>}>
-            <div className='flex flex-col bg-gray-200'>
-                <div className='grid grid-cols-2'>
-                    <span className='text-center'>支出</span>
-                    <span className='text-center'>收入</span>
+            <div className='flex flex-col items-center gap-5 p-2'>
+                <div className='flex flex-row items-center w-20 p-3 aspect-square border-2 border-yellow-500 bg-white rounded-full'> {
+                    categoryForm.image_url
+                        ?
+                        <img src={categoryForm.image_url} className='w-full' />
+                        :
+                        <span className='w-full text-center text-xs'>選擇照片</span>
+
+                }
                 </div>
-                <div className='flex flex-col items-center gap-5 p-2'>
-                    <img src={categoryForm.image_url} className='w-20 p-3 aspect-square border-2 border-yellow-500 bg-white rounded-full' />
-                    <input type="text" name='name' value={categoryForm.name} onChange={handleChange} placeholder='請輸入類別名稱' className='border-b text-center focus:outline-none' />
-                </div>
+                <input type="text" name='name' value={categoryForm.name} onChange={handleChange} placeholder='請輸入類別名稱' className='border-b text-center focus:outline-none' />
+            </div>
 
-                <Card className='grid grid-cols-4 content-start place-items-center gap-4 h-full bg-gray-200'>
-                    {
-                        categories.map((category, index) => (
+            <Card className='grid grid-cols-4 content-start place-items-center gap-4 h-full bg-gray-200 overflow-y-auto'>
+                <Icon className='border-2 border-dashed'>+</Icon>
+                {
+                    categories.map((category, index) => (
+                        <Icon key={index} onClick={() => handleIconClick(category.image_url)} isSelected={categoryForm.image_url === category.image_url} image_url={category.image_url}></Icon>
+                    ))
+                }
+            </Card>
 
-                            <Icon key={index} onClick={() => handleIconClick(category.image_url)} isSelected={categoryForm.image_url === category.image_url} image_url={category.image_url}></Icon>
-
-                        ))
-                    }
-                </Card>
-            </div >
         </DetailLayout>
     )
 }

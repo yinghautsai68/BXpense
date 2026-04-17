@@ -83,7 +83,8 @@ const Records = () => {
                                     <Card className='divide-y divide-gray-300 bg-white'>
                                         {records.map((record, index) => (
                                             <ExpenseCard key={index} record={record}></ExpenseCard>
-                                        ))}
+                                        ))
+                                        }
                                     </Card>
                                 </div>
                             ))

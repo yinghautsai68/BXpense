@@ -80,11 +80,11 @@ const Account = () => {
         }
     }
     return (
-        <div className='flex flex-col gap-7 w-full '>
-            <div className='flex flex-row justify-between items-stretch w-full border-3 border-dashed  bg-white rounded-xl overflow-hidden'>
+        <>
+            <div className='flex flex-row justify-between items-stretch w-full h-60 border-3 border-dashed  bg-white rounded-xl overflow-hidden'>
                 <div className='flex flex-col justify-center gap-2 pl-4 py-4 '>
                     <div className='flex flex-row items-center gap-2'>
-                        <img src={account?.image_url} alt="" className='w-12 aspect-square border rounded-xl object-cover' />
+                        <img src={account?.image_url} alt="" className='w-12 aspect-square border border-gray-300  rounded-xl object-cover' />
                         <span className='font-bold'>{account?.name}</span>
                     </div>
                     <div className='flex flex-col'>
@@ -102,22 +102,18 @@ const Account = () => {
                 </div>
             </div>
 
-            <div className='flex flex-col gap-5'>
+            {/*records*/}
+            <div className='flex flex-col gap-5  h-full overflow-y-auto'>
                 {
                     Object.keys(records).map((date) => (
-                        <div className='flex flex-col gap-2'>
-                            <div className='flex flex-row justify-between'>
-                                <span className='font-medium'>{formatDate(date)}</span>
-
-                            </div>
-                            <Card className='flex flex-col divide-y divide-gray-300 bg-white'>
+                        <div className='flex flex-col gap-2 '>
+                            <span className='font-medium'>{formatDate(date)}</span>
+                            <Card className='flex flex-col  divide-y divide-gray-300 bg-white'>
                                 {
                                     records[date].map((record, index) => (
                                         <ExpenseCard key={record.id} record={record}></ExpenseCard>
                                     ))
                                 }
-
-
                             </Card>
                         </div>
                     ))
@@ -136,7 +132,7 @@ const Account = () => {
                     </div>
                 </div>
             </Modal>
-        </div >
+        </ >
     )
 }
 

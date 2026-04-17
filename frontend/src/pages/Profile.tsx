@@ -162,7 +162,7 @@ const Profile = () => {
                     <Link to='/categories' className='px-2 py-1 bg-yellow-500 rounded-xl cursor-pointer'>+</Link>
                 </div>
             </div>
-            <Card className='grid grid-cols-4 gap-5 bg-white'>
+            <Card className='grid grid-cols-4 md:grid-cols-8 gap-5 bg-white'>
                 {
                     categories?.map((category, index) => (
                         <div className='relative'>
@@ -173,6 +173,7 @@ const Profile = () => {
                             <RecordTag key={index} onClick={() => navigate(`/categories/${category.id}/edit`)} category={category}></RecordTag>
                         </div>
                     ))
+
                 }
             </Card>
 

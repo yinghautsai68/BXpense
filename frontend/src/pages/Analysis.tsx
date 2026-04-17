@@ -10,14 +10,15 @@ import Card from '../components/Card';
 import { categoryZhTW } from '../constants/categoryZhTW';
 
 import IllustrationEmpty from '../assets/illustration/illustration-empty.png'
-import { CardTitle, SubTitle } from '../components/Typography';
+import { CardTitle } from '../components/Typography';
+import type { CategorySummaryType, LineType, PieType } from '../types/analysis.type';
 const Analysis = () => {
     const { token } = useAuth();
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const [topExpenses, setTopExpenses] = useState<RecordType[]>([]);
-    const [line, setLine] = useState([]);
-    const [categorySummary, setCategorySummary] = useState([]);
+    const [line, setLine] = useState<LineType[]>([]);
+    const [categorySummary, setCategorySummary] = useState<CategorySummaryType[]>([]);
 
     const isEmpty = !isLoading && line.length === 0 && categorySummary.length === 0 && topExpenses.length === 0;
 
@@ -29,6 +30,7 @@ const Analysis = () => {
             try {
                 setIsLoading(true);
                 const lineData = await getLine(token);
+                console.log(lineData);
                 const categoryData = await getCategorySummary(token);
                 const topData = await getTopExpenseRecords(token);
                 setLine(lineData);
@@ -52,7 +54,7 @@ const Analysis = () => {
 
 
 
-    const [pieData, setPieData] = useState([]);
+    const [pieData, setPieData] = useState<PieType[]>([]);
     useEffect(() => {
 
         let pie = categorySummary.map((item, index) => (
@@ -75,7 +77,7 @@ const Analysis = () => {
     )
     if (isEmpty && !isLoading) return (
         <div className=' flex flex-col pt-15 items-center w-full h-full'>
-            <img src={IllustrationEmpty} alt="" />
+            <img src={IllustrationEmpty} alt="" className='md:w-64 md:h-64' />
             <span className='font-bold text-shadow-lg'>目前沒有數據可以參考</span>
         </div>
     )

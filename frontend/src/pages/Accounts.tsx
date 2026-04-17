@@ -91,15 +91,15 @@ const Accounts = () => {
                 <img src={IllustrationAccount} className='absolute right-5 w-25 z-50 ' />
             </div >
 
-            <div className='flex flex-col gap-2'>
+            <div className='flex flex-col gap-2 pb-20'>
                 <div className='flex flex-row justify-between items-center'>
                     <SubTitle>儲蓄帳戶</SubTitle>
                     <Button onClick={() => navigate('/accounts/new')} className='p-1 bg-yellow-500'>新增帳戶</Button>
                 </div>
                 {!isLoading && isEmpty
                     ?
-                    <div className='flex flex-col justify-center items-center gap-2 pt-10'>
-                        <img src={IllustrationAccounts} alt="" />
+                    <div className='flex flex-col justify-center items-center gap-2 pt-15'>
+                        <img src={IllustrationAccounts} alt="" className='w-64' />
                         <span className='text-center font-bold text-shadow-lg '>目前沒有任何賬戶</span>
                     </div>
                     :

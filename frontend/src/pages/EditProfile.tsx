@@ -15,7 +15,7 @@ const EditProfile = () => {
     const { token, user } = useAuth();
     const navigate = useNavigate();
     const { formatDateTime } = useUtil();
-    const imageRef = useRef(null);
+    const imageRef = useRef<HTMLInputElement | null>(null);
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [userData, setUserData] = useState<User>({
@@ -107,12 +107,12 @@ const EditProfile = () => {
                 <Button onClick={() => navigate(-1)} className="bg-gray-300">回上一頁</Button>
             </div>
             <FormInput ref={imageRef} label="照片" name="image_url" type="file" onChange={handleImageChange} required={true} ></FormInput>
-            <img onClick={() => imageRef.current.click()} src={formData.image_url} alt="" className='w-45 aspect-square rounded-xl object-cover' />
+            <img onClick={() => imageRef.current?.click()} src={formData.image_url} alt="" className='w-45 aspect-square rounded-xl object-cover' />
             <FormInput label="名稱" name="username" value={formData.username} type="text" onChange={handleChange} required={true} ></FormInput>
             <FormInput label="密碼" name="password" value={formData.password} type="password" onChange={handleChange} required={true} ></FormInput>
             <FormInput label="確認密碼" name="confirmPassword" value={formData.confirmPassword} type="password" onChange={handleChange} required={true} ></FormInput>
 
-            <Button onClick={() => handleSubmit()} className="w-full bg-yellow-500 hover:bg-yellow-700">更新資料</Button>
+            <Button onClick={() => handleSubmit()} className="w-full max-w-md bg-yellow-500 hover:bg-yellow-700">更新資料</Button>
             <SubTitle>創造時間</SubTitle>
             <span>{formatDateTime(userData.created_at)}</span>
             <SubTitle>最後一次更新時間</SubTitle>

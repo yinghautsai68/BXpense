@@ -1,12 +1,15 @@
 type IconProps = {
-    onClick: () => void;
-    isSelected: boolean,
-    image_url: string
+    className?: string,
+    onClick?: () => void;
+    isSelected?: boolean,
+    image_url?: string,
+    children?: React.ReactNode
 }
-const Icon = ({ onClick, isSelected = false, image_url = '' }: IconProps) => {
+const Icon = ({ className, onClick, isSelected = false, image_url = '', children = '' }: IconProps) => {
     return (
-        <div onClick={onClick} className={`${isSelected ? 'border-2 border-yellow-500' : ''} flex flex-row justify-center items-center w-15 p-3 aspect-square  rounded-full bg-white  `}>
+        <div onClick={onClick} className={`flex flex-row justify-center items-center w-15 p-3 aspect-square  rounded-full bg-white cursor-pointer ${className} ${isSelected ? 'border-2 border-yellow-500' : ''}   `}>
             <img src={image_url} alt="" />
+            {children}
         </div>
     )
 }

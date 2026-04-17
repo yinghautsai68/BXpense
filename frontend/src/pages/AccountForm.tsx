@@ -8,7 +8,6 @@ import { createAccount, getAccountById, updateAccountById } from "../services/ac
 import Button from "../components/Button"
 import toast from "react-hot-toast"
 import { useNavigate, useParams } from "react-router-dom"
-import { updateRecordById } from "../services/records.service";
 
 
 const AccountForm = () => {
@@ -101,19 +100,18 @@ const AccountForm = () => {
             }
         } catch (error) {
             console.error(error);
-            toast.error(error, 'hotdog');
         }
     }
     return (
         <>
-            <Card >
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className="flex flex-col justify-between w-full flex-1">
+                <Card className="flex flex-col gap-5 w-full bg-white">
                     <Information label="帳戶名稱" name='name' value={accountForm.name} type="text" onChange={handleChange}></Information>
                     <Information label="帳戶照片" name='image_url' value={imagePreview ?? ''} type="file" onChange={hanldeUpload}></Information>
                     <Information label="當前餘額" name='balance' value={accountForm.balance} type="number" onChange={handleChange}></Information>
-                    <Button className="bg-yellow-500 text-white">{id ? '更新' : '新增'}</Button>
-                </form>
-            </Card>
+                </Card>
+                <Button className="bg-yellow-500 hover:bg-yellow-600 text-white">{id ? '更新' : '新增'}</Button>
+            </form>
         </>
     )
 }

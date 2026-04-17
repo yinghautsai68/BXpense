@@ -1,8 +1,10 @@
-import React from 'react'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 type ExpenseChartProps = {
-    data: Record<string, number>[]
+    data: {
+        date: string,
+        amount: number
+    }[]
 }
 const ExpenseChart = ({ data }: ExpenseChartProps) => {
 

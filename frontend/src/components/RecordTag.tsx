@@ -10,7 +10,7 @@ type RecordTagProps = {
 const RecordTag = ({ onClick, isSelected, className, category }: RecordTagProps) => {
     return (
         <div onClick={onClick} className='flex flex-col items-center gap-1'>
-            <img src={category.image_url} className={`w-full p-3 aspect-square border border-white  rounded-full ${isSelected ? ' border-yellow-500 bg-white' : 'bg-white'} transition-all duration-200 `} />
+            <img src={category.image_url} className={`w-16 md:w-15 aspect-square p-2 border border-white ${isSelected ? ' border-yellow-500 bg-white' : 'bg-white'}  rounded-full cursor-pointer transition-all duration-200  `} />
             <span className={` text-xs ${isSelected ? 'font-bold' : 'text-gray-800'}`}>{categoryZhTW[category.name] || category.name}</span>
         </div>
     )

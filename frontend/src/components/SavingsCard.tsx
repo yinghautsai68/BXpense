@@ -8,7 +8,7 @@ type SavingsCardProps = {
 };
 const SavingsCard = ({ account, onClick }: SavingsCardProps) => {
     return (
-        <div onClick={onClick} className='flex flex-row justify-between items-center px-4 py-4 bg-white rounded-xl'>
+        <div onClick={onClick} className='flex flex-row justify-between items-center px-4 py-4 bg-white rounded-xl cursor-pointer'>
             <div className='flex flex-row items-center gap-2'>
                 <img src={account.image_url} className='w-8 aspect-square border rounded-lg object-cover' />
                 <span>{account.name}</span>

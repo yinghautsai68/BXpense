@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom"
 import Card from "../components/Card"
 import Information from "../components/Information"
-import { Title } from "../components/Typography"
 import { useEffect, useState } from "react"
 import type { RecordType } from "../types/records.type"
 import { useAuth } from "../context/AuthContext"
@@ -64,7 +63,7 @@ const Record = () => {
                     <span className={`${record?.type === 'expense' ? 'text-red-500' : 'text-green-500'}`}>{record?.type === 'expense' ? '-' : '+'}NT$ {record?.amount}</span>
                 </div>
                 <div className="flex flex-col gap-4">
-                    <Information label="類別" type="text" value={typeZhTw[record?.type]} />
+                    <Information label="類別" type="text" value={typeZhTw[record?.type ? typeZhTw[record.type] : '']} />
                     <Information label="備註" type="text" value={record?.remarks} />
                     <Information label="帳戶" type="text" value={record?.account_name} />
                     <Information label="日期" type="text" value={formatDateTime(record?.record_date || "")} />
@@ -75,24 +74,16 @@ const Record = () => {
                     <img src={IconEdit} onClick={() => navigate(`/records/${id}/edit`)} className="w-8 " />
                     <img src={IconDelete} onClick={() => setShowDeleteModal(true)} className="w-8" />
                 </div>
-
-                <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
-                    <>
-                        <p className="">確定要刪除這筆紀錄嗎？</p>
-                        <div className="flex justify-end gap-2">
-                            <Button onClick={() => setShowDeleteModal(false)} className="px-4 py-2 bg-gray-400 hover:bg-gray-500 rounded text-white">取消</Button>
-                            <Button onClick={handleDelete} className="px-4 py-2 bg-rose-500 hover:bg-rose-700  rounded text-white">刪除</Button>
-                        </div>
-                    </>
-
-
-
-
-                </Modal>
-
-
-
             </div >
+            <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+                <>
+                    <p className="">確定要刪除這筆紀錄嗎？</p>
+                    <div className="flex justify-end gap-2">
+                        <Button onClick={() => setShowDeleteModal(false)} className="px-4 py-2 bg-gray-400 hover:bg-gray-500 rounded text-white">取消</Button>
+                        <Button onClick={handleDelete} className="px-4 py-2 bg-rose-500 hover:bg-rose-700  rounded text-white">刪除</Button>
+                    </div>
+                </>
+            </Modal>
         </>
     )
 }
