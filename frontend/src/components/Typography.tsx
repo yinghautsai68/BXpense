@@ -1,5 +1,3 @@
-import { Children } from "react"
-
 type TitleProps = {
     className?: string,
     children: React.ReactNode

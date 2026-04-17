@@ -1,6 +1,5 @@
 import type { ApiResponse } from "../types/api.types";
 import type { CategoryType, CreateCategoryType } from "../types/categories.type";
-import type { createRecordType } from "../types/records.type";
 
 export const createCategory = async (token: string, categoryForm: CreateCategoryType) => {
     try {

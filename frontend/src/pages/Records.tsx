@@ -41,12 +41,12 @@ const Records = () => {
     }, [token, user])
 
     useEffect(() => {
-        if (!token || !user) {
+        if (!token) {
             return;
         }
         const fetchMonthlySummary = async () => {
             try {
-                const data = await getMonthlySummary(token, user.userId);
+                const data = await getMonthlySummary(token);
                 console.log('monthly summary', data);
                 setMonthlySummary(data);
             } catch (error) {
@@ -54,7 +54,7 @@ const Records = () => {
             }
         }
         fetchMonthlySummary();
-    }, [token, user]);
+    }, [token]);
     return (
         <>
             <div className='flex flex-col gap-4 p-2 bg-white rounded-lg text-sm'>

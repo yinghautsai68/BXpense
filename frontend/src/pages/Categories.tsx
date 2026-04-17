@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent } from 'react';
+import { useEffect, useState } from 'react';
 import Card from '../components/Card'
 import Icon from '../components/Icon'
 import type { CategoryType, CreateCategoryType } from '../types/categories.type';

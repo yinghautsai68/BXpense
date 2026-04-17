@@ -64,8 +64,8 @@ const Record = () => {
                 </div>
                 <div className="flex flex-col gap-4">
                     <Information label="類別" type="text" value={typeZhTw[record?.type ? typeZhTw[record.type] : '']} />
-                    <Information label="備註" type="text" value={record?.remarks} />
-                    <Information label="帳戶" type="text" value={record?.account_name} />
+                    <Information label="備註" type="text" value={record?.remarks ?? ''} />
+                    <Information label="帳戶" type="text" value={record?.account_name ?? ''} />
                     <Information label="日期" type="text" value={formatDateTime(record?.record_date || "")} />
                 </div>
             </Card>

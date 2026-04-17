@@ -57,7 +57,7 @@ const Analysis = () => {
     const [pieData, setPieData] = useState<PieType[]>([]);
     useEffect(() => {
 
-        let pie = categorySummary.map((item, index) => (
+        let pie = categorySummary.map((item) => (
             {
                 name: categoryZhTW[item.name],
                 value: Number(item.total_amount)
@@ -132,7 +132,7 @@ const Analysis = () => {
                 </div>
                 <div className='flex flex-col w-full  bg-white '>
                     {
-                        topExpenses.map((expense, index) => (
+                        topExpenses.map((expense) => (
                             <ExpenseCard key={expense.id} record={expense}></ExpenseCard>
                         ))
                     }

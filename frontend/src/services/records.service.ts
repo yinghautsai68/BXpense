@@ -84,7 +84,7 @@ export const getRecordsByAccountId = async (token: string, accountId: string) =>
     }
 }
 
-export const getMonthlySummary = async (token: string, userId: string) => {
+export const getMonthlySummary = async (token: string) => {
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records/monthly-summary`, {
             method: 'GET',

@@ -1,6 +1,4 @@
-import React from 'react'
 import type { AccountType } from '../types/accounts.type'
-import { Link } from 'react-router-dom';
 
 type SavingsCardProps = {
     account: AccountType,

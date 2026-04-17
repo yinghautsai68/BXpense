@@ -1,7 +1,6 @@
 import React from 'react'
 
 type FormInputProps = {
-    className?: string,
     label: string,
     name: string,
     value?: string,
@@ -11,7 +10,7 @@ type FormInputProps = {
 
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
-const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(({ className, label, name, value, type, placeholder, required, onChange }, ref) => {
+const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(({ label, name, value, type, placeholder, required, onChange }, ref) => {
     return (
         <div className='flex flex-col w-full max-w-md'>
             <label htmlFor={name} className='font-bold'>{label}</label>

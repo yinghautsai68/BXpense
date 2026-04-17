@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ExpenseCard from '../components/ExpenseCard'
 import Card from '../components/Card'
 import type { AccountType } from '../types/accounts.type'
@@ -110,7 +110,7 @@ const Account = () => {
                             <span className='font-medium'>{formatDate(date)}</span>
                             <Card className='flex flex-col  divide-y divide-gray-300 bg-white'>
                                 {
-                                    records[date].map((record, index) => (
+                                    records[date].map((record) => (
                                         <ExpenseCard key={record.id} record={record}></ExpenseCard>
                                     ))
                                 }

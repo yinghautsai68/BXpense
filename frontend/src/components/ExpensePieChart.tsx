@@ -22,7 +22,7 @@ const ExpensePieChart = ({ data, colors = DEFAULT_COLORS }: ExpensePieChartProps
                     labelLine={false}
                     outerRadius={50}
                 >
-                    {data.map((data, index) => (
+                    {data.map((_, index) => (
                         <Cell key={index} fill={colors[index % colors.length]} />
                     ))}
                 </Pie>
