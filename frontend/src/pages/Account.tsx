@@ -83,10 +83,18 @@ const Account = () => {
         <>
             <div className='flex flex-row justify-between items-stretch w-full h-60 border-3 border-dashed  bg-white rounded-xl overflow-hidden'>
                 <div className='flex flex-col justify-center gap-2 pl-4 py-4 '>
-                    <div className='flex flex-row items-center gap-2'>
-                        <img src={account?.image_url} alt="" className='w-12 aspect-square border border-gray-300  rounded-xl object-cover' />
-                        <span className='font-bold'>{account?.name}</span>
-                    </div>
+                    {isLoading ?
+                        <div className='flex flex-row items-center gap-2'>
+                            <div className='w-12 aspect-square bg-gray-400 border border-gray-300  rounded-xl object-cover' />
+                            <div className='w-15 h-5 bg-gray-400'></div>
+                        </div>
+                        :
+                        <div className='flex flex-row items-center gap-2'>
+                            <img src={account?.image_url} alt="" className='w-12 aspect-square border border-gray-300  rounded-xl object-cover' />
+                            <span className='font-bold'>{account?.name}</span>
+                        </div>
+                    }
+
                     <div className='flex flex-col'>
                         <span className='text-sm'>當前餘額</span>
                         <span className='text-2xl font-bold'>NTD {account?.final_balance}</span>

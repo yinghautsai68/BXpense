@@ -51,7 +51,9 @@ const Accounts = () => {
         }
         fetchData();
     }, [token, user]);
-
+    if (error) return (
+        <div>{error}</div>
+    )
     return (
         <>
             <div className='relative flex flex-col gap-4 w-full p-4 border-2 border-dashed bg-white rounded-xl'>

@@ -91,6 +91,7 @@ const AccountForm = () => {
             let data;
             if (id) {
                 data = await updateAccountById(token, id, accountForm);
+                console.log(data);
                 toast.success("更新帳戶成功");
                 navigate(-1);
             } else {

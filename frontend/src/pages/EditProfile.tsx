@@ -100,7 +100,9 @@ const EditProfile = () => {
     }
 
 
-
+    if (isLoading) return (
+        <div>...loading</div>
+    )
     return (
         <div className='flex flex-col justify-start items-center gap-5 flex-1'>
             <div className="flex flex-row justify-start w-full">
