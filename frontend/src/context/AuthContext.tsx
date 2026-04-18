@@ -20,7 +20,9 @@ type AuthContext = {
 const AuthContext = createContext<AuthContext | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [token, setToken] = useState<string | null>(null);
+    const [token, setToken] = useState<string | null>(() => {
+        return localStorage.getItem("token")
+    });
     const [user, setUser] = useState<AuthUser | null>(null);
 
     useEffect(() => {
