@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import ExpenseCard from '../components/ExpenseCard'
-import { getTopExpenseRecords } from '../services/records.service';
 import { useAuth } from '../context/AuthContext';
 import type { RecordType } from '../types/records.type';
 import ExpenseChart from '../components/ExpenseChart';
@@ -12,10 +11,10 @@ import { categoryZhTW } from '../constants/categoryZhTW';
 import IllustrationEmpty from '../assets/illustration/illustration-empty.png'
 import { CardTitle } from '../components/Typography';
 import type { CategorySummaryType, LineType, PieType } from '../types/analysis.type';
+import { getMyRecords } from '../services/records.service';
 const Analysis = () => {
     const { token } = useAuth();
     const [isLoading, setIsLoading] = useState<boolean>(true);
-
     const [topExpenses, setTopExpenses] = useState<RecordType[]>([]);
     const [line, setLine] = useState<LineType[]>([]);
     const [categorySummary, setCategorySummary] = useState<CategorySummaryType[]>([]);
@@ -29,13 +28,41 @@ const Analysis = () => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const lineData = await getLine(token);
-                console.log(lineData);
-                const categoryData = await getCategorySummary(token);
-                const topData = await getTopExpenseRecords(token);
-                setLine(lineData);
-                setCategorySummary(categoryData);
-                setTopExpenses(topData);
+                const results = await Promise.allSettled([
+                    getLine(token),
+                    getCategorySummary(token),
+                    getMyRecords(token, {
+                        limit: 10,
+                        type: "expense",
+                        sort: "amount_desc"
+                    })
+                ]);
+
+                const lineRes = results[0];
+                console.log(lineRes);
+                const categoryRes = results[1];
+                const topRes = results[2];
+
+                // Line chart data
+                if (lineRes.status === "fulfilled") {
+                    setLine(lineRes.value);
+                } else {
+                    console.error("Line API failed:", lineRes.reason);
+                }
+
+                // Category data
+                if (categoryRes.status === "fulfilled") {
+                    setCategorySummary(categoryRes.value);
+                } else {
+                    console.error("Category API failed:", categoryRes.reason);
+                }
+
+                // Top expenses
+                if (topRes.status === "fulfilled") {
+                    setTopExpenses(topRes.value);
+                } else {
+                    console.error("Top records API failed:", topRes.reason);
+                }
             } catch (error) {
                 console.error(error);
             } finally {
@@ -124,10 +151,12 @@ const Analysis = () => {
                     <span>TOP 10</span>
                 </div>
                 <div className='flex flex-col w-full  bg-white '>
-                    {
+                    {topExpenses.length > 0 ?
                         topExpenses.map((expense) => (
                             <ExpenseCard key={expense.id} record={expense}></ExpenseCard>
                         ))
+                        :
+                        <div>沒有紀錄</div>
                     }
                 </div>
             </Card>

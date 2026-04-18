@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import ExpenseCard from '../components/ExpenseCard'
 import { useAuth } from '../context/AuthContext';
 import type { MonthlySummaryType, RecordType } from '../types/records.type';
-import { getMonthlySummary, getMyRecords, getRecords } from '../services/records.service';
+import { getMonthlySummary, getMyGroupedRecords } from '../services/records.service';
 import Card from '../components/Card';
 import { useUtil } from '../context/UtilContext';
 
 const Records = () => {
-    const { token, user } = useAuth();
+    const { token } = useAuth();
     const { formatDate } = useUtil();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -26,7 +26,7 @@ const Records = () => {
         }
         const fetchData = async () => {
             try {
-                const recordsData = await getMyRecords(token);
+                const recordsData = await getMyGroupedRecords(token);
                 console.log(recordsData);
                 setRecords(recordsData);
 

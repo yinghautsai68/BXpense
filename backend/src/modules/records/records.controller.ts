@@ -90,8 +90,9 @@ export const getRecords = async (req: Request, res: Response) => {
 export const getMyRecords = async (req: Request, res: Response) => {
     try {
         const { user_id } = (req as any).user;
+        const { limit, type, sort } = req.query;
 
-        const [recordsResult]: any = await db.query(
+        let query =
             `SELECT 
                 r.id,
                 r.user_id,
@@ -112,28 +113,117 @@ export const getMyRecords = async (req: Request, res: Response) => {
             LEFT JOIN accounts a ON r.account_id = a.id
             LEFT JOIN categories c ON r.category_id = c.id
             WHERE r.user_id = ?
-            ORDER BY record_date DESC
-            `,
-            [user_id]
+            `
+
+        const params = [user_id];
+
+        if (type) {
+            query += ` AND r.type = ? `
+            params.push(type)
+        }
+
+        if (sort === 'amount_desc') {
+            query += ` ORDER BY r.amount DESC `;
+        } else if (sort === 'amount_asc') {
+            query += ` ORDER BY r.amount ASC `;
+        }
+        else {
+            query += ` ORDER BY r.record_date DESC `
+        }
+
+        if (limit) {
+            query += ` LIMIT ? `;
+            params.push(Number(limit))
+        }
+
+        const [recordsResult]: any = await db.query(
+            query,
+            params
         );
         if (recordsResult.length === 0) {
             return res.status(404).json({ success: false, message: user_id ? `該帳號沒有紀錄` : `沒有紀錄` });
         }
 
-        const grouped: any = {};
-        for (let i = 0; i < recordsResult.length; i++) {
 
-            const date = new Date(recordsResult[i].record_date).toLocaleDateString('en-CA');
+        res.status(200).json({ success: true, message: `取得紀錄成功`, data: recordsResult });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "SERVER ERROR" });
+    }
+}
 
-            if (!grouped[date]) {
-                grouped[date] = [];
-            }
+export const getMyGroupedRecords = async (req: Request, res: Response) => {
+    try {
+        const { user_id } = (req as any).user;
+        const { limit, type, sort } = req.query;
 
-            grouped[date].push(recordsResult[i]);
+        let query =
+            `SELECT 
+                r.id,
+                r.user_id,
+                r.type, 
+                r.amount, 
+                r.remarks, 
+                r.record_date,
+                r.created_at, 
+                r.updated_at,
+                a.id AS account_id,
+                a.name AS account_name,
+                a.image_url AS account_image_url, 
+                a.balance AS account_balance,
+                c.id AS category_id,
+                c.name AS category_name, 
+                c.image_url AS category_image_url
+            FROM records r
+            LEFT JOIN accounts a ON r.account_id = a.id
+            LEFT JOIN categories c ON r.category_id = c.id
+            WHERE r.user_id = ?
+            `
+
+        const params = [user_id];
+
+        if (type) {
+            query += ` AND r.type = ? `
+            params.push(type)
         }
 
+        if (sort === 'amount_desc') {
+            query += ` ORDER BY r.amount DESC `;
+        } else if (sort === 'amount_asc') {
+            query += ` ORDER BY r.amount ASC `;
+        }
+        else {
+            query += ` ORDER BY r.record_date DESC `
+        }
+
+        if (limit) {
+            query += ` LIMIT ? `;
+            params.push(Number(limit))
+        }
+
+        const [recordsResult]: any = await db.query(
+            query,
+            params
+        );
+        if (recordsResult.length === 0) {
+            return res.status(404).json({ success: false, message: user_id ? `該帳號沒有紀錄` : `沒有紀錄` });
+        }
+
+        const grouped: Record<string, any[]> = {};
+
+        for (let i = 0; i < recordsResult.length; i++) {
+            const date = recordsResult[i].record_date;
+            const formatted_date = new Date(date).toISOString().split("T")[0];
+            if (!formatted_date) {
+                continue;
+            }
 
 
+            if (!grouped[formatted_date]) {
+                grouped[formatted_date] = [];
+            }
+            grouped[formatted_date].push(recordsResult[i]);
+        }
         res.status(200).json({ success: true, message: `取得紀錄成功`, data: grouped });
     } catch (error) {
         console.log(error);
@@ -145,6 +235,7 @@ export const getMyRecords = async (req: Request, res: Response) => {
 export const getRecordsById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
+
         const [recordResult]: any = await db.query(
             ` SELECT
             r.user_id,
@@ -300,44 +391,6 @@ export const deleteRecordById = async (req: Request, res: Response) => {
     }
 }
 
-export const getTopExpenseRecords = async (req: Request, res: Response) => {
-    try {
-        const { user_id } = (req as any).user;
-
-        const [topTenResult]: any = await db.query(
-            `
-            SELECT 
-                r.id,
-                r.user_id,
-                r.type,
-                r.amount,
-                r.remarks,
-                r.record_date,
-                r.created_at,
-                r.updated_at,
-                a.id AS account_id,
-                a.name AS account_name,
-                a.image_url AS account_image_url,
-                a.balance AS account_balance,
-                c.id AS category_id,
-                c.name AS category_name,
-                c.image_url AS category_image_url
-            FROM records r
-            LEFT JOIN accounts a ON r.account_id = a.id
-            LEFT JOIN categories c ON r.category_id = c.id
-            WHERE r.user_id = ? AND r.type = 'expense'
-            ORDER BY amount DESC
-            LIMIT 10
-            `,
-            [user_id]
-        );
-
-        res.status(200).json({ success: true, message: `get`, data: topTenResult })
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: `SERVER ERROR` })
-    }
-}
 
 
 export const getSummary = async (req: Request, res: Response) => {

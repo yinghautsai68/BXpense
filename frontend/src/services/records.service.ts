@@ -45,9 +45,28 @@ export const getRecords = async (token: string, userId: string): Promise<Record<
     }
 }
 
-export const getMyRecords = async (token: string): Promise<Record<string, RecordType[]>> => {
+export const getMyRecords = async (token: string): Promise<RecordType[]> => {
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records/me`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const result: ApiResponse<RecordType[]> = await response.json();
+        if (!result.success) {
+            throw new Error(result.message);
+        }
+        return result.data;
+    } catch (error) {
+        console.error('getRecords error', error);
+        throw error;
+    }
+}
+
+export const getMyGroupedRecords = async (token: string): Promise<Record<string, RecordType[]>> => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records/me/grouped`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -63,6 +82,7 @@ export const getMyRecords = async (token: string): Promise<Record<string, Record
         throw error;
     }
 }
+
 
 
 export const getRecordById = async (token: string, recordId: string) => {
