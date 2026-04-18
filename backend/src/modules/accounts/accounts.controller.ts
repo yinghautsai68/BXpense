@@ -36,9 +36,7 @@ export const createAccount = async (req: Request, res: Response) => {
 
 export const getAccounts = async (req: Request, res: Response) => {
     try {
-        const { user_id } = req.query;
-
-        let query =
+        const [accountsResult]: any = await db.query(
             `SELECT 
                 a.id,
                 a.user_id,
@@ -54,23 +52,15 @@ export const getAccounts = async (req: Request, res: Response) => {
                 ) AS final_balance
             FROM accounts a
             LEFT JOIN records r ON a.id = r.account_id
-            `
-        const queryParams: any[] = [];
+            WHERE deleted_at IS NULL
+            GROUP BY a.id
+            `,
+            []
+        );
 
-
-        if (user_id) {
-            query += ` WHERE a.user_id = ? AND deleted_at IS NULL`
-            queryParams.push(user_id);
-        }
-
-
-
-        query += ` GROUP BY a.id`;
-
-        const [accountsResult]: any = await db.query(query, queryParams);
 
         if (accountsResult.length === 0) {
-            return res.status(404).json({ success: false, message: user_id ? `該用戶者沒有帳戶資料` : `沒有帳戶資料`, data: [] });
+            return res.status(404).json({ success: false, message: `沒有帳戶資料`, data: [] });
         }
 
         res.status(200).json({ success: true, message: "取得帳戶成功", data: accountsResult });
@@ -79,6 +69,46 @@ export const getAccounts = async (req: Request, res: Response) => {
         res.status(500).json({ success: false, message: "SERVER ERROR" });
     }
 }
+
+export const getMyAccounts = async (req: Request, res: Response) => {
+    try {
+        const { user_id } = (req as any).user;
+
+
+        const [accountsResult]: any = await db.query(
+            `SELECT 
+                a.id,
+                a.user_id,
+                a.name,
+                a.image_url,
+                a.balance,
+                a.created_at,
+                a.updated_at,
+                (
+                    a.balance 
+                    + SUM(CASE WHEN r.type = 'income' THEN r.amount ELSE 0 END)
+                    - SUM(CASE WHEN r.type = 'expense' THEN r.amount ELSE 0 END)
+                ) AS final_balance
+            FROM accounts a
+            LEFT JOIN records r ON a.id = r.account_id
+            WHERE a.user_id = ? AND deleted_at IS NULL
+            GROUP BY a.id
+            `,
+            [user_id]
+        );
+
+        if (accountsResult.length === 0) {
+            return res.status(404).json({ success: false, message: `該用戶者沒有帳戶資料`, data: [] });
+        }
+
+        res.status(200).json({ success: true, message: "取得帳戶成功", data: accountsResult });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "SERVER ERROR" });
+    }
+}
+
+
 export const getAccountsById = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
