@@ -82,6 +82,32 @@ export const getUserById = async (req: Request, res: Response) => {
     }
 }
 
+export const getMyProfile = async (req: Request, res: Response) => {
+    try {
+        const { user_id } = (req as any).user;
+        const [userResult]: any = await db.query(
+            `
+            SELECT 
+                username, 
+                image_url, 
+                created_at, 
+                updated_at 
+            FROM users 
+            WHERE id = ?
+            `,
+            [user_id]
+        );
+        if (userResult.length === 0) {
+            return res.status(404).json({ success: false, message: `沒有使用者資料`, data: [] });
+        }
+
+        res.status(200).json({ success: true, message: "取得使用者成功", data: userResult[0] });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "SERVER ERROR" });
+    }
+}
+
 export const updateUser = async (req: Request, res: Response) => {
     const bodyResult = updateUserSchema.safeParse(req.body);
     if (!bodyResult.success) {
