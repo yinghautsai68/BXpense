@@ -45,9 +45,19 @@ export const getRecords = async (token: string, userId: string): Promise<Record<
     }
 }
 
-export const getMyRecords = async (token: string): Promise<RecordType[]> => {
+type getRecordsParamsType = {
+    limit?: number,
+    type?: 'expense' | 'income',
+    sort?: 'amount_desc'
+}
+export const getMyRecords = async (token: string, params: getRecordsParamsType): Promise<RecordType[]> => {
+
+    const query = new URLSearchParams();
+    if (params?.limit) query.append('limit', String(params.limit));
+    if (params?.type) query.append('type', params.type);
+    if (params?.sort) query.append('sort', params.sort);
     try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records/me`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records/me?${query.toString()}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -59,7 +69,6 @@ export const getMyRecords = async (token: string): Promise<RecordType[]> => {
         }
         return result.data;
     } catch (error) {
-        console.error('getRecords error', error);
         throw error;
     }
 }
