@@ -15,7 +15,7 @@ const Information = ({ onChange, className, label, name, value, type }: Informat
         ref.current?.click();
     }
     return (
-        <div className={`${className} flex flex-row justify-between w-full`}>
+        <div className={`${className} flex flex-row justify-between gap-25 w-full`}>
             <span className='text-lg font-medium'>{label}</span>
             {
                 type === 'file' ? (<>
@@ -36,7 +36,7 @@ const Information = ({ onChange, className, label, name, value, type }: Informat
                 </>)
                     : type === 'text' ?
                         (
-                            <input type="text" name={name} value={value} onChange={onChange} placeholder='請輸入' className='text-end ' />
+                            <input type="text" name={name} value={value} onChange={onChange} placeholder='請輸入' className='flex-1 text-end ' />
                         )
                         : type === 'number' &&
                         (
