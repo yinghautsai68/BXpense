@@ -68,7 +68,7 @@ export const getMyCategories = async (req: Request, res: Response) => {
             SELECT 
                 * 
             FROM categories 
-            WHERE user_id = ?`
+            WHERE user_id = ? OR user_id IS NULL`
             , [user_id]);
         if (categoriesResult.length === 0) {
             return res.status(404).json({ success: false, message: `該帳號沒有自己的類別`, data: [] });
