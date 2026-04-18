@@ -14,6 +14,7 @@ import type { AccountType } from '../types/accounts.type'
 import toast from 'react-hot-toast'
 import AccountSelector from './AccountSelector'
 import Modal from '../components/Modal'
+import { RecordFormSchema } from '../schemas/records.schema'
 
 const RecordForm = () => {
     const { token, user } = useAuth();
@@ -29,7 +30,8 @@ const RecordForm = () => {
         type: 'expense',
         amount: 0,
         remarks: '',
-        record_date: new Date().toISOString().slice(0, 16),
+        record_date: new Date().toLocaleString("sv-SE", { timeZone: "Asia/Taipei" })
+            .slice(0, 16)
     })
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -46,14 +48,16 @@ const RecordForm = () => {
         const fetchRecordById = async () => {
             try {
                 const data = await getRecordById(token, id);
+                console.log(data);
+                console.log(data.record_date.slice(0, 16));
                 setRecordForm({
                     user_id: data.user_id,
                     account_id: data.account_id,
                     category_id: data.category_id,
                     type: data.type,
-                    amount: data.amount,
+                    amount: Number(data.amount),
                     remarks: data.remarks,
-                    record_date: data.record_date.slice(0, 16)
+                    record_date: new Date(data.record_date).toLocaleString("sv-SE", { timeZone: "Asia/Taipei" }).slice(0, 16)
                 });
                 setExpression(String(data.amount));
             } catch (error) {
@@ -158,20 +162,9 @@ const RecordForm = () => {
     };
 
     const handleSubmit = async () => {
-        if (recordForm.account_id === 0) {
-            toast.error("請選擇帳戶");
-            return;
-        }
-        if (recordForm.category_id === 0) {
-            toast.error("請選擇類別");
-            return;
-        }
-        if (isNaN(recordForm.amount)) {
-            toast.error("請輸入合理金額");
-            return;
-        }
-        if (recordForm.amount <= 0) {
-            toast.error("請輸入合理金額");
+        const result = RecordFormSchema.safeParse(recordForm);
+        if (!result.success) {
+            toast.error(result.error.issues[0].message);
             return;
         }
         try {
@@ -204,7 +197,7 @@ const RecordForm = () => {
         }
     }
 
-
+    useEffect(() => { console.log(recordForm) }, [recordForm]);
     return (
         //background
         <div className=' flex flex-col items-center  w-full min-h-screen  pt-10 bg-yellow-400'>
