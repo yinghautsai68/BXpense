@@ -213,7 +213,7 @@ export const getMyGroupedRecords = async (req: Request, res: Response) => {
 
         for (let i = 0; i < recordsResult.length; i++) {
             const date = recordsResult[i].record_date;
-            const formatted_date = new Date(date).toISOString().split("T")[0];
+            const formatted_date = new Date(date).toLocaleString("sv-SE", { timeZone: "Asia/Taipei" }).slice(0, 10);
             if (!formatted_date) {
                 continue;
             }
@@ -223,6 +223,7 @@ export const getMyGroupedRecords = async (req: Request, res: Response) => {
                 grouped[formatted_date] = [];
             }
             grouped[formatted_date].push(recordsResult[i]);
+            grouped[formatted_date].sort((a, b) => b.record_date - a.record_date);
         }
         res.status(200).json({ success: true, message: `取得紀錄成功`, data: grouped });
     } catch (error) {
