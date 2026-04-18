@@ -7,9 +7,9 @@ import { useEffect, useState } from 'react'
 import type { createRecordType } from '../types/records.type'
 import { createRecord, getRecordById, updateRecordById } from '../services/records.service'
 import Button from '../components/Button'
-import { getCategories } from '../services/categories.service'
+import { getCategories, getMyCategories } from '../services/categories.service'
 import type { CategoryType } from '../types/categories.type'
-import { getAccounts } from '../services/accounts.service'
+import { getAccounts, getMyAccounts } from '../services/accounts.service'
 import type { AccountType } from '../types/accounts.type'
 import toast from 'react-hot-toast'
 import AccountSelector from './AccountSelector'
@@ -37,6 +37,8 @@ const RecordForm = () => {
         setRecordForm((prev) => ({ ...prev, [name]: name === 'amount' ? Number(value) : value }));
     }
 
+
+    //Fetch existing data
     useEffect(() => {
         if (!token || !id) {
             return;
@@ -61,51 +63,50 @@ const RecordForm = () => {
         fetchRecordById();
     }, [token, id])
 
+    // Fetch Options
+    const [accounts, setAccounts] = useState<AccountType[]>([]);
     const [categories, setCategories] = useState<CategoryType[]>([]);
+    useEffect(() => {
+        if (!token) {
+            return;
+        }
+        const fetchData = async () => {
+            try {
+                const [accountsResult, categoriesResult] = await Promise.allSettled([
+                    getMyAccounts(token),
+                    getMyCategories(token)
+                ]);
+
+                if (accountsResult.status === 'fulfilled') {
+                    console.log(accountsResult.value);
+                    setAccounts(accountsResult.value);
+                    setRecordForm((prev) => ({ ...prev, account_id: accountsResult.value[0].id }));
+                } else {
+                    console.error(accountsResult.reason);
+                }
+
+                if (categoriesResult.status === 'fulfilled') {
+                    console.log(categoriesResult.value);
+                    setCategories(categoriesResult.value);
+                    setRecordForm((prev) => ({ ...prev, category_id: categoriesResult.value[0].id }));
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+
+            }
+        }
+        fetchData();
+    }, [token]);
+
     useEffect(() => {
         if (!user) {
             return;
         }
         setRecordForm((prev) => ({ ...prev, user_id: Number(user.userId) }));
-
     }, [user]);
 
-    useEffect(() => {
-        if (!token) {
-            return;
-        }
-        const fetchCategories = async () => {
-            try {
-                const data = await getCategories(token, user ? user.userId : '');
-                console.log(data);
-                setCategories(data);
-                setRecordForm((prev) => ({ ...prev, category_id: data[0].id }));
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        fetchCategories();
-    }, [token]);
-
-    const [accounts, setAccounts] = useState<AccountType[]>([]);
-    useEffect(() => {
-        if (!token || !user) {
-            return;
-        }
-        const fetchAccounts = async () => {
-            try {
-                const data = await getAccounts(token, user.userId);
-                console.log(data);
-                setAccounts(data);
-                setRecordForm((prev) => ({ ...prev, account_id: data[0].id }));
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        fetchAccounts();
-
-    }, [token, user]);
-
+    //Form Handler
     const handleTypeSelect = (newType: 'expense' | 'income') => {
         setRecordForm((prev) => ({ ...prev, type: newType }));
     }
@@ -122,8 +123,6 @@ const RecordForm = () => {
     }
 
     useEffect(() => { console.log(recordForm) }, [recordForm])
-
-
 
     const [expression, setExpression] = useState("");
     const appendValue = (val: string) => {
