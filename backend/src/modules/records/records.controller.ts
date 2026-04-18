@@ -41,8 +41,8 @@ export const createRecord = async (req: Request, res: Response) => {
 
 export const getRecords = async (req: Request, res: Response) => {
     try {
-        const { user_id, account_id } = req.query;
-        let query = `
+        const [recordsResult]: any = await db.query(
+            `
         SELECT 
             r.id,
             r.user_id,
@@ -62,23 +62,60 @@ export const getRecords = async (req: Request, res: Response) => {
         FROM records r
         LEFT JOIN accounts a ON r.account_id = a.id
         LEFT JOIN categories c ON r.category_id = c.id
-        `
-        let params = []
-
-
-        if (user_id) {
-            query += ` WHERE r.user_id = ?`
-            params.push(user_id);
+        ORDER BY record_date DESC
+        `, []);
+        if (recordsResult.length === 0) {
+            return res.status(404).json({ success: false, message: `沒有紀錄` });
         }
 
-        if (account_id) {
-            query += ' WHERE r.account_id = ?';
-            params.push(account_id);
+        const grouped: any = {};
+        for (let i = 0; i < recordsResult.length; i++) {
+
+            const date = new Date(recordsResult[i].record_date).toLocaleDateString('en-CA');
+
+            if (!grouped[date]) {
+                grouped[date] = [];
+            }
+
+            grouped[date].push(recordsResult[i]);
         }
 
-        query += ' ORDER BY record_date DESC'
+        res.status(200).json({ success: true, message: `取得紀錄成功`, data: grouped });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "SERVER ERROR" });
+    }
+}
 
-        const [recordsResult]: any = await db.query(query, params);
+export const getMyRecords = async (req: Request, res: Response) => {
+    try {
+        const { user_id } = (req as any).user;
+
+        const [recordsResult]: any = await db.query(
+            `SELECT 
+                r.id,
+                r.user_id,
+                r.type, 
+                r.amount, 
+                r.remarks, 
+                r.record_date,
+                r.created_at, 
+                r.updated_at,
+                a.id AS account_id,
+                a.name AS account_name,
+                a.image_url AS account_image_url, 
+                a.balance AS account_balance,
+                c.id AS category_id,
+                c.name AS category_name, 
+                c.image_url AS category_image_url
+            FROM records r
+            LEFT JOIN accounts a ON r.account_id = a.id
+            LEFT JOIN categories c ON r.category_id = c.id
+            WHERE r.user_id = ?
+            ORDER BY record_date DESC
+            `,
+            [user_id]
+        );
         if (recordsResult.length === 0) {
             return res.status(404).json({ success: false, message: user_id ? `該帳號沒有紀錄` : `沒有紀錄` });
         }
