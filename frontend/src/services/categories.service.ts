@@ -42,6 +42,24 @@ export const getCategories = async (token: string, userId: string) => {
     }
 }
 
+export const getMyCategories = async (token: string) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/categories/me`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const result = await response.json();
+        if (!result.success) {
+            throw new Error(result.message);
+        }
+        return result.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const getCategoryById = async (token: string, categoryId: string) => {
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/categories/${categoryId}`, {
