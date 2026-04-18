@@ -3,14 +3,14 @@ import SavingsCard from '../components/SavingsCard'
 import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react';
 import type { AccountType } from '../types/accounts.type';
-import { getAccounts, getAssetsSummary } from '../services/accounts.service';
+import { getAssetsSummary, getMyAccounts } from '../services/accounts.service';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 
 import IllustrationAccount from '../assets/illustration/illustration-account.png'
 import IllustrationAccounts from '../assets/illustration/illustration-accounts.png'
 const Accounts = () => {
-    const { token, user } = useAuth();
+    const { token } = useAuth();
     const navigate = useNavigate();
 
     const [accounts, setAccounts] = useState<AccountType[]>([]);
@@ -33,12 +33,12 @@ const Accounts = () => {
 
 
     useEffect(() => {
-        if (!token || !user) {
+        if (!token) {
             return;
         }
         const fetchData = async () => {
             try {
-                const accountData = await getAccounts(token, user.userId);
+                const accountData = await getMyAccounts(token);
                 setAccounts(accountData);
                 const assetsData = await getAssetsSummary(token);
                 setAssetsSummary(assetsData);
@@ -50,7 +50,7 @@ const Accounts = () => {
             }
         }
         fetchData();
-    }, [token, user]);
+    }, [token]);
     if (error) return (
         <div>{error}</div>
     )
