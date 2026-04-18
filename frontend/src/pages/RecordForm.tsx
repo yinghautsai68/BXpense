@@ -22,8 +22,6 @@ const RecordForm = () => {
 
     const [accountModalOpen, setAccountModalOpen] = useState<boolean>(false);
 
-
-
     const [recordForm, setRecordForm] = useState<createRecordType>({
         user_id: 0,
         account_id: 0,
@@ -43,7 +41,6 @@ const RecordForm = () => {
         if (!token || !id) {
             return;
         }
-
         const fetchRecordById = async () => {
             try {
                 const data = await getRecordById(token, id);
@@ -65,7 +62,6 @@ const RecordForm = () => {
     }, [token, id])
 
     const [categories, setCategories] = useState<CategoryType[]>([]);
-
     useEffect(() => {
         if (!user) {
             return;
@@ -83,6 +79,7 @@ const RecordForm = () => {
                 const data = await getCategories(token, user ? user.userId : '');
                 console.log(data);
                 setCategories(data);
+                setRecordForm((prev) => ({ ...prev, category_id: data[0].id }));
             } catch (error) {
                 console.error(error);
             }
@@ -90,7 +87,7 @@ const RecordForm = () => {
         fetchCategories();
     }, [token]);
 
-    const [accounts, setAccounts] = useState<AccountType[] | null>(null);
+    const [accounts, setAccounts] = useState<AccountType[]>([]);
     useEffect(() => {
         if (!token || !user) {
             return;
@@ -191,7 +188,17 @@ const RecordForm = () => {
             } else {
                 data = await createRecord(token, recordForm);
                 console.log(data);
-                return toast.success("新增紀錄成功");
+                toast.success("新增紀錄成功");
+                setRecordForm({
+                    user_id: 0,
+                    account_id: accounts?.length > 0 ? accounts[0].id : 0,
+                    category_id: categories?.length > 0 ? categories[0].id : 0,
+                    type: 'expense',
+                    amount: 0,
+                    remarks: '',
+                    record_date: new Date().toISOString().slice(0, 16),
+                });
+                setExpression('');
             }
         } catch (error) {
             console.error(error);
