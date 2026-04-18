@@ -24,37 +24,23 @@ const Records = () => {
             setIsLoading(false);
             return;
         }
-
-        const fetchAccounts = async () => {
+        const fetchData = async () => {
             try {
-                const data = await getRecords(token, user.userId);
-                console.log(data);
-                setRecords(data);
+                const recordsData = await getRecords(token, user.userId);
+                console.log(recordsData);
+                setRecords(recordsData);
 
+                const monthlySummaryData = await getMonthlySummary(token);
+                console.log('monthly summary', monthlySummaryData);
+                setMonthlySummary(monthlySummaryData);
             } catch (error) {
                 console.error(error);
             } finally {
                 setIsLoading(false);
             }
         }
-        fetchAccounts();
+        fetchData()
     }, [token, user])
-
-    useEffect(() => {
-        if (!token) {
-            return;
-        }
-        const fetchMonthlySummary = async () => {
-            try {
-                const data = await getMonthlySummary(token);
-                console.log('monthly summary', data);
-                setMonthlySummary(data);
-            } catch (error) {
-                console.error;
-            }
-        }
-        fetchMonthlySummary();
-    }, [token]);
     return (
         <>
             <div className='flex flex-col gap-4 p-2 bg-white rounded-lg text-sm'>
