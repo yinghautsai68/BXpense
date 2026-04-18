@@ -45,7 +45,7 @@ export const getAccounts = async (token: string, userId: string): Promise<Accoun
     }
 }
 
-export const getMyAccounts = async (token: string): Promise<AccountType> => {
+export const getMyAccounts = async (token: string): Promise<AccountType[]> => {
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/accounts/me`, {
             method: 'GET',
@@ -53,7 +53,7 @@ export const getMyAccounts = async (token: string): Promise<AccountType> => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        const result: ApiResponse<AccountType> = await response.json();
+        const result: ApiResponse<AccountType[]> = await response.json();
         if (!result.success) {
             throw new Error(result.message);
         }
