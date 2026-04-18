@@ -97,6 +97,12 @@ const AccountForm = () => {
             } else {
                 data = await createAccount(token, accountForm);
                 toast.success("新增帳戶成功");
+                setAccountForm({
+                    name: '',
+                    image_url: '',
+                    balance: 0
+                })
+                setImagePreview('');
                 return;
             }
         } catch (error) {
