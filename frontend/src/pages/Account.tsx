@@ -5,7 +5,7 @@ import type { AccountType } from '../types/accounts.type'
 import { useAuth } from '../context/AuthContext'
 import { deleteAccountById, getAccountById } from '../services/accounts.service'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getRecordsByAccountId } from '../services/records.service'
+import { getMyGroupedRecords } from '../services/records.service'
 import type { RecordType } from '../types/records.type'
 import { useUtil } from '../context/UtilContext'
 
@@ -15,7 +15,7 @@ import toast from 'react-hot-toast'
 import Modal from '../components/Modal'
 import Button from '../components/Button'
 const Account = () => {
-    const { token, user } = useAuth();
+    const { token } = useAuth();
     const { id } = useParams();
 
     const { formatDate } = useUtil();
@@ -26,43 +26,41 @@ const Account = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [account, setAccount] = useState<AccountType | null>(null);
     const [records, setRecords] = useState<Record<string, RecordType[]>>({});
+
+
     useEffect(() => {
         if (!token || !id) {
-            setIsLoading(false);
             return;
         }
 
-        const fetchAccountById = async () => {
+        const fetchData = async () => {
             try {
-                const data = await getAccountById(token, id);
-                console.log(data);
-                setAccount(data);
+                const [accountResult, recordsResult] = await Promise.allSettled([
+                    getAccountById(token, id),
+                    getMyGroupedRecords(token, { account_id: Number(id) })
+                ]);
+
+                if (accountResult.status === 'fulfilled') {
+                    setAccount(accountResult.value);
+                } else {
+                    console.error(accountResult.reason);
+                }
+
+                if (recordsResult.status === 'fulfilled') {
+                    setRecords(recordsResult.value);
+                } else {
+                    console.error(recordsResult.reason);
+                }
             } catch (error) {
                 console.error(error);
-
             } finally {
                 setIsLoading(false);
             }
         }
-        fetchAccountById();
-    }, [token]);
+        fetchData();
+    }, [token, id]);
 
 
-    useEffect(() => {
-        if (!token || !id) {
-            return;
-        }
-        const fetchRecordsByAccountId = async () => {
-            try {
-                const data = await getRecordsByAccountId(token, id);
-                console.log(data);
-                setRecords(data);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        fetchRecordsByAccountId();
-    }, [token, user]);
 
     const handleDelete = async () => {
         if (!token || !id) {
