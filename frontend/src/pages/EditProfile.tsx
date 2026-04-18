@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import FormInput from "../components/FormInput"
 import { useAuth } from "../context/AuthContext";
-import { getUserData, updateUser } from "../services/user.service";
+import { getMyProfile, updateUser } from "../services/user.service";
 import type { EditUserFormType, User } from "../types/users.types";
 import Button from "../components/Button";
 import { SubTitle } from "../components/Typography";
@@ -32,14 +32,14 @@ const EditProfile = () => {
         confirmPassword: ''
     });
     useEffect(() => {
-        if (!token || !user) {
+        if (!token) {
             setIsLoading(false);
             return;
         }
         const fetchUserData = async () => {
             try {
                 setIsLoading(true);
-                const data = await getUserData(token, user.userId);
+                const data = await getMyProfile(token);
                 console.log(data);
                 setUserData(data);
                 setFormData({
@@ -55,7 +55,7 @@ const EditProfile = () => {
             }
         }
         fetchUserData();
-    }, [token, user]);
+    }, [token]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
