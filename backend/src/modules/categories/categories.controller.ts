@@ -41,20 +41,17 @@ export const createCategory = async (req: Request, res: Response) => {
 
 export const getCategories = async (req: Request, res: Response) => {
     try {
-        const { user_id } = req.query;
-        let query = `SELECT * FROM categories`
-        let params = []
-
-        if (user_id) {
-            query += ` WHERE user_id IS NULL OR user_id = ?`
-            params.push(user_id);
-        }
-
-        const [categoriesResult]: any = await db.query(query, params);
+        const [categoriesResult]: any = await db.query(
+            ` 
+            SELECT 
+                * 
+            FROM categories 
+            `,
+            []
+        );
         if (categoriesResult.length === 0) {
-            return res.status(404).json({ success: false, message: user_id ? `該帳號沒有自己的類別` : `取得類別失敗` });
+            return res.status(404).json({ success: false, message: `沒有類別`, data: [] });
         }
-
         res.status(200).json({ success: true, message: `取得類別成功`, data: categoriesResult });
     } catch (error) {
         console.log(error);
@@ -62,6 +59,26 @@ export const getCategories = async (req: Request, res: Response) => {
     }
 }
 
+export const getMyCategories = async (req: Request, res: Response) => {
+    try {
+        const { user_id } = (req as any).user;
+
+        const [categoriesResult]: any = await db.query(
+            ` 
+            SELECT 
+                * 
+            FROM categories 
+            WHERE user_id = ?`
+            , [user_id]);
+        if (categoriesResult.length === 0) {
+            return res.status(404).json({ success: false, message: `該帳號沒有自己的類別`, data: [] });
+        }
+        res.status(200).json({ success: true, message: `取得類別成功`, data: categoriesResult });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "SERVER ERROR" });
+    }
+}
 
 export const getCategoriesById = async (req: Request, res: Response) => {
     try {
