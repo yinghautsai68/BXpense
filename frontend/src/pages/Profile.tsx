@@ -6,17 +6,17 @@ import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react'
 
 import type { User } from '../types/users.types'
-import { getUserData, resetUserData } from '../services/user.service'
+import { getMyProfile, getUserData, resetUserData } from '../services/user.service'
 import toast from 'react-hot-toast'
 import type { CategoryType } from '../types/categories.type'
-import { deleteCategoryById, getCategories } from '../services/categories.service'
+import { deleteCategoryById, getCategories, getMyCategories } from '../services/categories.service'
 import { getSummary } from '../services/records.service'
 import Button from '../components/Button'
 import Modal from '../components/Modal'
 
 import IconEdit from '../assets/icons/icon-edit.png'
 const Profile = () => {
-    const { token, user } = useAuth();
+    const { token } = useAuth();
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -27,61 +27,45 @@ const Profile = () => {
         total_income: 0,
         total_records: 0
     });
-    const [categories, setCategories] = useState<CategoryType[] | null>(null);
-
-
-    useEffect(() => {
-        if (!token || !user) {
-            setIsLoading(false);
-            return;
-        }
-        const fetchUserData = async () => {
-            try {
-                setIsLoading(true);
-                const data = await getUserData(token, user.userId);
-                console.log(data);
-                setUserData(data);
-            } catch (error) {
-                console.error(error);
-                setError('載入使用者資料失敗');
-            } finally {
-                setIsLoading(false);
-            }
-        }
-        fetchUserData();
-    }, [token, user]);
+    const [categories, setCategories] = useState<CategoryType[]>([]);
 
     useEffect(() => {
         if (!token) {
             return;
         }
-        const fetchSummary = async () => {
+        const fetchData = async () => {
             try {
-                const data = await getSummary(token);
-                console.log(data);
-                setSummary(data);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        fetchSummary();
-    }, [token]);
+                const [userResult, summaryResult, categoriesResult] = await Promise.allSettled([
+                    getMyProfile(token),
+                    getSummary(token),
+                    getMyCategories(token)
+                ]);
 
-    useEffect(() => {
-        if (!token || !user) {
-            return;
-        }
-        const fetchCategories = async () => {
-            try {
-                const data = await getCategories(token, user.userId);
-                console.log(data);
-                setCategories(data);
+                if (userResult.status === 'fulfilled') {
+                    setUserData(userResult.value);
+                } else {
+                    console.error(userResult.reason);
+                }
+
+                if (summaryResult.status === 'fulfilled') {
+                    setSummary(summaryResult.value)
+                } else {
+                    console.error(summaryResult.reason);
+                }
+
+                if (categoriesResult.status === 'fulfilled') {
+                    setCategories(categoriesResult.value);
+                } else {
+                    console.error(categoriesResult.reason);
+                }
             } catch (error) {
                 console.error(error);
+            } finally {
+                setIsLoading(false);
             }
         }
-        fetchCategories();
-    }, [token, user]);
+        fetchData();
+    }, [token]);
 
     const [isDelete, setIsDelete] = useState<boolean>(false);
     const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -118,8 +102,6 @@ const Profile = () => {
     if (isLoading) return <p>載入中...</p>;
     if (error) return <p className="text-red-500">{error}</p>;
     if (!userData) return <p>無使用者資料</p>;
-
-
 
     return (
         <>
