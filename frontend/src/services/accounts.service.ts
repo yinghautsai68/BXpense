@@ -45,6 +45,27 @@ export const getAccounts = async (token: string, userId: string): Promise<Accoun
     }
 }
 
+export const getMyAccounts = async (token: string): Promise<AccountType> => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/accounts/me`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const result: ApiResponse<AccountType> = await response.json();
+        if (!result.success) {
+            throw new Error(result.message);
+        }
+
+        return result.data;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+
 export const getAccountById = async (token: string, accountId: string): Promise<AccountType> => {
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/accounts/${accountId}`, {
@@ -65,6 +86,8 @@ export const getAccountById = async (token: string, accountId: string): Promise<
         throw error;
     }
 }
+
+
 
 export const getAssetsSummary = async (token: string) => {
     try {
