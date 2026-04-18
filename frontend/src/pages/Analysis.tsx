@@ -26,7 +26,7 @@ const Analysis = () => {
         if (!token) {
             return;
         }
-        const fetchAll = async () => {
+        const fetchData = async () => {
             try {
                 setIsLoading(true);
                 const lineData = await getLine(token);
@@ -42,17 +42,13 @@ const Analysis = () => {
                 setIsLoading(false);
             }
         }
-        fetchAll();
+        fetchData();
     }, [token]);
-
-
 
     const totalAmount = categorySummary.reduce((sum, item) => sum + Number(item.total_amount), 0);
     const getPercent = (amount: number) => {
         return ((amount / totalAmount) * 100).toFixed(2);
     }
-
-
 
     const [pieData, setPieData] = useState<PieType[]>([]);
     useEffect(() => {
@@ -65,9 +61,6 @@ const Analysis = () => {
         ));
         setPieData(pie);
     }, [categorySummary]);
-
-
-
 
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     if (isLoading) return (
