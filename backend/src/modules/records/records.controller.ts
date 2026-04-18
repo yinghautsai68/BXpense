@@ -90,7 +90,7 @@ export const getRecords = async (req: Request, res: Response) => {
 export const getMyRecords = async (req: Request, res: Response) => {
     try {
         const { user_id } = (req as any).user;
-        const { limit, type, sort } = req.query;
+        const { type, account_id, sort, limit } = req.query;
 
         let query =
             `SELECT 
@@ -121,6 +121,10 @@ export const getMyRecords = async (req: Request, res: Response) => {
             query += ` AND r.type = ? `
             params.push(type)
         }
+        if (account_id) {
+            query += ` AND r.account_id = ? `
+            params.push(account_id);
+        }
 
         if (sort === 'amount_desc') {
             query += ` ORDER BY r.amount DESC `;
@@ -135,6 +139,7 @@ export const getMyRecords = async (req: Request, res: Response) => {
             query += ` LIMIT ? `;
             params.push(Number(limit))
         }
+
 
         const [recordsResult]: any = await db.query(
             query,
@@ -155,7 +160,7 @@ export const getMyRecords = async (req: Request, res: Response) => {
 export const getMyGroupedRecords = async (req: Request, res: Response) => {
     try {
         const { user_id } = (req as any).user;
-        const { limit, type, sort } = req.query;
+        const { type, account_id, sort, limit } = req.query;
 
         let query =
             `SELECT 
@@ -183,8 +188,12 @@ export const getMyGroupedRecords = async (req: Request, res: Response) => {
         const params = [user_id];
 
         if (type) {
-            query += ` AND r.type = ? `
+            query += ` AND r.type = ? `;
             params.push(type)
+        }
+        if (account_id) {
+            query += ` AND r.account_id = ? `;
+            params.push(account_id);
         }
 
         if (sort === 'amount_desc') {
