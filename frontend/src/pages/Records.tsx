@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import ExpenseCard from '../components/ExpenseCard'
 import { useAuth } from '../context/AuthContext';
 import type { MonthlySummaryType, RecordType } from '../types/records.type';
-import { getMonthlySummary, getRecords } from '../services/records.service';
+import { getMonthlySummary, getMyRecords, getRecords } from '../services/records.service';
 import Card from '../components/Card';
 import { useUtil } from '../context/UtilContext';
 
@@ -20,13 +20,13 @@ const Records = () => {
     const balance = income - expense;
 
     useEffect(() => {
-        if (!token || !user) {
+        if (!token) {
             setIsLoading(false);
             return;
         }
         const fetchData = async () => {
             try {
-                const recordsData = await getRecords(token, user.userId);
+                const recordsData = await getMyRecords(token);
                 console.log(recordsData);
                 setRecords(recordsData);
 
@@ -40,7 +40,7 @@ const Records = () => {
             }
         }
         fetchData()
-    }, [token, user])
+    }, [token])
     return (
         <>
             <div className='flex flex-col gap-4 p-2 bg-white rounded-lg text-sm'>
