@@ -46,16 +46,19 @@ export const getRecords = async (token: string, userId: string): Promise<Record<
 }
 
 type getRecordsParamsType = {
-    limit?: number,
     type?: 'expense' | 'income',
-    sort?: 'amount_desc'
+    account_id?: number,
+    sort?: 'amount_desc',
+    limit?: number,
 }
-export const getMyRecords = async (token: string, params: getRecordsParamsType): Promise<RecordType[]> => {
+export const getMyRecords = async (token: string, params?: getRecordsParamsType): Promise<RecordType[]> => {
 
     const query = new URLSearchParams();
-    if (params?.limit) query.append('limit', String(params.limit));
+    if (params?.account_id) query.append('account_id', String(params.account_id));
     if (params?.type) query.append('type', params.type);
     if (params?.sort) query.append('sort', params.sort);
+    if (params?.limit) query.append('limit', String(params.limit));
+
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records/me?${query.toString()}`, {
             method: 'GET',
@@ -73,9 +76,16 @@ export const getMyRecords = async (token: string, params: getRecordsParamsType):
     }
 }
 
-export const getMyGroupedRecords = async (token: string): Promise<Record<string, RecordType[]>> => {
+export const getMyGroupedRecords = async (token: string, params?: getRecordsParamsType): Promise<Record<string, RecordType[]>> => {
+
+    const query = new URLSearchParams();
+    if (params?.account_id) query.append('account_id', String(params.account_id));
+    if (params?.type) query.append('type', params.type);
+    if (params?.sort) query.append('sort', params.sort);
+    if (params?.limit) query.append('limit', String(params.limit));
+
     try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records/me/grouped`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records/me/grouped?${query.toString()}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
