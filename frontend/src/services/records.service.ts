@@ -76,7 +76,13 @@ export const getMyRecords = async (token: string, params?: getRecordsParamsType)
     }
 }
 
-export const getMyGroupedRecords = async (token: string, params?: getRecordsParamsType): Promise<Record<string, RecordType[]>> => {
+type GroupedRecordsType = {
+    month: {
+        date: RecordType[]
+    }
+}
+//<Record<string, Record<string, RecordType[]>>>
+export const getMyGroupedRecords = async (token: string, params?: getRecordsParamsType): Promise<GroupedRecordsType> => {
 
     const query = new URLSearchParams();
     if (params?.account_id) query.append('account_id', String(params.account_id));
@@ -91,11 +97,11 @@ export const getMyGroupedRecords = async (token: string, params?: getRecordsPara
                 'Authorization': `Bearer ${token}`
             }
         });
-        const result: ApiResponse<Record<string, RecordType[]>> = await response.json();
+        const result = await response.json();
         if (!result.success) {
             throw new Error(result.message);
         }
-        return result.data;
+        return result.data2;
     } catch (error) {
         console.error('getRecords error', error);
         throw error;

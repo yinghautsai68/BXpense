@@ -6,13 +6,14 @@ import { getMonthlySummary, getMyGroupedRecords } from '../services/records.serv
 import Card from '../components/Card';
 import { useUtil } from '../context/UtilContext';
 
+
 const Records = () => {
     const { token } = useAuth();
     const { formatDate } = useUtil();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [records, setRecords] = useState<Record<string, RecordType[]> | null>(null);
-    const [monthlySummary, setMonthlySummary] = useState<MonthlySummaryType[] | null>(null);
+    const [records, setRecords] = useState<Record<string, Record<string, RecordType[]>> | null>(null);
+    const [monthlySummary, setMonthlySummary] = useState<MonthlySummaryType[]>([]);
 
     const summary = monthlySummary?.[0] ?? { month: '', income: 0, expense: 0 };
     const income = summary.income;
@@ -63,20 +64,39 @@ const Records = () => {
                 {
                     isLoading ? (<span>...loading</span>)
                         : records ? (
-                            Object.entries(records).map(([date, records]) => (
+                            /*Object.entries(records).map(([date, records]) => (
+                    
                                 <div key={date}>
-                                    <span className='font-medium'>{formatDate(date)}</span>
-                                    <Card className='divide-y divide-gray-300 bg-white'>
-                                        {records.map((record, index) => (
-                                            <ExpenseCard key={index} record={record}></ExpenseCard>
-                                        ))
-                                        }
-                                    </Card>
+                                 
+                                  
                                 </div>
                             ))
 
                         )
+*/
 
+                            Object.entries(records).map(([month, dates]) => (
+                                <div key={month}>
+                                    <span >{month} MONTH</span>
+
+                                    {
+                                        Object.entries(dates).map(([date, records]) => (
+                                            <div key={date}>
+                                                <span className='font-medium'>{formatDate(date)}</span>
+                                                {
+                                                    <Card className='divide-y divide-gray-300 bg-white'>
+                                                        {records.map((record, index) => (
+                                                            <ExpenseCard key={index} record={record}></ExpenseCard>
+                                                        ))
+                                                        }
+                                                    </Card>
+                                                }
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            ))
+                        )
                             :
                             <div className='flex flex-row justify-center items-center w-full h-10 bg-white rounded-lg'>
                                 <span>目前沒有紀錄</span>
