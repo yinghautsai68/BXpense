@@ -202,7 +202,7 @@ export const getMyGroupedRecords = async (req: Request, res: Response) => {
             query += ` ORDER BY r.amount ASC `;
         }
         else {
-            query += ` ORDER BY r.record_date DESC `
+            query += ` ORDER BY r.record_date ASC `
         }
 
         if (limit) {
