@@ -6,15 +6,33 @@ import { getMonthlySummary, getMyGroupedRecords } from '../services/records.serv
 import Card from '../components/Card';
 import { useUtil } from '../context/UtilContext';
 import Layout from '../layout/Layout';
+import { Title } from '../components/Typography';
+import Button from '../components/Button';
 
 
 const Records = () => {
     const { token } = useAuth();
     const { formatDate } = useUtil();
 
+
+    const [monthIndex, setMonthIndex] = useState<number>(0);
+
+
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [records, setRecords] = useState<Record<string, Record<string, RecordType[]>> | null>(null);
     const [monthlySummary, setMonthlySummary] = useState<MonthlySummaryType[]>([]);
+
+
+    useEffect(() => {
+        if (!records) {
+            return;
+        }
+        const months = Object.keys(records);
+        const currentMonth = String(new Date().getMonth() + 1);
+        const index = months.indexOf(currentMonth);
+
+        setMonthIndex(index >= 0 ? index : 0);
+    }, [records]);
 
     const summary = monthlySummary?.[0] ?? { month: '', income: 0, expense: 0 };
     const income = summary.income;
@@ -44,7 +62,15 @@ const Records = () => {
         fetchData()
     }, [token])
     return (
-        <Layout title="紀錄">
+        <Layout component={
+
+            <div className='flex flex-row gap-5'>
+                <Title className='pl-5 text-white md:text-black'>紀錄 {records ? Object.keys(records)[monthIndex] : '#'}月</Title>
+                <Button onClick={() => setMonthIndex((prev) => Math.max(prev - 1, 0))}>prev</Button>
+                <Button onClick={() => setMonthIndex((prev) => Math.min(prev + 1, Object.keys(records ?? {}).length - 1))}>next</Button>
+            </div >
+
+        }>
             <div className='flex flex-col gap-4 p-2 bg-white rounded-lg text-sm'>
                 <div className='flex flex-row justify-between'>
                     <span className='text-gray-600 font-bold'>月支出</span>
@@ -65,36 +91,40 @@ const Records = () => {
                 {
                     isLoading ? (<span>...loading</span>)
                         : records ? (
-                            /*Object.entries(records).map(([date, records]) => (
-                    
-                                <div key={date}>
-                                 
-                                  
-                                </div>
-                            ))
-
-                        )
-*/
-
-                            Object.entries(records).map(([month, dates]) => (
-                                <div key={month}>
-                                    <span >{month} MONTH</span>
-
-                                    {
-                                        Object.entries(dates).map(([date, records]) => (
-                                            <div key={date}>
-                                                <span className='font-medium'>{formatDate(date)}</span>
-                                                {
-                                                    <Card className='divide-y divide-gray-300 bg-white'>
-                                                        {records.map((record, index) => (
-                                                            <ExpenseCard key={index} record={record}></ExpenseCard>
+                            /*
+                                                        Object.entries(records[Object.keys(records)[0]]).map(([month, dates]) => (
+                                                            <div key={month}>
+                                                                <span >{month} MONTH</span>
+                            
+                                                                {
+                                                                    Object.entries(dates).map(([date, records]) => (
+                                                                        <div key={date}>
+                                                                            <span className='font-medium'>{formatDate(date)}</span>
+                                                                            {
+                                                                                <Card className='divide-y divide-gray-300 bg-white'>
+                                                                                    {records.map((record) => (
+                                                                                        <ExpenseCard key={record.id } record={record}></ExpenseCard>
+                                                                                    ))
+                                                                                    }
+                                                                                </Card>
+                                                                            }
+                                                                        </div>
+                                                                    ))
+                                                                }
+                                                            </div>
                                                         ))
-                                                        }
-                                                    </Card>
-                                                }
-                                            </div>
-                                        ))
-                                    }
+                                                            */
+                            Object.entries(records[Object.keys(records)[monthIndex]]).map(([date, records]) => (
+                                <div key={date}>
+                                    <span className='font-medium'>
+                                        {formatDate(date)}
+                                    </span>
+
+                                    <Card className='divide-y divide-gray-300 bg-white'>
+                                        {records.map((record) => (
+                                            <ExpenseCard key={record.id} record={record} />
+                                        ))}
+                                    </Card>
                                 </div>
                             ))
                         )

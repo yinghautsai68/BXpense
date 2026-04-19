@@ -12,10 +12,11 @@ import IconProfile from '../assets/icons/icon-profile-pulsar.png'
 import IconProfileYellow from '../assets/icons/icon-profile-yellow-pulsar.png'
 import LayoutNavigation from '../components/LayoutNavigation'
 type LayoutProps = {
-    title: string,
+    title?: string,
+    component?: React.ReactNode,
     children: React.ReactNode
 }
-const Layout = ({ title, children }: LayoutProps) => {
+const Layout = ({ title, component, children }: LayoutProps) => {
     return (
         <div className='flex flex-col items-center w-full min-h-screen md:px-2  md:pt-25 bg-yellow-500'>
 
@@ -29,7 +30,12 @@ const Layout = ({ title, children }: LayoutProps) => {
                 </div>
                 <div className='flex flex-col w-full min-h-screen  md:pt-15 md:bg-zinc-100 '>
                     <div className='w-full'>
-                        <Title className='pl-5 text-white md:text-black'>{title}</Title>
+                        {
+                            title && <Title className='pl-5 text-white md:text-black'>{title}</Title>
+                        }
+                        {
+                            component && component
+                        }
                     </div>
                     <div className='flex flex-col gap-4 w-full min-h-screen   px-4 pt-8 pb-25 bg-zinc-100 rounded-t-2xl md:rounded-none text-gray-800'>
                         {children}
