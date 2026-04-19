@@ -14,30 +14,35 @@ const Records = () => {
     const { token } = useAuth();
     const { formatDate } = useUtil();
 
-
-    const [monthIndex, setMonthIndex] = useState<number>(0);
-
-
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [records, setRecords] = useState<Record<string, Record<string, RecordType[]>> | null>(null);
-    const [monthlySummary, setMonthlySummary] = useState<MonthlySummaryType[]>([]);
 
+    const [records, setRecords] = useState<Record<string, Record<string, RecordType[]>> | null>(null);
+    const [monthlySummaries, setMonthlySummaries] = useState<MonthlySummaryType[]>([]);
+    const [monthlySummary, setMonthlySummary] = useState<MonthlySummaryType>({
+        month: '',
+        income: 0,
+        expense: 0
+    });
+
+    const [months, setMonths] = useState<string[]>([]);
+    const [monthIndex, setMonthIndex] = useState<number>(0);
+    const currentMonth = String(new Date().toISOString().slice(0, 7));
 
     useEffect(() => {
         if (!records) {
             return;
         }
-        const months = Object.keys(records);
-        const currentMonth = String(new Date().getMonth() + 1);
-        const index = months.indexOf(currentMonth);
-
+        const months = Object.keys(records); // ['2026-03', '2026-04']
+        setMonths(months);
+        const index = months.indexOf(currentMonth); // 1
         setMonthIndex(index >= 0 ? index : 0);
     }, [records]);
 
-    const summary = monthlySummary?.[0] ?? { month: '', income: 0, expense: 0 };
-    const income = summary.income;
-    const expense = summary.expense;
-    const balance = income - expense;
+    useEffect(() => {
+        console.log(monthIndex);
+        const summary = monthlySummaries.find((item) => item.month === months[monthIndex]) ?? { month: '', income: 0, expense: 0 };
+        setMonthlySummary(summary);
+    }, [months, monthIndex, monthlySummaries]);
 
     useEffect(() => {
         if (!token) {
@@ -50,9 +55,9 @@ const Records = () => {
                 console.log(recordsData);
                 setRecords(recordsData);
 
-                const monthlySummaryData = await getMonthlySummary(token);
-                console.log('monthly summary', monthlySummaryData);
-                setMonthlySummary(monthlySummaryData);
+                const monthlySummariesData = await getMonthlySummary(token);
+                console.log('monthly summary', monthlySummariesData);
+                setMonthlySummaries(monthlySummariesData);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -65,7 +70,7 @@ const Records = () => {
         <Layout component={
 
             <div className='flex flex-row gap-5'>
-                <Title className='pl-5 text-white md:text-black'>紀錄 {records ? Object.keys(records)[monthIndex] : '#'}月</Title>
+                <Title className='pl-5 text-white md:text-black'>紀錄 {records ? (Object.keys(records)[monthIndex]).split('-')[1] : '#'}月</Title>
                 <Button onClick={() => setMonthIndex((prev) => Math.max(prev - 1, 0))}>prev</Button>
                 <Button onClick={() => setMonthIndex((prev) => Math.min(prev + 1, Object.keys(records ?? {}).length - 1))}>next</Button>
             </div >
@@ -74,15 +79,15 @@ const Records = () => {
             <div className='flex flex-col gap-4 p-2 bg-white rounded-lg text-sm'>
                 <div className='flex flex-row justify-between'>
                     <span className='text-gray-600 font-bold'>月支出</span>
-                    <span>NT$ {expense}</span>
+                    <span>NT$ {monthlySummary.expense}</span>
                 </div>
                 <div className='flex flex-row justify-between'>
                     <span className='text-gray-600 font-bold'>月收入</span>
-                    <span>NT$ {income}</span>
+                    <span>NT$ {monthlySummary.income}</span>
                 </div>
                 <div className='flex flex-row justify-between'>
                     <span className='text-gray-600 font-bold'>月結餘</span>
-                    <span>NT$ {balance.toFixed(2)}</span>
+                    <span>NT$ {(monthlySummary.income - monthlySummary.expense).toFixed(2)}</span>
                 </div>
             </div>
 
