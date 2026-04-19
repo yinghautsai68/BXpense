@@ -28,7 +28,7 @@ const App = () => {
         <Route path='/register' element={<Register></Register>}></Route>
 
         <Route element={<ProtectedRoute />}>
-          <Route path='/records' element={<Layout title="紀錄"><Records /></Layout>}></Route>
+          <Route path='/records' element={<Records />}></Route>
           <Route path='/records/new' element={<RecordForm />}></Route>
           <Route path='/records/:id' element={<DetailLayout title="檢視紀錄"><Record /></DetailLayout>}></Route>
           <Route path='/records/:id/edit' element={<RecordForm />}></Route>

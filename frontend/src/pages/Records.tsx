@@ -5,6 +5,7 @@ import type { MonthlySummaryType, RecordType } from '../types/records.type';
 import { getMonthlySummary, getMyGroupedRecords } from '../services/records.service';
 import Card from '../components/Card';
 import { useUtil } from '../context/UtilContext';
+import Layout from '../layout/Layout';
 
 
 const Records = () => {
@@ -43,7 +44,7 @@ const Records = () => {
         fetchData()
     }, [token])
     return (
-        <>
+        <Layout title="紀錄">
             <div className='flex flex-col gap-4 p-2 bg-white rounded-lg text-sm'>
                 <div className='flex flex-row justify-between'>
                     <span className='text-gray-600 font-bold'>月支出</span>
@@ -103,7 +104,7 @@ const Records = () => {
                             </div>
                 }
             </div >
-        </>
+        </Layout >
     )
 }
 
