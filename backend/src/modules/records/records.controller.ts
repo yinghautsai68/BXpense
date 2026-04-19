@@ -240,7 +240,7 @@ export const getMyGroupedRecords = async (req: Request, res: Response) => {
 
         for (let i = 0; i < recordsResult.length; i++) {
             const datetime = recordsResult[i].record_date;
-            const month = new Date(datetime).toLocaleString("sv-SE", { timeZone: "Asia/Taipei", month: 'numeric' });
+            const month = new Date(datetime).toLocaleString("sv-SE", { timeZone: "Asia/Taipei", year: 'numeric', month: 'numeric' });
             const date = new Date(datetime).toLocaleString("sv-SE", { timeZone: "Asia/Taipei" }).slice(0, 10);
 
             if (!grouped2[month]) {
