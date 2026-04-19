@@ -256,7 +256,25 @@ export const getMyGroupedRecords = async (req: Request, res: Response) => {
             grouped2[month][date].push(recordsResult[i]);
             grouped2[month][date].sort((a, b) => b.record_date - a.record_date);
         }
-        res.status(200).json({ success: true, message: `取得紀錄成功`, data: grouped, data2: grouped2 });
+
+        type grouped3Type = Record<string, Record<string, Record<string, any[]>>>
+        const grouped3: grouped3Type = {}
+        for (let i = 0; i < recordsResult.length; i++) {
+            const year = new Date(recordsResult[i].record_date).toLocaleString('sv-SE', { year: 'numeric' });
+            const month = new Date(recordsResult[i].record_date).toLocaleString('sv-SE', { year: 'numeric', month: 'numeric' });
+            const date = new Date(recordsResult[i].record_date).toLocaleString('sv-SE', { year: 'numeric', month: 'numeric', day: 'numeric' });
+            if (!grouped3[year]) {
+                grouped3[year] = {};
+            }
+            if (!grouped3[year][month]) {
+                grouped3[year][month] = {};
+            }
+            if (!grouped3[year][month][date]) {
+                grouped3[year][month][date] = [];
+            }
+            grouped3[year][month][date].push(recordsResult[i]);
+        }
+        res.status(200).json({ success: true, message: `取得紀錄成功`, data: grouped3, data2: grouped2 });
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "SERVER ERROR" });
