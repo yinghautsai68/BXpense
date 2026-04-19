@@ -234,7 +234,29 @@ export const getMyGroupedRecords = async (req: Request, res: Response) => {
             grouped[formatted_date].push(recordsResult[i]);
             grouped[formatted_date].sort((a, b) => b.record_date - a.record_date);
         }
-        res.status(200).json({ success: true, message: `取得紀錄成功`, data: grouped });
+
+
+        const grouped2: Record<string, Record<string, any[]>> = {};
+
+        for (let i = 0; i < recordsResult.length; i++) {
+            const datetime = recordsResult[i].record_date;
+            const month = new Date(datetime).toLocaleString("sv-SE", { timeZone: "Asia/Taipei", month: 'numeric' });
+            const date = new Date(datetime).toLocaleString("sv-SE", { timeZone: "Asia/Taipei" }).slice(0, 10);
+
+            if (!grouped2[month]) {
+                grouped2[month] = {};
+
+            }
+
+
+            if (!grouped2[month][date]) {
+                grouped2[month][date] = [];
+            }
+
+            grouped2[month][date].push(recordsResult[i]);
+            grouped2[month][date].sort((a, b) => b.record_date - a.record_date);
+        }
+        res.status(200).json({ success: true, message: `取得紀錄成功`, data: grouped, data2: grouped2 });
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "SERVER ERROR" });
