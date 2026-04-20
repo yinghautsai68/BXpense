@@ -12,6 +12,7 @@ import IllustrationEmpty from '../assets/illustration/illustration-empty.png'
 import { CardTitle } from '../components/Typography';
 import type { CategorySummaryType, LineType, PieType } from '../types/analysis.type';
 import { getMyRecords } from '../services/records.service';
+import Layout from '../layout/Layout';
 const Analysis = () => {
     const { token } = useAuth();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -102,7 +103,7 @@ const Analysis = () => {
         </div>
     )
     return (
-        <>
+        <Layout title="分析">
             <Card className='w-full h-[250px] bg-white'>
                 <CardTitle>支出歷史</CardTitle>
                 <span className='text-xs font-bold'>支出：NT${totalAmount}</span>
@@ -160,7 +161,7 @@ const Analysis = () => {
                     }
                 </div>
             </Card>
-        </>
+        </Layout>
     )
 }
 

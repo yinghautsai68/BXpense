@@ -33,7 +33,7 @@ const App = () => {
           <Route path='/records/:id' element={<DetailLayout title="檢視紀錄"><Record /></DetailLayout>}></Route>
           <Route path='/records/:id/edit' element={<RecordForm />}></Route>
 
-          <Route path='/analysis' element={<Layout title="分析"><Analysis></Analysis></Layout>}></Route>
+          <Route path='/analysis' element={<Analysis></Analysis>}></Route>
 
           <Route path='/accounts' element={<Layout title="帳戶"><Accounts /> </Layout>}></Route>
           <Route path='/accounts/new' element={<DetailLayout title="新增帳戶"><AccountForm /></DetailLayout>}></Route>
