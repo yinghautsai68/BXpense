@@ -82,7 +82,7 @@ type GroupedRecordsType = {
     }
 }
 //<Record<string, Record<string, RecordType[]>>>
-export const getMyGroupedRecords = async (token: string, params?: getRecordsParamsType): Promise<GroupedRecordsType> => {
+export const getMyGroupedRecords = async (token: string, params?: getRecordsParamsType) => {
 
     const query = new URLSearchParams();
     if (params?.account_id) query.append('account_id', String(params.account_id));
@@ -101,7 +101,7 @@ export const getMyGroupedRecords = async (token: string, params?: getRecordsPara
         if (!result.success) {
             throw new Error(result.message);
         }
-        return result.data2;
+        return result;
     } catch (error) {
         console.error('getRecords error', error);
         throw error;
