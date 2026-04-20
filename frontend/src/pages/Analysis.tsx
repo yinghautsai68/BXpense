@@ -17,11 +17,21 @@ import DatePickerModal from '../components/DatePickerModal';
 const Analysis = () => {
     const { token } = useAuth();
     const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    const currentYear = new Date().toLocaleString('sv-SE', { year: 'numeric' });
+    const currentMonth = new Date().toLocaleString('sv-SE', { month: 'numeric' });
+    const [isSelectDate, setIsSelectDate] = useState<boolean>(false);
+    const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+    const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth);
+
+
     const [topExpenses, setTopExpenses] = useState<RecordType[]>([]);
     const [line, setLine] = useState<LineType[]>([]);
+    const [lineDatas, setLineDatas] = useState<Record<string, Record<string, LineType[]>> | null>(null);
     const [categorySummary, setCategorySummary] = useState<CategorySummaryType[]>([]);
 
     const isEmpty = !isLoading && line.length === 0 && categorySummary.length === 0 && topExpenses.length === 0;
+
 
     useEffect(() => {
         if (!token) {
@@ -31,7 +41,7 @@ const Analysis = () => {
             try {
                 setIsLoading(true);
                 const results = await Promise.allSettled([
-                    getLine(token),
+                    getLine(token, selectedYear, selectedMonth),
                     getCategorySummary(token),
                     getMyRecords(token, {
                         limit: 10,
@@ -47,7 +57,7 @@ const Analysis = () => {
 
                 // Line chart data
                 if (lineRes.status === "fulfilled") {
-                    setLine(lineRes.value);
+                    setLineDatas(lineRes.value);
                 } else {
                     console.error("Line API failed:", lineRes.reason);
                 }
@@ -74,6 +84,13 @@ const Analysis = () => {
         fetchData();
     }, [token]);
 
+    useEffect(() => {
+        if (!lineDatas) {
+            return;
+        }
+        setLine(lineDatas?.[selectedYear]?.[selectedMonth] ?? []);
+    }, [lineDatas, selectedYear, selectedMonth]);
+
     const totalAmount = categorySummary.reduce((sum, item) => sum + Number(item.total_amount), 0);
     const getPercent = (amount: number) => {
         return ((amount / totalAmount) * 100).toFixed(2);
@@ -94,11 +111,9 @@ const Analysis = () => {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 
-    const currentYear = new Date().toLocaleString('sv-SE', { year: 'numeric' });
-    const currentMonth = new Date().toLocaleString('sv-SE', { year: 'numeric', month: 'numeric' });
-    const [isSelectDate, setIsSelectDate] = useState<boolean>(false);
-    const [selectedYear, setSelectedYear] = useState<string>(currentYear);
-    const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth);
+
+
+
     if (isLoading) return (
         <div className='flex flex-col pt-15 items-center w-full h-full'>
             <span>loading</span>
@@ -110,14 +125,10 @@ const Analysis = () => {
             <span className='font-bold text-shadow-lg'>目前沒有數據可以參考</span>
         </div>
     )
-
-
-
-
     return (
         <Layout component={
             <div className='flex flex-row gap-5'>
-                <Title className='pl-5 text-white md:text-black'>紀錄 <span onClick={() => setIsSelectDate(true)} className='cursor-pointer'>{selectedYear}年{selectedMonth.split('-')[1]}月</span></Title>
+                <Title className='pl-5 text-white md:text-black'>紀錄 <span onClick={() => setIsSelectDate(true)} className='cursor-pointer'>{selectedYear}年{selectedMonth}月</span></Title>
                 <DatePickerModal isOpen={isSelectDate} onClose={() => setIsSelectDate(false)} selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
             </div>
         }>

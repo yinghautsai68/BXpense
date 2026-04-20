@@ -1,7 +1,7 @@
-export const getLine = async (token: string) => {
+export const getLine = async (token: string, year: string, month: string) => {
     try {
 
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/analytics/line`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/analytics/line?year=${year}&month=${month}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`

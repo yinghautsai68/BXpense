@@ -1,69 +1,56 @@
 import { record, success } from "zod";
 import { db } from "../../config/db";
 import type { Request, Response } from "express";
+import { chartQuerySchema } from "./analytics.schema";
 
 export const getLineChartSummaryExpense = async (req: Request, res: Response) => {
+    const queryResult = chartQuerySchema.safeParse(req.query);
+    if (!queryResult.success) {
+        queryResult.error.issues.map((item) => console.error(item.message));
+        return res.status(400).json({ success: false, message: `所輸入query有誤` });
+    }
     try {
         const { user_id } = (req as any).user;
+        const { year, month } = queryResult.data;
 
-        /*
-        const [result]: any = await db.query(
-            `
-            SELECT
-                id,
-                user_id,
-                record_date,
-                type,
-                amount
-            FROM records 
-            WHERE user_id = ?
-            `,
-            [user_id]
-        )
-        if (result.length === 0) {
-            return res.status(404).json({ success: false, message: '沒有資料', data: [] });
-        }
 
-        const formatResult = result.map((data: any) => ({
-            ...data, record_date: data.record_date.toISOString().split("T")[0]
-        }));
-
-        const group: Record<string, any[]> = {};
-        for (let i = 0; i < formatResult.length; i++) {
-            if (!group[formatResult[i].record_date]) {
-                group[formatResult[i].record_date] = [];
-            }
-
-            group[formatResult[i].record_date]!.push({
-                id: formatResult[i].id,
-                user_id: formatResult[i].user_id,
-                type: formatResult[i].type,
-                amount: formatResult[i].amount
-            });
-        }
-
-        const chartData = Object.entries(group).map(([date, items]) => {
-            const total = items.reduce((sum, item) => sum + Number(item.amount), 0);
-
-            return {
-                date,
-                amuont: total
-            }
-        });
-        */
+        const startDate = new Date(Number(year), Number(month) - 1, 1);
+        const endDate = new Date(Number(year), Number(month), 1);
         const [result]: any = await db.query(
             `
             SELECT 
                 DATE_FORMAT(record_date, '%Y-%m-%d') AS date,
                 SUM(amount) AS amount
             FROM records
-            WHERE user_id = ? AND record_date >= '2026-03-01' AND record_date <= '2026-04-01' 
+            WHERE user_id = ? AND record_date >= ? AND record_date < ? 
             GROUP BY date
             ORDER BY date ASC
             `,
-            [user_id]
+            [user_id, startDate, endDate]
         );
-        res.status(200).json({ success: true, message: '資料', data: result })
+        if (result.length === 0) {
+            return res.status(200).json({ success: true, message: `該時段沒有資料`, data: {} });
+        }
+
+        const grouped: any = {};
+        for (let i = 0; i < result.length; i++) {
+            const raw_date = result[i].date;
+            const year = new Date(raw_date).toLocaleString('sv-SE', { year: 'numeric' });
+            const month = new Date(raw_date).toLocaleString('sv-SE', { month: 'numeric' });
+
+            if (!grouped[year]) {
+                grouped[year] = {};
+            }
+            if (!grouped[year][month]) {
+                grouped[year][month] = [];
+            }
+            grouped[year][month].push({
+                date: result[i].date,
+                amount: result[i].amount
+            });
+        }
+
+        res.status(200).json({ success: true, message: '資料', data: grouped });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: `SERVER ERROR` });
