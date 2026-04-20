@@ -9,10 +9,11 @@ import Card from '../components/Card';
 import { categoryZhTW } from '../constants/categoryZhTW';
 
 import IllustrationEmpty from '../assets/illustration/illustration-empty.png'
-import { CardTitle } from '../components/Typography';
+import { CardTitle, Title } from '../components/Typography';
 import type { CategorySummaryType, LineType, PieType } from '../types/analysis.type';
 import { getMyRecords } from '../services/records.service';
 import Layout from '../layout/Layout';
+import DatePickerModal from '../components/DatePickerModal';
 const Analysis = () => {
     const { token } = useAuth();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -91,6 +92,13 @@ const Analysis = () => {
     }, [categorySummary]);
 
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+
+    const currentYear = new Date().toLocaleString('sv-SE', { year: 'numeric' });
+    const currentMonth = new Date().toLocaleString('sv-SE', { year: 'numeric', month: 'numeric' });
+    const [isSelectDate, setIsSelectDate] = useState<boolean>(false);
+    const [selectedYear, setSelectedYear] = useState<string>(currentYear);
+    const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth);
     if (isLoading) return (
         <div className='flex flex-col pt-15 items-center w-full h-full'>
             <span>loading</span>
@@ -102,8 +110,17 @@ const Analysis = () => {
             <span className='font-bold text-shadow-lg'>目前沒有數據可以參考</span>
         </div>
     )
+
+
+
+
     return (
-        <Layout title="分析">
+        <Layout component={
+            <div className='flex flex-row gap-5'>
+                <Title className='pl-5 text-white md:text-black'>紀錄 <span onClick={() => setIsSelectDate(true)} className='cursor-pointer'>{selectedYear}年{selectedMonth.split('-')[1]}月</span></Title>
+                <DatePickerModal isOpen={isSelectDate} onClose={() => setIsSelectDate(false)} selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
+            </div>
+        }>
             <Card className='w-full h-[250px] bg-white'>
                 <CardTitle>支出歷史</CardTitle>
                 <span className='text-xs font-bold'>支出：NT${totalAmount}</span>
