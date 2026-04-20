@@ -38,11 +38,9 @@ const DatePickerModal = ({ isOpen, onClose, selectedYear, setSelectedYear, selec
             <div className='flex flex-row justify-center '>
                 <div className='grid grid-cols-3 place-items-center gap-5 w-50  '>
                     {Array.from({ length: 12 }).map((_, index) => {
-                        const month = index + 1;
-                        const formatMonth = String(month).padStart(2, "0");
-                        const yearMonth = `2026-${formatMonth}`;
+                        const month = String(index + 1);
                         return (
-                            <Button onClick={() => setTempSelectedMonth(yearMonth)} className={`w-15 bg-gray-200 hover:bg-gray-400 font-bold ${yearMonth === tempSelectedMonth ? 'bg-gray-500 text-white' : ''}`}>{index + 1} 月</Button>
+                            <Button onClick={() => setTempSelectedMonth(month)} className={`w-15 bg-gray-200 hover:bg-gray-400 font-bold ${month === tempSelectedMonth ? 'bg-gray-500 text-white' : ''}`}>{index + 1} 月</Button>
                         )
                     })}
 

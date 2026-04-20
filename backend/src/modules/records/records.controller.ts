@@ -261,7 +261,7 @@ export const getMyGroupedRecords = async (req: Request, res: Response) => {
         const grouped3: grouped3Type = {}
         for (let i = 0; i < recordsResult.length; i++) {
             const year = new Date(recordsResult[i].record_date).toLocaleString('sv-SE', { year: 'numeric' });
-            const month = new Date(recordsResult[i].record_date).toLocaleString('sv-SE', { year: 'numeric', month: 'numeric' });
+            const month = new Date(recordsResult[i].record_date).toLocaleString('sv-SE', { month: 'numeric' });
             const date = new Date(recordsResult[i].record_date).toLocaleString('sv-SE', { year: 'numeric', month: 'numeric', day: 'numeric' });
             if (!grouped3[year]) {
                 grouped3[year] = {};
@@ -335,11 +335,27 @@ export const getMonthlySummary = async (req: Request, res: Response) => {
             ORDER BY month`,
             [user_id]
         )
+
+        const grouped: any = {}
+        for (let i = 0; i < result.length; i++) {
+            const date = result[i].month;
+            const year = new Date(date).toLocaleString('sv-SE', { year: 'numeric' });
+            const month = new Date(date).toLocaleString('sv-SE', { month: 'numeric' });
+            if (!grouped[year]) {
+                grouped[year] = {}
+            }
+            if (!grouped[year][month]) {
+                grouped[year][month] = {
+                    income: result[i].income,
+                    expense: result[i].expense
+                }
+            }
+        }
         if (result.length === 0) {
             return res.status(404).json({ success: false, message: `沒有資料`, data: [] });
         }
 
-        res.status(200).json({ success: true, message: `取得月成功`, data: result });
+        res.status(200).json({ success: true, message: `取得月成功`, data: grouped });
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: `SERVER ERROR` });

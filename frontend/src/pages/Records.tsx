@@ -20,15 +20,15 @@ const Records = () => {
     const [isSelectDate, setIsSelectDate] = useState<boolean>(false);
 
     const [records, setRecords] = useState<Record<string, Record<string, Record<string, RecordType[]>>> | null>(null);
-    const [monthlySummaries, setMonthlySummaries] = useState<MonthlySummaryType[]>([]);
+    const [monthlySummaries, setMonthlySummaries] = useState<Record<string, Record<string, MonthlySummaryType>> | null>(null);
     const [monthlySummary, setMonthlySummary] = useState<MonthlySummaryType>({
-        month: '',
         income: 0,
         expense: 0
     });
 
     const currentYear = new Date().toLocaleString('sv-SE', { year: 'numeric' });
-    const currentMonth = new Date().toLocaleString('sv-SE', { year: 'numeric', month: 'numeric' });
+    const currentMonth = new Date().toLocaleString('sv-SE', { month: 'numeric' });
+    console.log(currentMonth);
     const [selectedYear, setSelectedYear] = useState(currentYear);
     const [selectedMonth, setSelectedMonth] = useState(currentMonth);
 
@@ -36,12 +36,11 @@ const Records = () => {
         if (!monthlySummaries) {
             return;
         }
-        const currentMonthlySummary = monthlySummaries.find((object) => object.month === selectedMonth);
+        const currentMonthlySummary = monthlySummaries[selectedYear]?.[selectedMonth];
         if (currentMonthlySummary) {
             setMonthlySummary(currentMonthlySummary);
         } else {
             setMonthlySummary({
-                month: '',
                 income: 0,
                 expense: 0
             });
@@ -73,14 +72,14 @@ const Records = () => {
     }, [token])
 
     useEffect(() => {
-        console.log(selectedMonth);
+        console.log('selectedMonth:', selectedMonth);
         console.log(monthlySummary);
     }, [selectedMonth, monthlySummary])
     return (
         <Layout component={
 
             <div className='flex flex-row gap-5'>
-                <Title className='pl-5 text-white md:text-black'>紀錄 <span onClick={() => setIsSelectDate(true)} className='cursor-pointer'>{selectedYear}年{selectedMonth.split('-')[1]}月</span></Title>
+                <Title className='pl-5 text-white md:text-black'>紀錄 <span onClick={() => setIsSelectDate(true)} className='cursor-pointer'>{selectedYear}年{selectedMonth}月</span></Title>
                 <DatePickerModal isOpen={isSelectDate} onClose={() => setIsSelectDate(false)} selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
             </div >
 

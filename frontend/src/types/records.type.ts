@@ -27,7 +27,6 @@ export type createRecordType = {
 };
 
 export type MonthlySummaryType = {
-    month: string,
     income: number,
     expense: number
 }

@@ -157,7 +157,7 @@ export const getMonthlySummary = async (token: string) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        const result: ApiResponse<MonthlySummaryType[]> = await response.json();
+        const result = await response.json();
         if (!result.success) {
             throw new Error;
         }
