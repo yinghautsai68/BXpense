@@ -7,10 +7,9 @@ import Card from '../components/Card';
 import { useUtil } from '../context/UtilContext';
 import Layout from '../layout/Layout';
 import { SubTitle, Title } from '../components/Typography';
-import Button from '../components/Button';
-import Modal from '../components/Modal';
 
 import IllustrationEmpty from '../assets/illustration/illustration-empty.png'
+import DatePickerModal from '../components/DatePickerModal';
 
 const Records = () => {
     const { token } = useAuth();
@@ -49,30 +48,6 @@ const Records = () => {
         }
     }, [monthlySummaries, selectedMonth]);
 
-    const handleNext = () => {
-        if (!records) {
-            return;
-        }
-        setTempSelectedYear((prev) => String(Number(prev) + 1));
-
-
-    };
-    const handlePrev = () => {
-        if (!records) {
-            return;
-        }
-        setTempSelectedYear((prev) => String(Number(prev) - 1));
-    };
-
-    const [tempSelectedYear, setTempSelectedYear] = useState<string>(selectedYear);
-    const [tempSelectedMonth, setTempSelectedMonth] = useState<string>(selectedMonth);
-
-    const handleConfirmDate = () => {
-        setSelectedYear(tempSelectedYear);
-        setSelectedMonth(tempSelectedMonth);
-        setIsSelectDate(false);
-    }
-
     useEffect(() => {
         if (!token) {
             setIsLoading(false);
@@ -106,32 +81,7 @@ const Records = () => {
 
             <div className='flex flex-row gap-5'>
                 <Title className='pl-5 text-white md:text-black'>紀錄 <span onClick={() => setIsSelectDate(true)} className='cursor-pointer'>{selectedYear}年{selectedMonth.split('-')[1]}月</span></Title>
-
-                <Modal isOpen={isSelectDate} onClose={() => setIsSelectDate(false)}>
-                    <div className='flex flex-row justify-center items-center gap-5'>
-                        <Button onClick={() => handlePrev()}>L</Button>
-                        <SubTitle className='text-center'>{tempSelectedYear}</SubTitle>
-
-                        <Button onClick={() => handleNext()}>R</Button>
-                    </div>
-                    <div className='flex flex-row justify-center '>
-                        <div className='grid grid-cols-3 place-items-center gap-5 w-50  '>
-                            {Array.from({ length: 12 }).map((_, index) => {
-                                const month = index + 1;
-                                const formatMonth = String(month).padStart(2, "0");
-                                const yearMonth = `2026-${formatMonth}`;
-                                return (
-                                    <Button onClick={() => setTempSelectedMonth(yearMonth)} className={`w-15 bg-gray-200 hover:bg-gray-400 font-bold ${yearMonth === tempSelectedMonth ? 'bg-gray-500 text-white' : ''}`}>{index + 1} 月</Button>
-                                )
-                            })}
-
-                        </div>
-                    </div>
-                    <div className='flex flex-row justify-around items-center'>
-                        <Button onClick={() => setIsSelectDate(false)} className='bg-gray-500 hover:bg-gray-800 text-white'>取消</Button>
-                        <Button onClick={() => handleConfirmDate()} className='bg-yellow-500 hover:bg-yellow-600'>確認</Button>
-                    </div>
-                </Modal>
+                <DatePickerModal isOpen={isSelectDate} onClose={() => setIsSelectDate(false)} selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
             </div >
 
         }>
