@@ -5,6 +5,7 @@ import type { Request, Response } from "express";
 export const getLineChartSummaryExpense = async (req: Request, res: Response) => {
     try {
         const { user_id } = (req as any).user;
+
         /*
         const [result]: any = await db.query(
             `
@@ -56,7 +57,7 @@ export const getLineChartSummaryExpense = async (req: Request, res: Response) =>
                 DATE_FORMAT(record_date, '%Y-%m-%d') AS date,
                 SUM(amount) AS amount
             FROM records
-            WHERE user_id = ?
+            WHERE user_id = ? AND record_date >= '2026-03-01' AND record_date <= '2026-04-01' 
             GROUP BY date
             ORDER BY date ASC
             `,
