@@ -82,7 +82,7 @@ const Analysis = () => {
             }
         }
         fetchData();
-    }, [token]);
+    }, [token, selectedYear, selectedMonth]);
 
     useEffect(() => {
         if (!lineDatas) {
