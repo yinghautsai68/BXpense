@@ -280,7 +280,13 @@ export const getMyGroupedRecords = async (req: Request, res: Response) => {
                 grouped3[year][month][date] = [];
             }
             grouped3[year][month][date].push(recordsResult[i]);
+            grouped3[year][month] = Object.fromEntries(
+                Object.entries(grouped3[year][month])
+                    .sort(([a], [b]) => b.localeCompare(a))
+            );
+            grouped3[year][month][date]?.sort((a, b) => b.record_date - a.record_date);
         }
+
         res.status(200).json({ success: true, message: `取得紀錄成功`, data: grouped3, data2: grouped2 });
     } catch (error) {
         console.log(error);
