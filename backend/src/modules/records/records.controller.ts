@@ -90,8 +90,11 @@ export const getRecords = async (req: Request, res: Response) => {
 export const getMyRecords = async (req: Request, res: Response) => {
     try {
         const { user_id } = (req as any).user;
-        const { type, account_id, sort, limit } = req.query;
+        const { type, account_id, sort, limit, year, month } = req.query;
 
+
+        const start_date = new Date(Number(year), Number(month) - 1, 1);
+        const end_date = new Date(Number(year), Number(month), 1);
         let query =
             `SELECT 
                 r.id,
@@ -125,6 +128,10 @@ export const getMyRecords = async (req: Request, res: Response) => {
             query += ` AND r.account_id = ? `
             params.push(account_id);
         }
+        if (year && month) {
+            query += ` AND r.record_date >= ? AND r.record_date < ? `;
+            params.push(start_date, end_date);
+        }
 
         if (sort === 'amount_desc') {
             query += ` ORDER BY r.amount DESC `;
@@ -146,7 +153,7 @@ export const getMyRecords = async (req: Request, res: Response) => {
             params
         );
         if (recordsResult.length === 0) {
-            return res.status(404).json({ success: false, message: user_id ? `該帳號沒有紀錄` : `沒有紀錄` });
+            return res.status(404).json({ success: true, message: user_id ? `該帳號沒有紀錄` : `沒有紀錄`, data: [] });
         }
 
 

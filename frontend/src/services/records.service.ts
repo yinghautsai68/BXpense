@@ -50,6 +50,8 @@ type getRecordsParamsType = {
     account_id?: number,
     sort?: 'amount_desc',
     limit?: number,
+    year?: string,
+    month?: string
 }
 export const getMyRecords = async (token: string, params?: getRecordsParamsType): Promise<RecordType[]> => {
 
@@ -58,7 +60,8 @@ export const getMyRecords = async (token: string, params?: getRecordsParamsType)
     if (params?.type) query.append('type', params.type);
     if (params?.sort) query.append('sort', params.sort);
     if (params?.limit) query.append('limit', String(params.limit));
-
+    if (params?.year) query.append('year', params.year);
+    if (params?.month) query.append('month', params.month);
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/records/me?${query.toString()}`, {
             method: 'GET',

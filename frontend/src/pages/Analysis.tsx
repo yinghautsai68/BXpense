@@ -30,9 +30,6 @@ const Analysis = () => {
     const [lineDatas, setLineDatas] = useState<Record<string, Record<string, LineType[]>> | null>(null);
     const [categorySummary, setCategorySummary] = useState<CategorySummaryType[]>([]);
 
-    const isEmpty = !isLoading && line.length === 0 && categorySummary.length === 0 && topExpenses.length === 0;
-
-
     useEffect(() => {
         if (!token) {
             return;
@@ -46,7 +43,9 @@ const Analysis = () => {
                     getMyRecords(token, {
                         limit: 10,
                         type: "expense",
-                        sort: "amount_desc"
+                        sort: "amount_desc",
+                        year: selectedYear,
+                        month: selectedMonth
                     })
                 ]);
 
@@ -71,7 +70,7 @@ const Analysis = () => {
 
                 // Top expenses
                 if (topRes.status === "fulfilled") {
-                    //setTopExpenses(topRes.value);
+                    setTopExpenses(topRes.value);
                 } else {
                     console.error("Top records API failed:", topRes.reason);
                 }
@@ -117,12 +116,6 @@ const Analysis = () => {
     if (isLoading) return (
         <div className='flex flex-col pt-15 items-center w-full h-full'>
             <span>loading</span>
-        </div>
-    )
-    if (isEmpty && !isLoading) return (
-        <div className=' flex flex-col pt-15 items-center w-full h-full'>
-            <img src={IllustrationEmpty} alt="" className='md:w-64 md:h-64' />
-            <span className='font-bold text-shadow-lg'>目前沒有數據可以參考</span>
         </div>
     )
     return (
