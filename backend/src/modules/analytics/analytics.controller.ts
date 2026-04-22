@@ -60,6 +60,9 @@ export const getLineChartSummaryExpense = async (req: Request, res: Response) =>
 export const getCategorySummary = async (req: Request, res: Response) => {
     try {
         const { user_id } = (req as any).user;
+        const { year, month } = req.query;
+        const start_date = new Date(Number(year), Number(month) - 1, 1);
+        const end_date = new Date(Number(year), Number(month), 1);
         const [categorySummaryResult]: any = await db.query(
             `
             SELECT 
@@ -70,14 +73,17 @@ export const getCategorySummary = async (req: Request, res: Response) => {
                 COUNT(r.id) AS count
             FROM categories c 
             LEFT JOIN records r ON c.id = r.category_id
-            WHERE r.user_id = ? AND r.type = 'expense'
+            WHERE r.user_id = ? AND r.type = 'expense' AND r.record_date >= ? AND r.record_date < ?
             GROUP BY c.id, c.name, c.image_url
             ORDER BY total_amount DESC
             `,
-            [user_id]
+            [user_id, start_date, end_date]
         );
+        if (categorySummaryResult.length === 0) {
+            return res.status(404).json({ success: true, message: `沒有任何數據`, data: [] });
+        }
 
-        res.status(200).json({ success: true, message: `取得成功`, data: categorySummaryResult })
+        res.status(200).json({ success: true, message: `取得成功`, data: categorySummaryResult });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: `SERVER ERROR` });

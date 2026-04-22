@@ -42,7 +42,7 @@ const Analysis = () => {
                 setIsLoading(true);
                 const results = await Promise.allSettled([
                     getLine(token, selectedYear, selectedMonth),
-                    getCategorySummary(token),
+                    getCategorySummary(token, selectedYear, selectedMonth),
                     getMyRecords(token, {
                         limit: 10,
                         type: "expense",
