@@ -45,7 +45,7 @@ const Records = () => {
                 expense: 0
             });
         }
-    }, [monthlySummaries, selectedMonth]);
+    }, [monthlySummaries, selectedMonth, selectedYear]);
 
     useEffect(() => {
         if (!token) {
