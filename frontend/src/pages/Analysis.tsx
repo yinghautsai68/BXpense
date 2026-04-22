@@ -71,7 +71,7 @@ const Analysis = () => {
 
                 // Top expenses
                 if (topRes.status === "fulfilled") {
-                    setTopExpenses(topRes.value);
+                    //setTopExpenses(topRes.value);
                 } else {
                     console.error("Top records API failed:", topRes.reason);
                 }
@@ -135,12 +135,27 @@ const Analysis = () => {
             <Card className='w-full h-[250px] bg-white'>
                 <CardTitle>支出歷史</CardTitle>
                 <span className='text-xs font-bold'>支出：NT${totalAmount}</span>
-                <ExpenseChart data={line}></ExpenseChart>
+                {
+                    line.length === 0
+                        ?
+                        <div className='flex flex-row justify-center items-center w-full h-full'>沒有數據</div>
+                        :
+                        <ExpenseChart data={line}></ExpenseChart>
+                }
+
             </Card>
             <Card className='bg-white'>
                 <CardTitle>支出類別占比</CardTitle>
                 <div className='w-full h-[180px] bg-white'>
-                    <ExpensePieChart data={pieData} colors={COLORS} />
+                    {
+                        categorySummary.length === 0
+                            ?
+                            <div className='flex flex-row justify-center items-center w-full h-full'>沒有數據</div>
+                            :
+                            <ExpensePieChart data={pieData} colors={COLORS} />
+
+                    }
+
                 </div>
                 <div className='flex flex-col  gap-5 w-full'>
                     {
@@ -180,12 +195,13 @@ const Analysis = () => {
                     <span>TOP 10</span>
                 </div>
                 <div className='flex flex-col w-full  bg-white '>
-                    {topExpenses.length > 0 ?
+                    {topExpenses.length === 0
+                        ?
+                        <div className='w-full text-center'>沒有紀錄</div>
+                        :
                         topExpenses.map((expense) => (
                             <ExpenseCard key={expense.id} record={expense}></ExpenseCard>
                         ))
-                        :
-                        <div>沒有紀錄</div>
                     }
                 </div>
             </Card>
