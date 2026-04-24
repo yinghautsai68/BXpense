@@ -16,10 +16,10 @@ export const createRecord = async (req: Request, res: Response) => {
 
         const [insertResult]: any = await db.query(
             `
-            INSERT INTO records
-            (user_id, account_id, category_id, type, amount, remarks, record_date)
-            VALUES (?,?,?,?,?,?,?)
-            `,
+                INSERT INTO records
+                (user_id, account_id, category_id, type, amount, remarks, record_date)
+                VALUES (?,?,?,?,?,?,?)
+                `,
             [user_id, account_id, category_id, type, amount, remarks, record_date]
         );
         if (insertResult.affectedRows === 0) {
@@ -28,8 +28,8 @@ export const createRecord = async (req: Request, res: Response) => {
 
         const [newResult]: any = await db.query(
             `
-            SELECT * FROM records WHERE id = ?
-            `,
+                SELECT * FROM records WHERE id = ?
+                `,
             [insertResult.insertId]
         );
         res.status(201).json({ success: true, message: "建立紀錄成功", data: newResult[0] });
@@ -43,27 +43,27 @@ export const getRecords = async (req: Request, res: Response) => {
     try {
         const [recordsResult]: any = await db.query(
             `
-        SELECT 
-            r.id,
-            r.user_id,
-            r.type, 
-            r.amount, 
-            r.remarks, 
-            r.record_date,
-            r.created_at, 
-            r.updated_at,
-            a.id AS account_id,
-            a.name AS account_name,
-            a.image_url AS account_image_url, 
-            a.balance AS account_balance,
-            c.id AS category_id,
-            c.name AS category_name, 
-            c.image_url AS category_image_url
-        FROM records r
-        LEFT JOIN accounts a ON r.account_id = a.id
-        LEFT JOIN categories c ON r.category_id = c.id
-        ORDER BY record_date DESC
-        `, []);
+            SELECT 
+                r.id,
+                r.user_id,
+                r.type, 
+                r.amount, 
+                r.remarks, 
+                r.record_date,
+                r.created_at, 
+                r.updated_at,
+                a.id AS account_id,
+                a.name AS account_name,
+                a.image_url AS account_image_url, 
+                a.balance AS account_balance,
+                c.id AS category_id,
+                c.name AS category_name, 
+                c.image_url AS category_image_url
+            FROM records r
+            LEFT JOIN accounts a ON r.account_id = a.id
+            LEFT JOIN categories c ON r.category_id = c.id
+            ORDER BY record_date DESC
+            `, []);
         if (recordsResult.length === 0) {
             return res.status(404).json({ success: false, message: `沒有紀錄` });
         }
@@ -97,26 +97,26 @@ export const getMyRecords = async (req: Request, res: Response) => {
         const end_date = new Date(Number(year), Number(month), 1);
         let query =
             `SELECT 
-                r.id,
-                r.user_id,
-                r.type, 
-                r.amount, 
-                r.remarks, 
-                r.record_date,
-                r.created_at, 
-                r.updated_at,
-                a.id AS account_id,
-                a.name AS account_name,
-                a.image_url AS account_image_url, 
-                a.balance AS account_balance,
-                c.id AS category_id,
-                c.name AS category_name, 
-                c.image_url AS category_image_url
-            FROM records r
-            LEFT JOIN accounts a ON r.account_id = a.id
-            LEFT JOIN categories c ON r.category_id = c.id
-            WHERE r.user_id = ?
-            `
+                    r.id,
+                    r.user_id,
+                    r.type, 
+                    r.amount, 
+                    r.remarks, 
+                    r.record_date,
+                    r.created_at, 
+                    r.updated_at,
+                    a.id AS account_id,
+                    a.name AS account_name,
+                    a.image_url AS account_image_url, 
+                    a.balance AS account_balance,
+                    c.id AS category_id,
+                    c.name AS category_name, 
+                    c.image_url AS category_image_url
+                FROM records r
+                LEFT JOIN accounts a ON r.account_id = a.id
+                LEFT JOIN categories c ON r.category_id = c.id
+                WHERE r.user_id = ?
+                `
 
         const params = [user_id];
 
@@ -171,26 +171,26 @@ export const getMyGroupedRecords = async (req: Request, res: Response) => {
 
         let query =
             `SELECT 
-                r.id,
-                r.user_id,
-                r.type, 
-                r.amount, 
-                r.remarks, 
-                r.record_date,
-                r.created_at, 
-                r.updated_at,
-                a.id AS account_id,
-                a.name AS account_name,
-                a.image_url AS account_image_url, 
-                a.balance AS account_balance,
-                c.id AS category_id,
-                c.name AS category_name, 
-                c.image_url AS category_image_url
-            FROM records r
-            LEFT JOIN accounts a ON r.account_id = a.id
-            LEFT JOIN categories c ON r.category_id = c.id
-            WHERE r.user_id = ?
-            `
+                    r.id,
+                    r.user_id,
+                    r.type, 
+                    r.amount, 
+                    r.remarks, 
+                    r.record_date,
+                    r.created_at, 
+                    r.updated_at,
+                    a.id AS account_id,
+                    a.name AS account_name,
+                    a.image_url AS account_image_url, 
+                    a.balance AS account_balance,
+                    c.id AS category_id,
+                    c.name AS category_name, 
+                    c.image_url AS category_image_url
+                FROM records r
+                LEFT JOIN accounts a ON r.account_id = a.id
+                LEFT JOIN categories c ON r.category_id = c.id
+                WHERE r.user_id = ?
+                `
 
         const params = [user_id];
 
@@ -224,70 +224,7 @@ export const getMyGroupedRecords = async (req: Request, res: Response) => {
         if (recordsResult.length === 0) {
             return res.status(404).json({ success: false, message: user_id ? `該帳號沒有紀錄` : `沒有紀錄` });
         }
-
-        const grouped: Record<string, any[]> = {};
-
-        for (let i = 0; i < recordsResult.length; i++) {
-            const date = recordsResult[i].record_date;
-            const formatted_date = new Date(date).toLocaleString("sv-SE", { timeZone: "Asia/Taipei" }).slice(0, 10);
-            if (!formatted_date) {
-                continue;
-            }
-
-
-            if (!grouped[formatted_date]) {
-                grouped[formatted_date] = [];
-            }
-            grouped[formatted_date].push(recordsResult[i]);
-            grouped[formatted_date].sort((a, b) => b.record_date - a.record_date);
-        }
-
-
-        const grouped2: Record<string, Record<string, any[]>> = {};
-
-        for (let i = 0; i < recordsResult.length; i++) {
-            const datetime = recordsResult[i].record_date;
-            const month = new Date(datetime).toLocaleString("sv-SE", { timeZone: "Asia/Taipei", year: 'numeric', month: 'numeric' });
-            const date = new Date(datetime).toLocaleString("sv-SE", { timeZone: "Asia/Taipei" }).slice(0, 10);
-
-            if (!grouped2[month]) {
-                grouped2[month] = {};
-
-            }
-
-
-            if (!grouped2[month][date]) {
-                grouped2[month][date] = [];
-            }
-
-            grouped2[month][date].push(recordsResult[i]);
-            grouped2[month][date].sort((a, b) => b.record_date - a.record_date);
-        }
-
-        type grouped3Type = Record<string, Record<string, Record<string, any[]>>>
-        const grouped3: grouped3Type = {}
-        for (let i = 0; i < recordsResult.length; i++) {
-            const year = new Date(recordsResult[i].record_date).toLocaleString('sv-SE', { year: 'numeric' });
-            const month = new Date(recordsResult[i].record_date).toLocaleString('sv-SE', { month: 'numeric' });
-            const date = new Date(recordsResult[i].record_date).toLocaleString('sv-SE', { year: 'numeric', month: 'numeric', day: 'numeric' });
-            if (!grouped3[year]) {
-                grouped3[year] = {};
-            }
-            if (!grouped3[year][month]) {
-                grouped3[year][month] = {};
-            }
-            if (!grouped3[year][month][date]) {
-                grouped3[year][month][date] = [];
-            }
-            grouped3[year][month][date].push(recordsResult[i]);
-            grouped3[year][month] = Object.fromEntries(
-                Object.entries(grouped3[year][month])
-                    .sort(([a], [b]) => b.localeCompare(a))
-            );
-            grouped3[year][month][date]?.sort((a, b) => b.record_date - a.record_date);
-        }
-
-        res.status(200).json({ success: true, message: `取得紀錄成功`, data: grouped3, data2: grouped2 });
+        res.status(200).json({ success: true, message: `取得紀錄成功`, data: recordsResult });
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "SERVER ERROR" });
@@ -301,24 +238,24 @@ export const getRecordsById = async (req: Request, res: Response) => {
 
         const [recordResult]: any = await db.query(
             ` SELECT
-            r.user_id,
-            r.type, 
-            r.amount, 
-            r.remarks, 
-            r.record_date,
-            r.created_at, 
-            r.updated_at,
-            a.id AS account_id,
-            a.name AS account_name,
-            a.image_url AS account_image_url, 
-            a.balance AS account_balance,
-            c.id AS category_id,
-            c.name AS category_name, 
-            c.image_url AS category_image_url
-        FROM records r
-        LEFT JOIN accounts a ON r.account_id = a.id
-        LEFT JOIN categories c ON r.category_id = c.id
-        WHERE r.id = ?`,
+                r.user_id,
+                r.type, 
+                r.amount, 
+                r.remarks, 
+                r.record_date,
+                r.created_at, 
+                r.updated_at,
+                a.id AS account_id,
+                a.name AS account_name,
+                a.image_url AS account_image_url, 
+                a.balance AS account_balance,
+                c.id AS category_id,
+                c.name AS category_name, 
+                c.image_url AS category_image_url
+            FROM records r
+            LEFT JOIN accounts a ON r.account_id = a.id
+            LEFT JOIN categories c ON r.category_id = c.id
+            WHERE r.id = ?`,
             [id]
         )
         if (recordResult.length === 0) {
@@ -339,13 +276,13 @@ export const getMonthlySummary = async (req: Request, res: Response) => {
 
         const [result]: any = await db.query(
             `SELECT 
-                DATE_FORMAT(record_date, '%Y-%m') AS month, 
-                SUM(CASE WHEN type ='income' THEN amount ELSE 0 END) AS income,
-                SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) AS expense
-            FROM records
-            WHERE user_id = ?
-            GROUP BY month
-            ORDER BY month`,
+                    DATE_FORMAT(record_date, '%Y-%m') AS month, 
+                    SUM(CASE WHEN type ='income' THEN amount ELSE 0 END) AS income,
+                    SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) AS expense
+                FROM records
+                WHERE user_id = ?
+                GROUP BY month
+                ORDER BY month`,
             [user_id]
         )
 
@@ -386,8 +323,8 @@ export const updateRecordById = async (req: Request, res: Response) => {
 
         const [recordResult]: any = await db.query(
             `
-            SELECT id FROM records WHERE id = ?
-            `,
+                SELECT id FROM records WHERE id = ?
+                `,
             [id]
         );
         if (recordResult.length === 0) {
@@ -396,16 +333,16 @@ export const updateRecordById = async (req: Request, res: Response) => {
 
         const [updateResult]: any = await db.query(
             `
-            UPDATE records
-            SET
-                account_id = COALESCE(?, account_id) ,
-                category_id = COALESCE(?, category_id),
-                type = COALESCE(?, type),
-                amount = COALESCE(?, amount),
-                remarks = COALESCE(?,remarks),
-                record_date = COALESCE(?, record_date)
-            WHERE id = ?
-            `,
+                UPDATE records
+                SET
+                    account_id = COALESCE(?, account_id) ,
+                    category_id = COALESCE(?, category_id),
+                    type = COALESCE(?, type),
+                    amount = COALESCE(?, amount),
+                    remarks = COALESCE(?,remarks),
+                    record_date = COALESCE(?, record_date)
+                WHERE id = ?
+                `,
             [account_id ?? null, category_id ?? null, type ?? null, amount ?? null, remarks ?? null, record_date ?? null, id]
         );
         if (updateResult.affectedRows === 0) {
@@ -414,20 +351,20 @@ export const updateRecordById = async (req: Request, res: Response) => {
 
         const [newResult]: any = await db.query(
             `SELECT 
-                r.type, 
-                r.amount, 
-                r.remarks, 
-                r.created_at, 
-                r.updated_at,
-                a.name AS account_name,
-                a.image_url AS account_image_url, 
-                a.balance AS account_balance,
-                c.name AS category_name, 
-                c.image_url AS category_image_url
-            FROM records r
-            LEFT JOIN accounts a ON r.account_id = a.id
-            LEFT JOIN categories c ON r.category_id = c.id
-            WHERE r.id = ?`,
+                    r.type, 
+                    r.amount, 
+                    r.remarks, 
+                    r.created_at, 
+                    r.updated_at,
+                    a.name AS account_name,
+                    a.image_url AS account_image_url, 
+                    a.balance AS account_balance,
+                    c.name AS category_name, 
+                    c.image_url AS category_image_url
+                FROM records r
+                LEFT JOIN accounts a ON r.account_id = a.id
+                LEFT JOIN categories c ON r.category_id = c.id
+                WHERE r.id = ?`,
             [id]
         );
         res.status(200).json({ success: true, message: `更新紀錄成功`, data: newResult[0] });
@@ -442,11 +379,11 @@ export const deleteRecordById = async (req: Request, res: Response) => {
         const { id } = req.params;
         const [recordResult]: any = await db.query(
             `
-            SELECT 
-                id  
-            FROM records
-            WHERE id = ?
-            `,
+                SELECT 
+                    id  
+                FROM records
+                WHERE id = ?
+                `,
             [id]
         );
         if (recordResult.length === 0) {
@@ -455,8 +392,8 @@ export const deleteRecordById = async (req: Request, res: Response) => {
 
         const [deleteResult]: any = await db.query(
             `
-            DELETE FROM records WHERE id = ?
-            `,
+                DELETE FROM records WHERE id = ?
+                `,
             [id]
         );
         if (deleteResult.affectedRows === 0) {
@@ -478,13 +415,13 @@ export const getSummary = async (req: Request, res: Response) => {
 
         const [userSummaryResult]: any = await db.query(
             `
-            SELECT
-                SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) AS total_income,
-                SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) AS total_expense,
-                COUNT(id) AS total_records 
-            FROM records 
-            WHERE user_id = ?
-            `,
+                SELECT
+                    SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END) AS total_income,
+                    SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END) AS total_expense,
+                    COUNT(id) AS total_records 
+                FROM records 
+                WHERE user_id = ?
+                `,
             [user_id]
         );
 

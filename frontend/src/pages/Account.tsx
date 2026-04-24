@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import ExpenseCard from '../components/ExpenseCard'
 import Card from '../components/Card'
 import type { AccountType } from '../types/accounts.type'
@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext'
 import { deleteAccountById, getAccountById } from '../services/accounts.service'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getMyGroupedRecords } from '../services/records.service'
-import type { RecordType } from '../types/records.type'
+
 import { useUtil } from '../context/UtilContext'
 
 import IconDelete from '../assets/icons/icon-delete.png'
@@ -14,6 +14,8 @@ import IconEdit from '../assets/icons/icon-edit.png'
 import toast from 'react-hot-toast'
 import Modal from '../components/Modal'
 import Button from '../components/Button'
+import type { RecordType } from '../types/records.type'
+
 const Account = () => {
     const { token } = useAuth();
     const { id } = useParams();
@@ -25,8 +27,41 @@ const Account = () => {
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [account, setAccount] = useState<AccountType | null>(null);
-    const [records, setRecords] = useState<Record<string, RecordType[]>>({});
 
+
+    const [records, setRecords] = useState<RecordType[]>([]);
+
+    type GroupedType = {
+        [year: string]: {
+            [month: string]: {
+                [date: string]: RecordType[]
+            }
+        }
+    }
+    const grouped = useMemo(() => {
+        let result: GroupedType = {};
+
+        for (let i = 0; i < records.length; i++) {
+            const dateObject = new Date(records[i].record_date);
+            const year = dateObject.getFullYear();
+            const month = dateObject.getMonth() + 1;
+            const date = dateObject.getDate();
+
+            if (!result[year]) {
+                result[year] = {};
+            }
+            if (!result[year][month]) {
+                result[year][month] = {};
+            }
+            if (!result[year][month][date]) {
+                result[year][month][date] = [];
+            }
+
+            result[year][month][date].push(records[i]);
+        }
+
+        return result;
+    }, [records]);
 
     useEffect(() => {
         if (!token || !id) {
@@ -39,7 +74,6 @@ const Account = () => {
                     getAccountById(token, id),
                     getMyGroupedRecords(token, { account_id: Number(id) })
                 ]);
-
                 if (accountResult.status === 'fulfilled') {
                     setAccount(accountResult.value);
                 } else {
@@ -47,7 +81,8 @@ const Account = () => {
                 }
 
                 if (recordsResult.status === 'fulfilled') {
-                    setRecords(recordsResult.value);
+                    console.log(recordsResult.value);
+                    setRecords(recordsResult.value.data);
                 } else {
                     console.error(recordsResult.reason);
                 }
@@ -60,7 +95,7 @@ const Account = () => {
         fetchData();
     }, [token, id]);
 
-
+    useEffect(() => console.log(records), [records]);
 
     const handleDelete = async () => {
         if (!token || !id) {
@@ -109,21 +144,42 @@ const Account = () => {
             </div>
 
             {/*records*/}
-            <div className='flex flex-col gap-5  h-full overflow-y-auto'>
-                {
-                    Object.keys(records).map((date) => (
-                        <div className='flex flex-col gap-2 '>
-                            <span className='font-medium'>{formatDate(date)}</span>
-                            <Card className='flex flex-col  divide-y divide-gray-300 bg-white'>
-                                {
-                                    records[date].map((record) => (
-                                        <ExpenseCard key={record.id} record={record}></ExpenseCard>
-                                    ))
+            <div className='flex flex-col gap-8  h-full overflow-y-auto'>
+                {records.length === 0 ?
+                    <Card className='flex flex-row justify-center bg-white'>
+                        <span className='w-full text-center font-semibold'>沒有任何支出紀錄</span>
+                    </Card>
+                    :
+                    Object.entries(grouped).sort((a, b) => Number(b[0]) - Number(a[0])).map(([year, months]) => (
+                        <div>
+                            <span className='text-lg font-bold'>{year}年</span>
+                            <div className='flex flex-col gap-3'>
+                                {Object.entries(months).sort((a, b) => Number(b[0]) - Number(a[0])).map(([month, dates]) => (
+                                    <Card className='bg-gray-200'>
+                                        <span className='font-semibold'>{month}月</span>
+                                        <div >
+                                            {
+                                                Object.entries(dates).sort((a, b) => Number(b[0]) - Number(a[0])).map(([date, records]) => (
+                                                    <div>
+                                                        <span>{month}月{date}日</span>
+                                                        <Card className='bg-white'>
+                                                            {records.map((record) => (
+                                                                <ExpenseCard record={record} />
+                                                            ))}
+                                                        </Card>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    </Card>
+                                ))
                                 }
-                            </Card>
+                            </div>
                         </div>
+
                     ))
                 }
+
             </div>
 
             <Modal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>

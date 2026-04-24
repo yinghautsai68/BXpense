@@ -22,7 +22,7 @@ export const getLineChartSummaryExpense = async (req: Request, res: Response) =>
                 DATE_FORMAT(record_date, '%Y-%m-%d') AS date,
                 SUM(amount) AS amount
             FROM records
-            WHERE user_id = ? AND record_date >= ? AND record_date < ? 
+            WHERE user_id = ? AND type = 'expense' AND record_date >= ? AND record_date < ? 
             GROUP BY date
             ORDER BY date ASC
             `,

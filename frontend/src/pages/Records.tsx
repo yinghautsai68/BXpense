@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ExpenseCard from '../components/ExpenseCard'
 import { useAuth } from '../context/AuthContext';
 import type { MonthlySummaryType, RecordType } from '../types/records.type';
-import { getMonthlySummary, getMyGroupedRecords } from '../services/records.service';
+import { getMonthlySummary, getMyRecords } from '../services/records.service';
 import Card from '../components/Card';
 import { useUtil } from '../context/UtilContext';
 import Layout from '../layout/Layout';
@@ -19,16 +19,48 @@ const Records = () => {
 
     const [isSelectDate, setIsSelectDate] = useState<boolean>(false);
 
-    const [records, setRecords] = useState<Record<string, Record<string, Record<string, RecordType[]>>> | null>(null);
+    const [records, setRecords] = useState<RecordType[]>([]);
     const [monthlySummaries, setMonthlySummaries] = useState<Record<string, Record<string, MonthlySummaryType>> | null>(null);
     const [monthlySummary, setMonthlySummary] = useState<MonthlySummaryType>({
         income: 0,
         expense: 0
     });
 
+    type GroupedType = {
+        [year: string]: {
+            [month: string]: {
+                [date: string]: RecordType[]
+            }
+        }
+    }
+
+    const grouped = useMemo(() => {
+        let result: GroupedType = {};
+
+        for (let i = 0; i < records.length; i++) {
+            const dateObj = new Date(records[i].record_date);
+
+            const year = dateObj.getFullYear().toString();
+            const month = (dateObj.getMonth() + 1).toString(); // important: string
+            const date = dateObj.getDate().toString();
+
+            if (!result[year]) result[year] = {};
+            if (!result[year][month]) result[year][month] = {};
+            if (!result[year][month][date]) result[year][month][date] = [];
+
+            result[year][month][date].push(records[i]);
+        }
+
+        return result;
+    }, [records]);
+
+
+
+
+
     const currentYear = new Date().toLocaleString('sv-SE', { year: 'numeric' });
     const currentMonth = new Date().toLocaleString('sv-SE', { month: 'numeric' });
-    console.log(currentMonth);
+    //console.log(currentMonth);
     const [selectedYear, setSelectedYear] = useState(currentYear);
     const [selectedMonth, setSelectedMonth] = useState(currentMonth);
 
@@ -54,12 +86,12 @@ const Records = () => {
         }
         const fetchData = async () => {
             try {
-                const recordsData = await getMyGroupedRecords(token);
-                console.log(recordsData.data);
-                setRecords(recordsData.data);
+                const recordsData = await getMyRecords(token);
+                //console.log(recordsData);
+                setRecords(recordsData);
 
                 const monthlySummariesData = await getMonthlySummary(token);
-                console.log('monthly summary', monthlySummariesData);
+                //console.log('monthly summary', monthlySummariesData);
                 setMonthlySummaries(monthlySummariesData);
 
             } catch (error) {
@@ -73,7 +105,7 @@ const Records = () => {
 
     useEffect(() => {
         console.log('selectedMonth:', selectedMonth);
-        console.log(monthlySummary);
+        //console.log(monthlySummary);
     }, [selectedMonth, monthlySummary])
     return (
         <Layout component={
@@ -102,36 +134,36 @@ const Records = () => {
             <div className='flex flex-col gap-3 flex-1'>
 
                 {
-                    isLoading ? (<span>...loading</span>)
-                        : records ? (
-                            !records[selectedYear] ?
-                                <div className='flex flex-col justify-center items-center w-full flex-1 '>
-                                    <img src={IllustrationEmpty} alt="illustration-empty" className='w-64' />
-                                    <SubTitle className='w-full text-center'>這年份沒有資料</SubTitle>
-                                </div>
-                                : !records[selectedYear][selectedMonth] ?
-                                    <div className='flex flex-col justify-center items-center w-full flex-1 '>
-                                        <img src={IllustrationEmpty} alt="illustration-empty" className='w-64' />
-                                        <SubTitle className='w-full text-center'>這個月沒有資料</SubTitle>
-                                    </div>
-                                    :
-                                    Object.entries(records[selectedYear][selectedMonth]).map(([date, dateRecords]) => (
-                                        <div key={date}>
-                                            <span className='font-medium'>
-                                                {formatDate(date)}
-                                            </span>
-                                            <Card className='divide-y divide-gray-300 bg-white'>
-                                                {dateRecords.map((record: RecordType) => (
-                                                    <ExpenseCard key={record.id} record={record} />
-                                                ))}
-                                            </Card>
-                                        </div>
-                                    ))
-                        )
-                            :
+                    isLoading
+                        ?
+                        <span>...loading</span>
+                        : !grouped[selectedYear]
+                            ?
                             <div className='flex flex-row justify-center items-center w-full h-10 bg-white rounded-lg'>
-                                <span>目前沒有紀錄</span>
+                                <span>這年沒有紀錄</span>
                             </div>
+                            : !grouped[selectedYear][selectedMonth]
+                                ?
+                                <div className='flex flex-row justify-center items-center w-full h-10 bg-white rounded-lg'>
+                                    <span>這月份沒有紀錄</span>
+                                </div>
+                                :
+                                <div className='flex flex-col gap-3'>
+                                    {
+                                        Object.entries(grouped[selectedYear][selectedMonth]).sort((a, b) => Number(b[0]) - Number(a[0])).map(([date, records]) => (
+                                            <div key={date} className='flex flex-col gap-1'>
+                                                <span>{selectedMonth}月{date}日 {new Date(Number(selectedMonth), Number(date)).toLocaleString('zh-TW', { weekday: 'short' })}</span>
+                                                <Card className='divide-y divide-gray-300 bg-white'>
+                                                    {
+                                                        records.map((record) => (
+                                                            <ExpenseCard record={record} />
+                                                        ))
+                                                    }
+                                                </Card>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
                 }
             </div >
         </Layout >
