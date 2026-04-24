@@ -65,7 +65,7 @@ export const getRecords = async (req: Request, res: Response) => {
             ORDER BY record_date DESC
             `, []);
         if (recordsResult.length === 0) {
-            return res.status(404).json({ success: false, message: `沒有紀錄` });
+            return res.status(200).json({ success: true, message: `沒有紀錄`, data: [] });
         }
 
         const grouped: any = {};
@@ -153,7 +153,7 @@ export const getMyRecords = async (req: Request, res: Response) => {
             params
         );
         if (recordsResult.length === 0) {
-            return res.status(404).json({ success: true, message: user_id ? `該帳號沒有紀錄` : `沒有紀錄`, data: [] });
+            return res.status(200).json({ success: true, message: user_id ? `該帳號沒有紀錄` : `沒有紀錄`, data: [] });
         }
 
 
@@ -302,7 +302,7 @@ export const getMonthlySummary = async (req: Request, res: Response) => {
             }
         }
         if (result.length === 0) {
-            return res.status(404).json({ success: false, message: `沒有資料`, data: [] });
+            return res.status(200).json({ success: true, message: `沒有資料`, data: [] });
         }
 
         res.status(200).json({ success: true, message: `取得月成功`, data: grouped });

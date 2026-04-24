@@ -80,7 +80,7 @@ export const getCategorySummary = async (req: Request, res: Response) => {
             [user_id, start_date, end_date]
         );
         if (categorySummaryResult.length === 0) {
-            return res.status(404).json({ success: true, message: `沒有任何數據`, data: [] });
+            return res.status(200).json({ success: true, message: `沒有任何數據`, data: [] });
         }
 
         res.status(200).json({ success: true, message: `取得成功`, data: categorySummaryResult });

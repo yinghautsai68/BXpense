@@ -60,7 +60,7 @@ export const getAccounts = async (req: Request, res: Response) => {
 
 
         if (accountsResult.length === 0) {
-            return res.status(404).json({ success: false, message: `沒有帳戶資料`, data: [] });
+            return res.status(200).json({ success: true, message: `沒有帳戶資料`, data: [] });
         }
 
         res.status(200).json({ success: true, message: "取得帳戶成功", data: accountsResult });
@@ -98,7 +98,7 @@ export const getMyAccounts = async (req: Request, res: Response) => {
         );
 
         if (accountsResult.length === 0) {
-            return res.status(404).json({ success: false, message: `該用戶者沒有帳戶資料`, data: [] });
+            return res.status(200).json({ success: true, message: `該用戶者沒有帳戶資料`, data: [] });
         }
 
         res.status(200).json({ success: true, message: "取得帳戶成功", data: accountsResult });
