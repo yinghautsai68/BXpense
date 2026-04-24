@@ -39,7 +39,7 @@ const Information = ({ onChange, className, label, name, value, type }: Informat
 
                     : type === 'text' ?
                         (
-                            <input type="text" name={name} value={value} onChange={onChange} placeholder='請輸入' className='flex-5 text-end    ' />
+                            <input type="text" name={name} value={value} onChange={onChange} placeholder='請輸入' className='flex-4 text-end    ' />
                         )
                         : type === 'number' &&
                         (
