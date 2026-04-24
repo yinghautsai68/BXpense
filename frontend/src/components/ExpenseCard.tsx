@@ -21,7 +21,7 @@ const ExpenseCard = ({ record }: ExpenseCardProps) => {
                 </div>
             </div>
             <div className='flex flex-col items-end'>
-                <span className="text-xs font-bold">-NT$ {record.amount}</span>
+                <span className="text-xs font-bold">{record.type === 'expense' ? '-' : '+'}NT$ {record.amount}</span>
                 <span className="text-xs">{formatTime(record.record_date)}</span>
             </div>
         </Link >

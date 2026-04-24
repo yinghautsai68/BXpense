@@ -15,28 +15,31 @@ const Information = ({ onChange, className, label, name, value, type }: Informat
         ref.current?.click();
     }
     return (
-        <div className={`${className} flex flex-row justify-between gap-25 w-full`}>
-            <span className='text-lg font-medium'>{label}</span>
+        <div className={`${className} flex flex-row justify-between items-center  w-full `}>
+            <span className='text-lg font-medium flex-1'>{label}</span>
             {
-                type === 'file' ? (<>
-                    <div onClick={handleClick}>
-                        {
-                            value ? (
-                                <img src={typeof value === 'string' ? value : ''} alt="" className='w-10 aspect-square rounded-lg object-cover cursor-pointer ' />
-                            )
-                                : (
-                                    <span>請添加照片</span>
+                type === 'file'
+                    ?
+                    (<>
+                        <div onClick={handleClick}>
+                            {
+                                value ? (
+                                    <img src={typeof value === 'string' ? value : ''} alt="" className='w-10 aspect-square rounded-lg object-cover cursor-pointer ' />
                                 )
-                        }
+                                    : (
+                                        <span>請添加照片</span>
+                                    )
+                            }
 
-                    </div>
+                        </div>
 
 
-                    <input ref={ref} type="file" name={name} onChange={onChange} placeholder='請輸入' className='hidden w-2 text-end' />
-                </>)
+                        <input ref={ref} type="file" name={name} onChange={onChange} placeholder='請輸入' className='hidden w-2 text-end' />
+                    </>)
+
                     : type === 'text' ?
                         (
-                            <input type="text" name={name} value={value} onChange={onChange} placeholder='請輸入' className='flex-1 text-end ' />
+                            <input type="text" name={name} value={value} onChange={onChange} placeholder='請輸入' className='flex-5 text-end    ' />
                         )
                         : type === 'number' &&
                         (

@@ -9,7 +9,7 @@ type ExpenseChartProps = {
 const ExpenseChart = ({ data }: ExpenseChartProps) => {
 
     return (
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="90%">
             <LineChart data={data} >
                 <CartesianGrid strokeDasharray='10 10' />
                 <XAxis height={35} tick={{ fontSize: 10 }} dataKey="date" />

@@ -52,7 +52,6 @@ export const UtilProvider = ({ children }: UtilProviderType) => {
             year: "numeric",
             month: "long",
             day: "2-digit",
-            weekday: "short",
             hour: "2-digit",
             minute: "2-digit",
             hour12: true
