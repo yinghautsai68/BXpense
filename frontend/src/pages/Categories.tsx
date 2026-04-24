@@ -192,7 +192,7 @@ const Categories = () => {
     return (
         <DetailLayout title="類別自定義" rightAction={<Button onClick={() => handleSubmit()} className='bg-yellow-500 text-white'>{id ? '更新' : '新增'}</Button>}>
             <div className='flex flex-col items-center gap-5 p-2'>
-                <div className='flex flex-row items-center w-20 p-3 aspect-square border-2 border-yellow-500 bg-white rounded-full'> {
+                <div className='flex flex-row items-center w-20 aspect-square border-2 border-yellow-500 bg-white rounded-full'> {
                     categoryForm.image_url
                         ?
                         <img src={previewImage} className='w-full aspect-square rounded-full object-cover' />
