@@ -14,7 +14,7 @@ const ExpenseCard = ({ record }: ExpenseCardProps) => {
     return (
         <Link to={`/records/${record.id}`} className='flex flex-row justify-between items-center py-3 first:pt-0 last:pb-0 '>
             <div className='flex flex-row items-center gap-2'>
-                <img src={record.category_image_url} className='w-8 p-1 aspect-square  rounded-lg bg-zinc-200' />
+                <img src={record.category_image_url} className='w-8 aspect-square  rounded-lg bg-zinc-200' />
                 <div className="flex flex-col">
                     <span className="text-sm font-bold">{categoryZhTW[record.category_name]}</span>
                     <span className="text-xs text-gray-400">{record.remarks}</span>
