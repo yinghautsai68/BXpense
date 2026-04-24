@@ -154,7 +154,7 @@ const Analysis = () => {
                     {
                         categorySummary.map((category, index) => (
                             <div key={index} className='flex flex-row  items-center gap-2 w-full '>
-                                <img src={category.image_url} alt='category_img' className='w-10 aspect-square p-2  rounded-full bg-gray-100' />
+                                <img src={category.image_url} alt='category_img' className='w-10 aspect-square  rounded-full bg-gray-100' />
                                 <div className='flex flex-col w-full'>
                                     <div className='flex flex-row'>
                                         <div className='flex flex-col'>

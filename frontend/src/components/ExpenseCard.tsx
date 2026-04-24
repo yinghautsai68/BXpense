@@ -16,7 +16,7 @@ const ExpenseCard = ({ record }: ExpenseCardProps) => {
             <div className='flex flex-row items-center gap-2'>
                 <img src={record.category_image_url} className='w-8 aspect-square  rounded-lg bg-zinc-200' />
                 <div className="flex flex-col">
-                    <span className="text-sm font-bold">{categoryZhTW[record.category_name]}</span>
+                    <span className="text-sm font-bold">{categoryZhTW[record.category_name] ?? record.category_name}</span>
                     <span className="text-xs text-gray-400">{record.remarks}</span>
                 </div>
             </div>
