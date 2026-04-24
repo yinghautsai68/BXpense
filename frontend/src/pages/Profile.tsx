@@ -60,6 +60,7 @@ const Profile = () => {
                 }
             } catch (error) {
                 console.error(error);
+                setError('網路錯誤，請稍後再試');
             } finally {
                 setIsLoading(false);
             }

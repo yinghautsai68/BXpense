@@ -1,5 +1,5 @@
 import type { ApiResponse } from "../types/api.types";
-import type { createRecordType, MonthlySummaryType, RecordType } from "../types/records.type";
+import type { createRecordType, RecordType } from "../types/records.type";
 
 export const createRecord = async (token: string, record: createRecordType) => {
     try {
@@ -79,11 +79,7 @@ export const getMyRecords = async (token: string, params?: getRecordsParamsType)
     }
 }
 
-type GroupedRecordsType = {
-    month: {
-        date: RecordType[]
-    }
-}
+
 //<Record<string, Record<string, RecordType[]>>>
 export const getMyGroupedRecords = async (token: string, params?: getRecordsParamsType) => {
 

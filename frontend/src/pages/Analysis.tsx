@@ -8,7 +8,7 @@ import { getCategorySummary, getLine } from '../services/analytics.service';
 import Card from '../components/Card';
 import { categoryZhTW } from '../constants/categoryZhTW';
 
-import IllustrationEmpty from '../assets/illustration/illustration-empty.png'
+
 import { CardTitle, Title } from '../components/Typography';
 import type { CategorySummaryType, LineType, PieType } from '../types/analysis.type';
 import { getMyRecords } from '../services/records.service';

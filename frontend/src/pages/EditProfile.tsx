@@ -109,7 +109,7 @@ const EditProfile = () => {
                 <Button onClick={() => navigate(-1)} className="bg-gray-300">回上一頁</Button>
             </div>
             <FormInput ref={imageRef} label="照片" name="image_url" type="file" onChange={handleImageChange} required={true} ></FormInput>
-            <img onClick={() => imageRef.current?.click()} src={formData.image_url} alt="" className='w-45 aspect-square rounded-xl object-cover' />
+            <img onClick={() => imageRef.current?.click()} src={formData.image_url} alt="" className='w-45 aspect-square rounded-xl object-cover cursor-pointer' />
             <FormInput label="名稱" name="username" value={formData.username} type="text" onChange={handleChange} required={true} ></FormInput>
             <FormInput label="密碼" name="password" value={formData.password} type="password" onChange={handleChange} required={true} ></FormInput>
             <FormInput label="確認密碼" name="confirmPassword" value={formData.confirmPassword} type="password" onChange={handleChange} required={true} ></FormInput>

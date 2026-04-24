@@ -7,7 +7,7 @@ import { deleteAccountById, getAccountById } from '../services/accounts.service'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getMyGroupedRecords } from '../services/records.service'
 
-import { useUtil } from '../context/UtilContext'
+
 
 import IconDelete from '../assets/icons/icon-delete.png'
 import IconEdit from '../assets/icons/icon-edit.png'
@@ -19,8 +19,6 @@ import type { RecordType } from '../types/records.type'
 const Account = () => {
     const { token } = useAuth();
     const { id } = useParams();
-
-    const { formatDate } = useUtil();
     const navigate = useNavigate();
 
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);

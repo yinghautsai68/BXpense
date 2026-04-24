@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import Card from '../components/Card'
 import Icon from '../components/Icon'
-import type { CategoryType, CreateCategoryType } from '../types/categories.type';
+import type { CreateCategoryType } from '../types/categories.type';
 import { useAuth } from '../context/AuthContext';
-import { createCategory, getCategories, getCategoryById, updateCategoryById } from '../services/categories.service';
+import { createCategory, getCategoryById, updateCategoryById } from '../services/categories.service';
 import DetailLayout from '../layout/DetailLayout';
 import Button from '../components/Button';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -12,7 +12,7 @@ import { createCategoryFormSchema } from '../schemas/categories.schema';
 import { uploadImage } from '../services/upload.service';
 
 const Categories = () => {
-    const { token, user } = useAuth();
+    const { token } = useAuth();
     const { id } = useParams();
     const navigate = useNavigate();
     const fileRef = useRef<HTMLInputElement | null>(null);

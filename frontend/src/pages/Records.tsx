@@ -4,16 +4,15 @@ import { useAuth } from '../context/AuthContext';
 import type { MonthlySummaryType, RecordType } from '../types/records.type';
 import { getMonthlySummary, getMyRecords } from '../services/records.service';
 import Card from '../components/Card';
-import { useUtil } from '../context/UtilContext';
-import Layout from '../layout/Layout';
-import { SubTitle, Title } from '../components/Typography';
 
-import IllustrationEmpty from '../assets/illustration/illustration-empty.png'
+import Layout from '../layout/Layout';
+import { Title } from '../components/Typography';
+
 import DatePickerModal from '../components/DatePickerModal';
 
 const Records = () => {
     const { token } = useAuth();
-    const { formatDate } = useUtil();
+
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
