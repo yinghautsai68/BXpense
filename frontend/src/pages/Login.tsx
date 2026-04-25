@@ -63,10 +63,6 @@ const Login = () => {
                 <Button className="bg-yellow-500 hover:bg-yellow-700">登入</Button>
                 <span>沒有帳號？ <span onClick={() => navigate('/register')} className="text-yellow-500 font-bold cursor-pointer">註冊！</span></span>
             </form>
-
-            <div className="fixed left-0 bottom-0 w-full h-[20%] bg-yellow-400">
-
-            </div>
         </AuthLayout>
     )
 }

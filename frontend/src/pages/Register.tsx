@@ -109,8 +109,6 @@ const Register = () => {
                 <Button className="bg-yellow-500 hover:bg-yellow-700">註冊</Button>
                 <span>已經有帳號？ <span onClick={() => navigate('/login')} className="text-yellow-500 font-bold cursor-pointer">登入！</span></span>
             </form>
-
-
         </AuthLayout>
 
     )
