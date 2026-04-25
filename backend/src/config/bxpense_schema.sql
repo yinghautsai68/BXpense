@@ -12,7 +12,7 @@ CREATE TABLE users(
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 INSERT INTO users (username, password, image_url)
-VALUES ("pani", "$2b$10$TXTi84Riik9D4I9lVuGPP.6XUEuq7qQJBCzRaB.HkrMGJmPlmZTNG", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775711545283-SnapInsta.to_642800192_17954497605067836_5123513395128580387_n.jpg");
+VALUES ("demo", "$2b$10$TXTi84Riik9D4I9lVuGPP.6XUEuq7qQJBCzRaB.HkrMGJmPlmZTNG", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/bear.png");
 
 CREATE TABLE accounts(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -32,7 +32,7 @@ CREATE TABLE accounts(
 INSERT INTO accounts (user_id, name, image_url, balance)
 VALUES (1, "現金", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png", 500),
 (1, "銀行", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png", 500),
-(1, "emergency", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png", 500);
+(1, "緊急預備金", "https://bxpense-bucket.s3.us-east-1.amazonaws.com/products/1775655585454-glorious_keyboard.png", 500);
 
 CREATE TABLE categories(
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -93,14 +93,14 @@ CREATE TABLE records(
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 INSERT INTO records (user_id, account_id, category_id, type, amount, remarks, record_date)
-VALUES ( 1, 1, 1, "expense", 100, "午餐","2026-04-01 12:30:30"),
-( 1, 1, 1, "expense", 100, "晚餐","2026-04-01 18:30:30"),
-( 1, 1, 1, "expense", 100, "衣服","2026-04-01 19:30:30"),
-( 1, 2, 1, "expense", 550, "Snacks","2026-04-01 20:30:30"),
-( 1, 3, 1, "expense", 200, "午餐","2026-04-02 12:30:30"),
-( 1, 3, 1, "expense", 200, "晚餐","2026-04-02 18:30:30");
-
-
+VALUES 
+(1, 1, 1, 'expense', 100, '午餐', '2026-04-01 04:30:30'),
+(1, 1, 1, 'expense', 100, '晚餐', '2026-04-01 10:30:30'),
+(1, 1, 1, 'expense', 100, '衣服', '2026-04-01 11:30:30'),
+(1, 2, 1, 'expense', 550, 'Snacks', '2026-04-01 12:30:30'),
+(1, 3, 1, 'expense', 200, '午餐', '2026-04-02 04:30:30'),
+(1, 3, 1, 'expense', 200, '晚餐', '2026-04-02 10:30:30'),
+(1, 3, 1, 'expense', 200, '晚餐', '2026-05-1 01:30:30');
 
 CREATE TABLE saving_goals(
     id INT AUTO_INCREMENT PRIMARY KEY,
