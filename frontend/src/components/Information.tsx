@@ -16,7 +16,7 @@ const Information = ({ onChange, className, label, name, value, type }: Informat
     }
     return (
         <div className={`${className} flex flex-row justify-between items-center  w-full `}>
-            <span className='text-lg font-medium flex-1'>{label}</span>
+            <span className='md:text-lg font-medium flex-2'>{label}</span>
             {
                 type === 'file'
                     ?
