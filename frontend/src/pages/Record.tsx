@@ -13,11 +13,14 @@ import IconEdit from '../assets/icons/icon-edit.png'
 import IconDelete from '../assets/icons/icon-delete.png'
 import Modal from "../components/Modal"
 import { typeZhTw } from "../constants/typeZhTW"
+import SkeletonBlock from "./SkeletonBlock"
 const Record = () => {
     const { token } = useAuth();
     const { id } = useParams();
     const { formatDateTime } = useUtil();
     const navigate = useNavigate();
+
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
     const [record, setRecord] = useState<RecordType | null>(null);
@@ -33,6 +36,8 @@ const Record = () => {
                 console.log(data);
             } catch (error) {
                 console.error(error);
+            } finally {
+                setIsLoading(false);
             }
         }
         fetchRecord();
@@ -54,20 +59,54 @@ const Record = () => {
     }
     return (
         <>
-            <Card className="bg-white">
-                <div className="flex flex-row justify-between items-center border-b-2 border-dashed border-gray-300">
-                    <div className="flex flex-row items-center gap-2 pb-4">
-                        <img src={record?.category_image_url} alt="" className="w-10 aspect-square rounded-lg" />
-                        <span className="font-medium">{record?.category_name}</span>
-                    </div>
-                    <span className={`${record?.type === 'expense' ? 'text-red-500' : 'text-green-500'}`}>{record?.type === 'expense' ? '-' : '+'}NT$ {record?.amount}</span>
-                </div>
-                <div className="flex flex-col gap-4">
-                    <Information label="類別" type="text" value={record?.type ? typeZhTw[record.type] : ''} />
-                    <Information label="備註" type="text" value={record?.remarks ?? ''} />
-                    <Information label="帳戶" type="text" value={record?.account_name ?? ''} />
-                    <Information label="日期" type="text" value={formatDateTime(record?.record_date || "")} />
-                </div>
+            <Card className="flex flex-col gap-2 divide-y divide-gray-200 bg-white">
+                {
+                    isLoading ?
+                        <>
+                            <div className="flex flex-row justify-between items-center pb-4">
+                                <div className="flex flex-row items-center gap-2">
+                                    <SkeletonBlock className="w-10 aspect-square rounded-lg" />
+                                    <SkeletonBlock className="w-15 h-5" />
+                                </div>
+                                <SkeletonBlock className="w-15 h-5" />
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <div className="flex flex-row justify-between items-center">
+                                    <span className="text-lg font-medium">類別</span>
+                                    <SkeletonBlock className="w-25 h-5" />
+                                </div>
+                                <div className="flex flex-row justify-between items-center">
+                                    <span className="text-lg font-medium">備註</span>
+                                    <SkeletonBlock className="w-20 h-5" />
+                                </div>
+                                <div className="flex flex-row justify-between items-center">
+                                    <span className="text-lg font-medium">帳戶</span>
+                                    <SkeletonBlock className="w-25 h-5" />
+                                </div>
+                                <div className="flex flex-row justify-between items-center">
+                                    <span className="text-lg font-medium">日期</span>
+                                    <SkeletonBlock className="w-35 h-5" />
+                                </div>
+                            </div>
+                        </>
+                        :
+                        <>
+                            <div className="flex flex-row justify-between items-center border-b-2 border-dashed border-gray-300">
+                                <div className="flex flex-row items-center gap-2 pb-4">
+                                    <img src={record?.category_image_url} alt="" className="w-10 aspect-square rounded-lg" />
+                                    <span className="font-medium">{record?.category_name}</span>
+                                </div>
+                                <span className={`${record?.type === 'expense' ? 'text-red-500' : 'text-green-500'}`}>{record?.type === 'expense' ? '-' : '+'}NT$ {record?.amount}</span>
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <Information label="類別" type="text" value={record?.type ? typeZhTw[record.type] : ''} />
+                                <Information label="備註" type="text" value={record?.remarks ?? ''} />
+                                <Information label="帳戶" type="text" value={record?.account_name ?? ''} />
+                                <Information label="日期" type="text" value={formatDateTime(record?.record_date || "")} />
+                            </div>
+                        </>
+                }
+
             </Card>
             <div className="flex flex-row justify-end items-center ">
                 <div className="flex flex-row items-center gap-2">

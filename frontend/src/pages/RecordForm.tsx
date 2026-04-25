@@ -15,11 +15,14 @@ import toast from 'react-hot-toast'
 import AccountSelector from './AccountSelector'
 import Modal from '../components/Modal'
 import { RecordFormSchema } from '../schemas/records.schema'
+import SkeletonBlock from './SkeletonBlock'
 
 const RecordForm = () => {
     const { token, user } = useAuth();
     const { id } = useParams();
     const navigate = useNavigate();
+
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const [accountModalOpen, setAccountModalOpen] = useState<boolean>(false);
 
@@ -97,7 +100,7 @@ const RecordForm = () => {
             } catch (error) {
                 console.error(error);
             } finally {
-
+                setIsLoading(false);
             }
         }
         fetchData();
@@ -142,17 +145,14 @@ const RecordForm = () => {
         setExpression("");
     }
 
-
     const add = () => setExpression((prev) => prev + "+");
     const subtract = () => setExpression((prev) => prev + "-");
     const multiply = () => setExpression((prev) => prev + "*");
     const divide = () => setExpression((prev) => prev + "/");
 
-
     const calculate = () => {
         try {
             const result = eval(expression);
-
             setExpression(String(result));
 
             setRecordForm((prev) => ({ ...prev, amount: Number(result) }));
@@ -216,10 +216,19 @@ const RecordForm = () => {
                     </div>
                     <div className='flex flex-col gap-2 w-full flex-1  px-4'>
                         <SubTitle>類別</SubTitle>
-                        <div className='grid grid-cols-4 md:grid-cols-6 gap-4 overflow-hidden'>
-                            {categories?.map((category, index) => (
-                                <RecordTag onClick={() => handleSelectCategory(category.id)} key={index} category={category} isSelected={recordForm.category_id === category.id} ></RecordTag>
-                            ))
+                        <div className='grid grid-cols-4 md:grid-cols-6 place-items-center gap-4 overflow-hidden'>
+                            {
+                                isLoading ?
+                                    Array.from({ length: 24 }).map((_) => (
+                                        <div className='flex flex-col items-center gap-1'>
+                                            <SkeletonBlock className='w-13 aspect-square' />
+                                            <SkeletonBlock className='w-15 h-5' />
+                                        </div>
+                                    ))
+                                    :
+                                    categories?.map((category, index) => (
+                                        <RecordTag onClick={() => handleSelectCategory(category.id)} key={index} category={category} isSelected={recordForm.category_id === category.id} ></RecordTag>
+                                    ))
                             }
                         </div>
                     </div>

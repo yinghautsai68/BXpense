@@ -15,6 +15,7 @@ import toast from 'react-hot-toast'
 import Modal from '../components/Modal'
 import Button from '../components/Button'
 import type { RecordType } from '../types/records.type'
+import SkeletonBlock from './SkeletonBlock'
 
 const Account = () => {
     const { token } = useAuth();
@@ -115,23 +116,29 @@ const Account = () => {
             <div className='flex flex-row justify-between items-stretch w-full h-60 border-3 border-dashed  bg-white rounded-xl overflow-hidden'>
                 <div className='flex flex-col justify-center gap-2 pl-4 py-4 '>
                     {isLoading ?
-                        <div className='flex flex-row items-center gap-2'>
-                            <div className='w-12 aspect-square bg-gray-400 border border-gray-300  rounded-xl object-cover' />
-                            <div className='w-15 h-5 bg-gray-400'></div>
-                        </div>
+                        <>
+                            <div className='flex flex-row items-center gap-2'>
+                                <SkeletonBlock className='w-12 aspect-square' />
+                                <SkeletonBlock className='w-15 h-5' />
+                            </div>
+                            <div className='flex flex-col'>
+                                <span className='text-sm'>當前餘額</span>
+                                <SkeletonBlock className='w-30 h-8' />
+                            </div>
+                        </>
                         :
-                        <div className='flex flex-row items-center gap-2'>
-                            <img src={account?.image_url} alt="" className='w-12 aspect-square border border-gray-300  rounded-xl object-cover' />
-                            <span className='font-bold'>{account?.name}</span>
-                        </div>
+                        <>
+                            <div className='flex flex-row items-center gap-2'>
+                                <img src={account?.image_url} alt="" className='w-12 aspect-square border border-gray-300  rounded-xl object-cover' />
+                                <span className='font-bold'>{account?.name}</span>
+                            </div>
+                            <div className='flex flex-col'>
+                                <span className='text-sm'>當前餘額</span>
+                                <span className='text-2xl font-bold'>NTD {account?.final_balance}</span>
+                            </div>
+                        </>
                     }
-
-                    <div className='flex flex-col'>
-                        <span className='text-sm'>當前餘額</span>
-                        <span className='text-2xl font-bold'>NTD {account?.final_balance}</span>
-                    </div>
                 </div>
-
                 <div className='relative w-[50%] overflow-hidden '>
                     <div className='absolute right-3 top-3 flex flex-row items-center gap-2 '>
                         <img onClick={() => setIsDeleteOpen(true)} src={IconDelete} alt="icon-delete" className='w-5 aspect-square cursor-pointer' />
@@ -139,46 +146,69 @@ const Account = () => {
                     </div>
                     <div className='absolute right-0 top-10 translate-x-1/2 w-60 h-60 bg-yellow-500 rounded-full z-50'></div>
                 </div>
-            </div>
+            </div >
 
             {/*records*/}
-            <div className='flex flex-col gap-8  h-full overflow-y-auto'>
-                {records.length === 0 ?
-                    <Card className='flex flex-row justify-center bg-white'>
-                        <span className='w-full text-center font-semibold'>沒有任何支出紀錄</span>
-                    </Card>
-                    :
-                    Object.entries(grouped).sort((a, b) => Number(b[0]) - Number(a[0])).map(([year, months]) => (
-                        <div>
-                            <span className='text-lg font-bold'>{year}年</span>
-                            <div className='flex flex-col gap-3'>
-                                {Object.entries(months).sort((a, b) => Number(b[0]) - Number(a[0])).map(([month, dates]) => (
-                                    <Card className='bg-gray-200'>
-                                        <span className='font-semibold'>{month}月</span>
-                                        <div >
-                                            {
-                                                Object.entries(dates).sort((a, b) => Number(b[0]) - Number(a[0])).map(([date, records]) => (
-                                                    <div>
-                                                        <span>{month}月{date}日</span>
-                                                        <Card className='bg-white'>
-                                                            {records.map((record) => (
-                                                                <ExpenseCard record={record} />
-                                                            ))}
-                                                        </Card>
-                                                    </div>
-                                                ))
-                                            }
+            < div className='flex flex-col gap-8  h-full overflow-y-auto' >
+                {
+                    isLoading ?
+                        Array.from({ length: 2 }).map((_) => (
+                            <div className='flex flex-col gap-1'>
+                                <SkeletonBlock className='w-15 h-5' />
+                                <div className='flex flex-col gap-3'>
+                                    <Card className='flex flex-col gap-1 bg-gray-200'>
+                                        <SkeletonBlock className='w-15 h-5' />
+                                        <div className='flex flex-col gap-1'>
+                                            <SkeletonBlock className='w-18 h-5' />
+                                            <Card className='flex flex-col gap-1 bg-white'>
+                                                {
+                                                    Array.from({ length: 4 }).map((_) => (
+                                                        <SkeletonBlock className='w-full h-10' />
+                                                    ))
+                                                }
+
+                                            </Card>
                                         </div>
                                     </Card>
-                                ))
-                                }
+                                </div>
                             </div>
-                        </div>
+                        ))
+                        : records.length === 0 ?
+                            <Card className='flex flex-row justify-center bg-white'>
+                                <span className='w-full text-center font-semibold'>沒有任何支出紀錄</span>
+                            </Card>
+                            :
+                            Object.entries(grouped).sort((a, b) => Number(b[0]) - Number(a[0])).map(([year, months]) => (
+                                <div>
+                                    <span className='text-lg font-bold'>{year}年</span>
+                                    <div className='flex flex-col gap-3'>
+                                        {Object.entries(months).sort((a, b) => Number(b[0]) - Number(a[0])).map(([month, dates]) => (
+                                            <Card className='bg-gray-200'>
+                                                <span className='font-semibold'>{month}月</span>
+                                                <div >
+                                                    {
+                                                        Object.entries(dates).sort((a, b) => Number(b[0]) - Number(a[0])).map(([date, records]) => (
+                                                            <div>
+                                                                <span>{month}月{date}日</span>
+                                                                <Card className='bg-white'>
+                                                                    {records.map((record) => (
+                                                                        <ExpenseCard record={record} />
+                                                                    ))}
+                                                                </Card>
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </div>
+                                            </Card>
+                                        ))
+                                        }
+                                    </div>
+                                </div>
 
-                    ))
+                            ))
                 }
 
-            </div>
+            </div >
 
             <Modal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>
                 <div className="flex flex-col gap-4 p-4">

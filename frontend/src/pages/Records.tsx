@@ -9,10 +9,10 @@ import Layout from '../layout/Layout';
 import { Title } from '../components/Typography';
 
 import DatePickerModal from '../components/DatePickerModal';
+import SkeletonBlock from './SkeletonBlock';
 
 const Records = () => {
     const { token } = useAuth();
-
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -52,10 +52,6 @@ const Records = () => {
 
         return result;
     }, [records]);
-
-
-
-
 
     const currentYear = new Date().toLocaleString('sv-SE', { year: 'numeric' });
     const currentMonth = new Date().toLocaleString('sv-SE', { month: 'numeric' });
@@ -116,17 +112,39 @@ const Records = () => {
 
         }>
             <div className='flex flex-col gap-4 p-2 bg-white rounded-lg text-sm'>
-                <div className='flex flex-row justify-between'>
+                <div className='flex flex-row justify-between items-stretch'>
                     <span className='text-gray-600 font-bold'>月支出</span>
-                    <span>NT$ {monthlySummary.expense}</span>
+                    {
+                        isLoading
+                            ?
+                            <SkeletonBlock className='w-15' />
+                            :
+                            <span>NT$ {monthlySummary.expense}</span>
+                    }
+
                 </div>
-                <div className='flex flex-row justify-between'>
+                <div className='flex flex-row justify-between items-stretch'>
                     <span className='text-gray-600 font-bold'>月收入</span>
-                    <span>NT$ {monthlySummary.income}</span>
+                    {
+                        isLoading
+                            ?
+                            <SkeletonBlock className='w-15' />
+                            :
+                            <span>NT$ {monthlySummary.income}</span>
+                    }
+
                 </div>
-                <div className='flex flex-row justify-between'>
+                <div className='flex flex-row justify-between items-stretch'>
                     <span className='text-gray-600 font-bold'>月結餘</span>
-                    <span>NT$ {(monthlySummary.income - monthlySummary.expense).toFixed(2)}</span>
+                    {
+                        isLoading
+                            ?
+
+                            <SkeletonBlock className='w-15' />
+                            :
+                            <span>NT$ {(monthlySummary.income - monthlySummary.expense).toFixed(2)}</span>
+                    }
+
                 </div>
             </div>
 
@@ -135,7 +153,21 @@ const Records = () => {
                 {
                     isLoading
                         ?
-                        <span>...loading</span>
+                        <div className='flex flex-col gap-3 w-full h-full'>
+                            {
+                                Array.from({ length: 2 }).map((_) => (
+                                    <div className='flex flex-col gap-2 w-full'>
+                                        <SkeletonBlock className='w-15 h-5' />
+                                        {
+                                            Array.from({ length: 3 }).map((_) => (
+                                                <SkeletonBlock className='w-full h-15' />
+                                            ))
+                                        }
+                                    </div>
+                                ))
+
+                            }
+                        </div>
                         : !grouped[selectedYear]
                             ?
                             <div className='flex flex-row justify-center items-center w-full h-10 bg-white rounded-lg'>

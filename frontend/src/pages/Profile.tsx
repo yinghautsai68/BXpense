@@ -15,13 +15,19 @@ import Button from '../components/Button'
 import Modal from '../components/Modal'
 
 import IconEdit from '../assets/icons/icon-edit.png'
+import SkeletonBlock from './SkeletonBlock'
 const Profile = () => {
     const { token } = useAuth();
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [userData, setUserData] = useState<User | null>(null);
+    const [userData, setUserData] = useState<User>({
+        username: '',
+        image_url: '',
+        created_at: '',
+        updated_at: ''
+    });
     const [summary, setSummary] = useState({
         total_expense: 0,
         total_income: 0,
@@ -100,36 +106,63 @@ const Profile = () => {
         }
     }
 
-    if (isLoading) return <p>載入中...</p>;
     if (error) return <p className="text-red-500">{error}</p>;
-    if (!userData) return <p>無使用者資料</p>;
-
     return (
         <>
             <SubTitle>我的帳號</SubTitle>
-            <Card className='flex flex-col bg-white'>
-                <div className='flex flex-row justify-between items-center'>
-                    <div className='flex flex-row items-center gap-2'>
-                        <img src={userData.image_url} alt="大頭照" className='w-15 aspect-square border rounded-lg object-cover' />
-                        <span>{userData.username}</span>
-                    </div>
+            <Card className='flex flex-col gap-1 bg-white'>
+                {isLoading ?
+                    <>
+                        <div className='flex flex-row justify-between items-center'>
+                            <div className='flex flex-row items-center gap-2'>
+                                <SkeletonBlock className='w-15 aspect-square  rounded-lg object-cover' />
+                                <SkeletonBlock className='w-15 h-5' />
+                            </div>
 
-                    <img onClick={() => navigate('/profile/edit')} src={IconEdit} alt='edit-user-button' className='w-5 h-5 bg-yellow-500' />
-                </div>
-                <div className='grid grid-cols-3 place-items-center '>
-                    <div className='flex flex-col justify-center '>
-                        <span className='text-gray-500'>總支出</span>
-                        <span>NT${summary.total_expense ?? 0}</span>
-                    </div>
-                    <div className='flex flex-col justify-center'>
-                        <span className='text-gray-500'>總收入</span>
-                        <span>NT${summary.total_income ?? 0}</span>
-                    </div>
-                    <div className='flex flex-col justify-center'>
-                        <span className='text-gray-500'>紀錄</span>
-                        <span>{summary.total_records}</span>
-                    </div>
-                </div>
+                            <img onClick={() => navigate('/profile/edit')} src={IconEdit} alt='edit-user-button' className='w-5 h-5 bg-yellow-500' />
+                        </div>
+                        <div className='grid grid-cols-3 place-items-center '>
+                            <div className='flex flex-col justify-center '>
+                                <SkeletonBlock className='w-15 h-5' />
+                                <SkeletonBlock className='w-20 h-5' />
+                            </div>
+                            <div className='flex flex-col justify-center '>
+                                <SkeletonBlock className='w-15 h-5' />
+                                <SkeletonBlock className='w-20 h-5' />
+                            </div>
+                            <div className='flex flex-col justify-center '>
+                                <SkeletonBlock className='w-15 h-5' />
+                                <SkeletonBlock className='w-20 h-5' />
+                            </div>
+                        </div>
+                    </>
+                    :
+
+                    <>
+                        <div className='flex flex-row justify-between items-center'>
+                            <div className='flex flex-row items-center gap-2'>
+                                <img src={userData.image_url} alt="大頭照" className='w-15 aspect-square border rounded-lg object-cover' />
+                                <span>{userData.username}</span>
+                            </div>
+
+                            <img onClick={() => navigate('/profile/edit')} src={IconEdit} alt='edit-user-button' className='w-5 h-5 bg-yellow-500' />
+                        </div>
+                        <div className='grid grid-cols-3 place-items-center '>
+                            <div className='flex flex-col justify-center '>
+                                <span className='text-gray-500'>總支出</span>
+                                <span>NT${summary.total_expense ?? 0}</span>
+                            </div>
+                            <div className='flex flex-col justify-center'>
+                                <span className='text-gray-500'>總收入</span>
+                                <span>NT${summary.total_income ?? 0}</span>
+                            </div>
+                            <div className='flex flex-col justify-center'>
+                                <span className='text-gray-500'>紀錄</span>
+                                <span>{summary.total_records}</span>
+                            </div>
+                        </div>
+                    </>
+                }
             </Card >
 
 
@@ -145,17 +178,26 @@ const Profile = () => {
                     <Link to='/categories' className='px-2 py-1 bg-yellow-500 rounded-xl cursor-pointer'>+</Link>
                 </div>
             </div>
-            <Card className='grid grid-cols-4 md:grid-cols-8 gap-5 bg-white'>
+            <Card className='grid grid-cols-4 md:grid-cols-8 place-items-center gap-5 bg-white'>
                 {
-                    categories?.map((category, index) => (
-                        <div className='relative'>
-                            {
-                                isDelete &&
-                                <div onClick={() => setDeleteId(category.id)} className='absolute right-0 flex flex-row justify-center items-center w-5 h-5 pb-1 bg-red-500 rounded-full text-xl text-white'>-</div>
-                            }
-                            <RecordTag key={index} onClick={() => navigate(`/categories/${category.id}/edit`)} category={category}></RecordTag>
-                        </div>
-                    ))
+
+                    isLoading ?
+                        Array.from({ length: 16 }).map((_) => (
+                            <SkeletonBlock className='w-15 aspect-square' />
+                        ))
+
+                        :
+
+
+                        categories?.map((category, index) => (
+                            <div className='relative'>
+                                {
+                                    isDelete &&
+                                    <div onClick={() => setDeleteId(category.id)} className='absolute right-0 flex flex-row justify-center items-center w-5 h-5 pb-1 bg-red-500 rounded-full text-xl text-white'>-</div>
+                                }
+                                <RecordTag key={index} onClick={() => navigate(`/categories/${category.id}/edit`)} category={category}></RecordTag>
+                            </div>
+                        ))
 
                 }
             </Card>

@@ -14,6 +14,7 @@ import type { CategorySummaryType, LineType, PieType } from '../types/analysis.t
 import { getMyRecords } from '../services/records.service';
 import Layout from '../layout/Layout';
 import DatePickerModal from '../components/DatePickerModal';
+import SkeletonBlock from './SkeletonBlock';
 const Analysis = () => {
     const { token } = useAuth();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -109,15 +110,6 @@ const Analysis = () => {
 
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-
-
-
-
-    if (isLoading) return (
-        <div className='flex flex-col pt-15 items-center w-full h-full'>
-            <span>loading</span>
-        </div>
-    )
     return (
         <Layout component={
             <div className='flex flex-row gap-5'>
@@ -125,78 +117,125 @@ const Analysis = () => {
                 <DatePickerModal isOpen={isSelectDate} onClose={() => setIsSelectDate(false)} selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
             </div>
         }>
-            <Card className='w-full h-[250px] bg-white'>
-                <CardTitle>支出歷史</CardTitle>
-                <span className='text-xs font-bold'>支出：NT${totalAmount}</span>
+            {
+                isLoading ?
+                    <Card className='flex flex-col gap-1 w-full h-[250px] bg-white'>
+                        <CardTitle>支出歷史</CardTitle>
+                        <div className='flex flex-row items-center gap-1 w-full text-xs font-bold'>
+                            <span>支出：</span>
+                            <SkeletonBlock className='w-10 h-5' />
+                        </div>
+                        <SkeletonBlock className='w-full h-full' />
+                    </Card>
+                    :
+                    <Card className='flex flex-col gap-1 w-full h-[250px] bg-white'>
+                        <CardTitle>支出歷史</CardTitle>
+                        {
+                            line.length === 0 ?
+                                <>
+                                    <span className='text-xs font-bold'>支出：NT${totalAmount}</span>
+                                    <div className='flex flex-row justify-center items-center w-full h-full'>
+                                        沒有數據
+                                    </div>
+                                </>
+                                :
+                                <>
+                                    <span className='text-xs font-bold'>支出：NT${totalAmount}</span>
+                                    <ExpenseChart data={line}></ExpenseChart>
+                                </>
+
+                        }
+                    </Card>
+            }
+
+
+            <Card className='flex flex-col gap-2 w-full bg-white'>
+                <CardTitle>支出類別占比</CardTitle>
                 {
-                    line.length === 0
-                        ?
-                        <div className='flex flex-row justify-center items-center w-full h-full'>沒有數據</div>
+                    isLoading ?
+                        <>
+
+                            <SkeletonBlock className='w-full h-[180px]' />
+                            <SkeletonBlock className='w-full h-[50px]' />
+                        </>
                         :
-                        <ExpenseChart data={line}></ExpenseChart>
+                        <>
+                            <div className='w-full h-[180px] bg-white'>
+                                {
+                                    categorySummary.length === 0
+                                        ?
+                                        <div className='flex flex-row justify-center items-center w-full h-full'>沒有數據</div>
+                                        :
+                                        <ExpensePieChart data={pieData} colors={COLORS} />
+
+                                }
+
+                            </div>
+                            <div className='flex flex-col  gap-5 w-full'>
+                                {
+                                    categorySummary.map((category, index) => (
+                                        <div key={index} className='flex flex-row  items-center gap-2 w-full '>
+                                            <img src={category.image_url} alt='category_img' className='w-10 aspect-square  rounded-full bg-gray-100' />
+                                            <div className='flex flex-col w-full'>
+                                                <div className='flex flex-row'>
+                                                    <div className='flex flex-col'>
+                                                        <div className='flex-1 flex flex-row items-center gap-1 text-sm font-bold'>
+                                                            <span>{index + 1}</span>
+                                                            <span>{categoryZhTW[category.name]}</span>
+                                                        </div>
+                                                        <span className='text-xs'>{getPercent(category.total_amount)}</span>
+                                                    </div>
+                                                    <div className='flex-2 flex flex-col items-end text-xs'>
+                                                        <span className='text-end font-bold'>-NT$ {category.total_amount}</span>
+                                                        <span>{category.count}筆</span>
+                                                    </div>
+                                                </div>
+                                                <div className='w-full h-2 rounded-xl bg-gray-200'>
+                                                    <div style={{
+                                                        width: `${getPercent(Number(category.total_amount))}%`,
+                                                        backgroundColor: COLORS[index % COLORS.length]
+                                                    }} className={`h-2 rounded-xl `}>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </>
                 }
 
             </Card>
-            <Card className='bg-white'>
-                <CardTitle>支出類別占比</CardTitle>
-                <div className='w-full h-[180px] bg-white'>
-                    {
-                        categorySummary.length === 0
-                            ?
-                            <div className='flex flex-row justify-center items-center w-full h-full'>沒有數據</div>
-                            :
-                            <ExpensePieChart data={pieData} colors={COLORS} />
-
-                    }
-
-                </div>
-                <div className='flex flex-col  gap-5 w-full'>
-                    {
-                        categorySummary.map((category, index) => (
-                            <div key={index} className='flex flex-row  items-center gap-2 w-full '>
-                                <img src={category.image_url} alt='category_img' className='w-10 aspect-square  rounded-full bg-gray-100' />
-                                <div className='flex flex-col w-full'>
-                                    <div className='flex flex-row'>
-                                        <div className='flex flex-col'>
-                                            <div className='flex-1 flex flex-row items-center gap-1 text-sm font-bold'>
-                                                <span>{index + 1}</span>
-                                                <span>{categoryZhTW[category.name]}</span>
-                                            </div>
-                                            <span className='text-xs'>{getPercent(category.total_amount)}</span>
-                                        </div>
-                                        <div className='flex-2 flex flex-col items-end text-xs'>
-                                            <span className='text-end font-bold'>-NT$ {category.total_amount}</span>
-                                            <span>{category.count}筆</span>
-                                        </div>
-                                    </div>
-                                    <div className='w-full h-2 rounded-xl bg-gray-200'>
-                                        <div style={{
-                                            width: `${getPercent(Number(category.total_amount))}%`,
-                                            backgroundColor: COLORS[index % COLORS.length]
-                                        }} className={`h-2 rounded-xl `}>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    }
-                </div>
-            </Card>
             <Card className='flex flex-col gap-5 bg-white'>
+
                 <div className='flex flex-row justify-between items-center'>
                     <CardTitle>單筆金額排行</CardTitle>
                     <span>TOP 10</span>
                 </div>
-                <div className='flex flex-col w-full  bg-white '>
-                    {topExpenses.length === 0
-                        ?
-                        <div className='w-full text-center'>沒有紀錄</div>
+                {
+                    isLoading ?
+                        <div className='flex flex-col gap-1 w-full  bg-white '>
+                            {
+                                Array.from({ length: 10 }).map((_, i) => (
+                                    <SkeletonBlock key={i} className='w-full h-12' />
+                                ))
+                            }
+                        </div>
                         :
-                        topExpenses.map((expense) => (
-                            <ExpenseCard key={expense.id} record={expense}></ExpenseCard>
-                        ))
-                    }
-                </div>
+                        <>
+                            <div className='flex flex-col w-full  bg-white '>
+                                {topExpenses.length === 0
+                                    ?
+                                    <div className='w-full text-center'>沒有紀錄</div>
+                                    :
+                                    topExpenses.map((expense) => (
+                                        <ExpenseCard key={expense.id} record={expense}></ExpenseCard>
+                                    ))
+                                }
+                            </div>
+                        </>
+                }
+
             </Card>
         </Layout>
     )

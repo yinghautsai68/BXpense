@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { updateUserSchema } from "../schemas/users.schema";
 import { uploadImage } from "../services/upload.service";
 import { useNavigate } from "react-router-dom";
+import SkeletonBlock from "./SkeletonBlock";
 
 const EditProfile = () => {
     const { token, user } = useAuth();
@@ -99,27 +100,44 @@ const EditProfile = () => {
         }
     }
 
-
-    if (isLoading) return (
-        <div>...loading</div>
-    )
     return (
         <div className='flex flex-col justify-start items-center gap-5 flex-1'>
             <div className="flex flex-row justify-start w-full">
                 <Button onClick={() => navigate(-1)} className="bg-gray-300">回上一頁</Button>
             </div>
-            <FormInput ref={imageRef} label="照片" name="image_url" type="file" onChange={handleImageChange} required={true} ></FormInput>
-            <img onClick={() => imageRef.current?.click()} src={formData.image_url} alt="" className='w-45 aspect-square rounded-xl object-cover cursor-pointer' />
+            {
+                isLoading ?
+                    <>
+                        <div className="flex flex-row justify-start items-center w-full">
+                            <span className="font-bold">照片</span>
+                        </div>
+                        <SkeletonBlock className="w-45 aspect-square" />
+                    </>
+                    :
+                    <>
+                        <FormInput ref={imageRef} label="照片" name="image_url" type="file" onChange={handleImageChange} required={true} ></FormInput>
+                        <img onClick={() => imageRef.current?.click()} src={formData.image_url} alt="" className='w-45 aspect-square rounded-xl object-cover cursor-pointer' />
+                    </>
+            }
             <FormInput label="名稱" name="username" value={formData.username} type="text" onChange={handleChange} required={true} ></FormInput>
             <FormInput label="密碼" name="password" value={formData.password} type="password" onChange={handleChange} required={true} ></FormInput>
             <FormInput label="確認密碼" name="confirmPassword" value={formData.confirmPassword} type="password" onChange={handleChange} required={true} ></FormInput>
-
             <Button onClick={() => handleSubmit()} className="w-full max-w-md bg-yellow-500 hover:bg-yellow-700">更新資料</Button>
-            <SubTitle>創造時間</SubTitle>
-            <span>{formatDateTime(userData.created_at)}</span>
-            <SubTitle>最後一次更新時間</SubTitle>
-            <span>{formatDateTime(userData.updated_at)}</span>
-
+            {
+                isLoading ?
+                    <>
+                        <SubTitle>創造時間</SubTitle>
+                        <SkeletonBlock className="w-45 h-5" />
+                        <SubTitle>最後一次更新時間</SubTitle>
+                        <SkeletonBlock className="w-45 h-5" />
+                    </> :
+                    <>
+                        <SubTitle>創造時間</SubTitle>
+                        <span>{formatDateTime(userData.created_at)}</span>
+                        <SubTitle>最後一次更新時間</SubTitle>
+                        <span>{formatDateTime(userData.updated_at)}</span>
+                    </>
+            }
         </div>
     )
 }

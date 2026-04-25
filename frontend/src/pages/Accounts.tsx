@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 import IllustrationAccount from '../assets/illustration/illustration-account.png'
 import IllustrationAccounts from '../assets/illustration/illustration-accounts.png'
+import SkeletonBlock from './SkeletonBlock';
 const Accounts = () => {
     const { token } = useAuth();
     const navigate = useNavigate();
@@ -109,7 +110,10 @@ const Accounts = () => {
                     <div className='flex flex-col gap-2'>
                         {
                             isLoading ?
-                                <div className="h-16 bg-gray-300 rounded animate-pulse"></div>
+                                Array.from({ length: 4 }).map((_) => (
+                                    <SkeletonBlock className='w-full h-15' />
+                                ))
+
                                 :
                                 accounts?.map((account, index) => {
                                     return (
