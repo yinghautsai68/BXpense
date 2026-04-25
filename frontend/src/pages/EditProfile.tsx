@@ -108,7 +108,7 @@ const EditProfile = () => {
             {
                 isLoading ?
                     <>
-                        <div className="flex flex-row justify-start items-center w-full">
+                        <div className="flex flex-row justify-start items-center w-full max-w-md">
                             <span className="font-bold">照片</span>
                         </div>
                         <SkeletonBlock className="w-45 aspect-square" />
