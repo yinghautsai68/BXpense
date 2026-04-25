@@ -41,7 +41,7 @@ const Layout = ({ title, component, children }: LayoutProps) => {
                         {children}
                     </div>
                 </div>
-                <div className=' fixed left-1/2 -translate-x-1/2 bottom-0 md:bottom-5  flex flex-row justify-between items-center w-full md:w-lg px-5 py-1 md:border bg-white  md:rounded-xl overflow-hidden'>
+                <div className=' fixed left-1/2 -translate-x-1/2 bottom-0 md:bottom-5  flex flex-row justify-between items-center w-full md:w-lg px-5 py-1 pb-10 md:pb-0 md:border bg-white  md:rounded-xl overflow-hidden'>
                     <NavLink to='/records'>
                         {({ isActive }) => (
                             <LayoutNavigation
@@ -64,7 +64,8 @@ const Layout = ({ title, component, children }: LayoutProps) => {
                         }
                     </NavLink>
                     <div className=' '>
-                        <div className='absolute left-1/2 -translate-x-1/2  bottom-8 flex flex-row justify-center items-center w-15 h-15 bg-gray-100 rounded-full '>
+                        <div className='absolute left-1/2 -translate-x-1/2  bottom-15 md:bottom-7 flex flex-row justify-center items-center w-15 h-15 bg-gray-100 rounded-full z-40  '>
+
                         </div>
                     </div>
                     <NavLink to='/accounts'>
@@ -92,7 +93,7 @@ const Layout = ({ title, component, children }: LayoutProps) => {
                         }
                     </NavLink>
                 </div>
-                <NavLink to='/records/new' className=' fixed left-1/2 -translate-x-1/2 bottom-10 md:bottom-15 flex flex-row justify-center items-center w-10 h-10 pb-1 bg-yellow-500 rounded-full text-2xl font-bold '>+</NavLink>
+                <NavLink to='/records/new' className='fixed left-1/2 -translate-x-1/2 bottom-18 md:bottom-15 flex flex-row justify-center items-center w-10 h-10 pb-1 bg-yellow-500 rounded-full text-2xl font-bold z-50'>+</NavLink>
             </div >
         </div>
     )
