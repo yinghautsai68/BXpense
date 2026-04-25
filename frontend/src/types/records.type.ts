@@ -23,7 +23,7 @@ export type createRecordType = {
     type: 'expense' | 'income',
     amount: number,
     remarks: string,
-    record_date: string,
+    record_date: string | Date,
 };
 
 export type MonthlySummaryType = {

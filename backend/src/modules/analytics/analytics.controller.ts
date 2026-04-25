@@ -22,7 +22,7 @@ export const getLineChartSummaryExpense = async (req: Request, res: Response) =>
                 DATE_FORMAT(record_date, '%Y-%m-%d') AS date,
                 SUM(amount) AS amount
             FROM records
-            WHERE user_id = ? AND type = 'expense' AND record_date >= ? AND record_date < ? 
+            WHERE user_id = ? AND type = 'expense' AND CONVERT_TZ(record_date, '+00:00', '+08:00') >= ? AND CONVERT_TZ(record_date, '+00:00', '+08:00') < ? 
             GROUP BY date
             ORDER BY date ASC
             `,
@@ -73,7 +73,7 @@ export const getCategorySummary = async (req: Request, res: Response) => {
                 COUNT(r.id) AS count
             FROM categories c 
             LEFT JOIN records r ON c.id = r.category_id
-            WHERE r.user_id = ? AND r.type = 'expense' AND r.record_date >= ? AND r.record_date < ?
+            WHERE r.user_id = ? AND r.type = 'expense' AND CONVERT_TZ(r.record_date, '+00:00', '+08:00') >= ? AND CONVERT_TZ(r.record_date, '+00:00', '+08:00') < ?
             GROUP BY c.id, c.name, c.image_url
             ORDER BY total_amount DESC
             `,

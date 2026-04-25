@@ -33,8 +33,7 @@ const RecordForm = () => {
         type: 'expense',
         amount: 0,
         remarks: '',
-        record_date: new Date().toLocaleString("sv-SE", { timeZone: "Asia/Taipei" })
-            .slice(0, 16)
+        record_date: new Date()
     })
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -118,7 +117,6 @@ const RecordForm = () => {
         setRecordForm((prev) => ({ ...prev, type: newType }));
     }
 
-
     const handleSelectAccount = (accountId: number) => {
         setRecordForm((prev) => ({ ...prev, account_id: accountId }));
     };
@@ -171,6 +169,11 @@ const RecordForm = () => {
             if (!token) {
                 return;
             }
+
+            const payload = {
+                ...recordForm,
+                record_date: new Date(recordForm.record_date).toISOString()
+            };
             let data;
             if (id) {
                 data = await updateRecordById(token, id, recordForm);
@@ -178,7 +181,7 @@ const RecordForm = () => {
                 toast.success("更新紀錄成功");
                 return navigate(`/records`)
             } else {
-                data = await createRecord(token, recordForm);
+                data = await createRecord(token, payload);
                 console.log(data);
                 toast.success("新增紀錄成功");
                 setRecordForm({
@@ -188,7 +191,7 @@ const RecordForm = () => {
                     type: 'expense',
                     amount: 0,
                     remarks: '',
-                    record_date: new Date().toISOString().slice(0, 16),
+                    record_date: new Date().toISOString(),
                 });
                 setExpression('');
             }
@@ -242,7 +245,7 @@ const RecordForm = () => {
                 <div className='flex flex-row justify-between items-center w-full'>
                     <div className='flex flex-row items-center gap-1 '>
                         <Button onClick={() => setAccountModalOpen(true)} className='px-1 border border-black bg-white text-xs'>{selectedAccountName || '選擇帳戶'}</Button>
-                        <input type='datetime-local' name='record_date' value={recordForm.record_date} onChange={handleChange} className='px-1 py-1 border border-black rounded-lg bg-white text-xs' />
+                        <input type='datetime-local' name='record_date' value={recordForm.record_date as string} onChange={handleChange} className='px-1 py-1 border border-black rounded-lg bg-white text-xs' />
                     </div>
                     <Button onClick={() => handleSubmit()} className='px-4 bg-yellow-500 text-sm font-medium text-white'>{id ? '更新' : '新增'}</Button>
                 </div>

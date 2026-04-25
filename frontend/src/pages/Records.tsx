@@ -37,11 +37,11 @@ const Records = () => {
         let result: GroupedType = {};
 
         for (let i = 0; i < records.length; i++) {
-            const dateObj = new Date(records[i].record_date);
+            const dateObj = new Date(records[i].record_date)
 
-            const year = dateObj.getFullYear().toString();
-            const month = (dateObj.getMonth() + 1).toString(); // important: string
-            const date = dateObj.getDate().toString();
+            const year = dateObj.getFullYear();
+            const month = dateObj.getMonth() + 1;
+            const date = dateObj.getDate();
 
             if (!result[year]) result[year] = {};
             if (!result[year][month]) result[year][month] = {};
@@ -52,6 +52,7 @@ const Records = () => {
 
         return result;
     }, [records]);
+    console.log(grouped);
 
     const currentYear = new Date().toLocaleString('sv-SE', { year: 'numeric' });
     const currentMonth = new Date().toLocaleString('sv-SE', { month: 'numeric' });
@@ -82,7 +83,7 @@ const Records = () => {
         const fetchData = async () => {
             try {
                 const recordsData = await getMyRecords(token);
-                //console.log(recordsData);
+                console.log(recordsData);
                 setRecords(recordsData);
 
                 const monthlySummariesData = await getMonthlySummary(token);

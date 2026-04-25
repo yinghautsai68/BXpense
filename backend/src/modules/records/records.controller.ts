@@ -92,31 +92,28 @@ export const getMyRecords = async (req: Request, res: Response) => {
         const { user_id } = (req as any).user;
         const { type, account_id, sort, limit, year, month } = req.query;
 
-
-        const start_date = new Date(Number(year), Number(month) - 1, 1);
-        const end_date = new Date(Number(year), Number(month), 1);
         let query =
             `SELECT 
-                    r.id,
-                    r.user_id,
-                    r.type, 
-                    r.amount, 
-                    r.remarks, 
-                    r.record_date,
-                    r.created_at, 
-                    r.updated_at,
-                    a.id AS account_id,
-                    a.name AS account_name,
-                    a.image_url AS account_image_url, 
-                    a.balance AS account_balance,
-                    c.id AS category_id,
-                    c.name AS category_name, 
-                    c.image_url AS category_image_url
-                FROM records r
-                LEFT JOIN accounts a ON r.account_id = a.id
-                LEFT JOIN categories c ON r.category_id = c.id
-                WHERE r.user_id = ?
-                `
+                        r.id,
+                        r.user_id,
+                        r.type, 
+                        r.amount, 
+                        r.remarks, 
+                        r.record_date,
+                        r.created_at, 
+                        r.updated_at,
+                        a.id AS account_id,
+                        a.name AS account_name,
+                        a.image_url AS account_image_url, 
+                        a.balance AS account_balance,
+                        c.id AS category_id,
+                        c.name AS category_name, 
+                        c.image_url AS category_image_url
+                    FROM records r
+                    LEFT JOIN accounts a ON r.account_id = a.id
+                    LEFT JOIN categories c ON r.category_id = c.id
+                    WHERE r.user_id = ?
+                    `
 
         const params = [user_id];
 
@@ -129,8 +126,12 @@ export const getMyRecords = async (req: Request, res: Response) => {
             params.push(account_id);
         }
         if (year && month) {
-            query += ` AND r.record_date >= ? AND r.record_date < ? `;
-            params.push(start_date, end_date);
+            const formatYear = Number(year);
+            const formatMonth = Number(month) - 1;
+            const start_date = new Date(formatYear, formatMonth, 1);
+            const end_date = new Date(formatYear, formatMonth + 1, 1);
+            query += ` AND CONVERT_TZ(r.record_date, '+00:00', '+08:00') >= ? AND CONVERT_TZ(r.record_date, '+00:00', '+08:00') < ? `;
+            params.push(start_date.toISOString(), end_date.toISOString());
         }
 
         if (sort === 'amount_desc') {
