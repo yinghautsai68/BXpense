@@ -18,7 +18,7 @@ type LayoutProps = {
 }
 const Layout = ({ title, component, children }: LayoutProps) => {
     return (
-        <div className='flex flex-col items-center w-full min-h-screen md:px-2  md:pt-25 bg-yellow-500'>
+        <div className='flex flex-col items-center w-full min-h-screen md:px-2 pt-10  md:pt-25 bg-yellow-500'>
 
             <div className='relative flex flex-row justify-center items-center items-stretch w-full max-w-2xl min-h-screen  pt-5  md:p-5 md:pb-0 md:bg-yellow-800 rounded-t-3xl '>
                 <div className='absolute top-0 -translate-y-1/2 hidden md:flex flex-row  gap-5 w-full max-w-2xl px-10'>
