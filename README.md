@@ -1,8 +1,14 @@
 # BXpense
 ## 全端記帳系統
 
+## DEMO
 ### DEMO連結
 https://bxpense.vercel.app/login
+### 登入帳號
+- 帳號：demo
+- 密碼：1234
+
+
 ### 專案接紹
 這個專案是我第一個記帳系統的重製版本。因為我覺得自己的能力有所提升，所以我想再次挑戰之前遇到的問題，並終於成功完成了這個專案。
 在這個專案中，我練習到物件的 grouping 與 sorting，以及 skeleton loading 的實作，也更進一步理解了 RWD（響應式網頁設計）以及圖表（Recharts）怎麼實作。
